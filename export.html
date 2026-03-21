@@ -247,7 +247,6 @@
             if (data.corruptionPerception) {
                 addHeaderCell(headerRow, '案例通报次数');
                 addHeaderCell(headerRow, '案例来源');
-                addHeaderCell(headerRow, '通报及时性');
                 addHeaderCell(headerRow, '防范效果');
                 addHeaderCell(headerRow, '支持力度');
                 addHeaderCell(headerRow, '警示教育形式');
@@ -318,8 +317,7 @@
                     addCell(row, Array.isArray(data.corruptionPerception['cp-q2']) ? data.corruptionPerception['cp-q2'].join('; ') : '');
                     addCell(row, data.corruptionPerception['cp-q3'] || '');
                     addCell(row, data.corruptionPerception['cp-q4'] || '');
-                    addCell(row, data.corruptionPerception['cp-q5'] || '');
-                    addCell(row, Array.isArray(data.corruptionPerception['cp-q6']) ? data.corruptionPerception['cp-q6'].join('; ') : '');
+                    addCell(row, Array.isArray(data.corruptionPerception['cp-q5']) ? data.corruptionPerception['cp-q5'].join('; ') : '');
                 }
                 
                 // 添加联系方式
@@ -428,10 +426,9 @@
                 if (data.corruptionPerception) {
                     row['案例通报次数'] = data.corruptionPerception['cp-q1'] || '';
                     row['案例来源'] = Array.isArray(data.corruptionPerception['cp-q2']) ? data.corruptionPerception['cp-q2'].join('; ') : '';
-                    row['通报及时性'] = data.corruptionPerception['cp-q3'] || '';
-                    row['防范效果'] = data.corruptionPerception['cp-q4'] || '';
-                    row['支持力度'] = data.corruptionPerception['cp-q5'] || '';
-                    row['警示教育形式'] = Array.isArray(data.corruptionPerception['cp-q6']) ? data.corruptionPerception['cp-q6'].join('; ') : '';
+                    row['防范效果'] = data.corruptionPerception['cp-q3'] || '';
+                    row['支持力度'] = data.corruptionPerception['cp-q4'] || '';
+                    row['警示教育形式'] = Array.isArray(data.corruptionPerception['cp-q5']) ? data.corruptionPerception['cp-q5'].join('; ') : '';
                 }
                 
                 // 添加联系方式
