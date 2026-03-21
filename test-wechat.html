@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信群聊格式测试</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">微信群聊格式测试</h1>
+        
+        <p class="text-gray-700 mb-4">【某天，您在单位内部的非正式微信群中看到一条关于本单位同事的八卦消息（如下），该消息在私下交流中有所流传。】</p>
+        
+        <!-- 微信群聊界面 -->
+        <div class="bg-gray-100 rounded-lg p-4 mb-8">
+            <div class="bg-white rounded-lg p-3 shadow-sm">
+                <!-- 群聊头部 -->
+                <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-2">摸</div>
+                        <span class="font-medium text-gray-800">摸鱼小队 (6)</span>
+                    </div>
+                    <span class="text-xs text-gray-400">...</span>
+                </div>
+                
+                <!-- 消息列表 -->
+                <div class="space-y-3">
+                    <!-- A的消息 -->
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-2 flex-shrink-0">A</div>
+                        <div class="flex-1">
+                            <div class="flex items-center mb-1">
+                                <span class="text-sm font-medium text-gray-800 mr-2">A</span>
+                                <span class="text-xs text-gray-400">09:15</span>
+                            </div>
+                            <div class="bg-gray-100 rounded-lg px-3 py-2 text-sm text-gray-700">你们听说了吗？咱们单位业务科的那个李科长，之前被请去喝茶了，好像是去年年底优亲厚友、手脚不干净被群众举报了。刚才听到"可靠消息"，调查已经结束，会都开完了，处分已经送到他手上了。</div>
+                        </div>
+                    </div>
+                    
+                    <!-- B的消息 -->
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-2 flex-shrink-0">B</div>
+                        <div class="flex-1">
+                            <div class="flex items-center mb-1">
+                                <span class="text-sm font-medium text-gray-800 mr-2">B</span>
+                                <span class="text-xs text-gray-400">09:16</span>
+                            </div>
+                            <div class="bg-gray-100 rounded-lg px-3 py-2 text-sm text-gray-700">我去？真假？难怪最近没看到他。</div>
+                        </div>
+                    </div>
+                    
+                    <!-- C的消息 -->
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-2 flex-shrink-0">C</div>
+                        <div class="flex-1">
+                            <div class="flex items-center mb-1">
+                                <span class="text-sm font-medium text-gray-800 mr-2">C</span>
+                                <span class="text-xs text-gray-400">09:17</span>
+                            </div>
+                            <div class="bg-gray-100 rounded-lg px-3 py-2 text-sm text-gray-700">好家伙，这么劲爆！@D，别潜水了快来吃瓜</div>
+                        </div>
+                    </div>
+                    
+                    <!-- D的消息 -->
+                    <div class="flex items-start">
+                        <div class="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-2 flex-shrink-0">D</div>
+                        <div class="flex-1">
+                            <div class="flex items-center mb-1">
+                                <span class="text-sm font-medium text-gray-800 mr-2">D</span>
+                                <span class="text-xs text-gray-400">09:18</span>
+                            </div>
+                            <div class="bg-gray-100 rounded-lg px-3 py-2 text-sm text-gray-700">天啊，希望他吸取教训吧。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <p class="text-gray-700 mb-4">【翌日，单位内部下发内部通报到各科室】</p>
+        
+        <div class="bg-gray-50 p-4 rounded-md mb-4">
+            <p class="text-gray-700 font-medium mb-2">中共××县纪律检查委员会 ××县监察委员会 内部通报</p>
+            <p class="text-gray-700 mb-2">×纪通〔2026〕12 号</p>
+            <p class="text-gray-700 font-medium mb-2">关于本单位业务科科长张某某违纪违法问题的内部通报</p>
+            <p class="text-gray-700 mb-2">局机关各科室、下属各单位：</p>
+            <p class="text-gray-700 mb-2">近期，县纪委监委对群众反映本单位业务科科长张某某有关问题线索进行了核查。经查，张某某在任职期间，违反中央八项规定精神及廉洁纪律，于 2024 年至 2025 年春节期间，收受管理服务对象所送礼金及消费卡，涉案金额共计 0.5 万元。</p>
+            <p class="text-gray-700 mb-2">鉴于张某某在组织核查期间能够配合调查，主动交代问题，认错态度较好，已全部退缴违纪所得。依据《中国共产党纪律处分条例》及《中华人民共和国公职人员政务处分法》相关规定，经县纪委常委会会议研究，决定给予张某某党内警告处分、政务记过处分。</p>
+            <p class="text-gray-700 mb-2">张某某身为党员干部，纪律规矩意识淡薄，收受可能影响公正执行公务的礼品礼金，损害了公职人员形象。节点即考点，作风见担当。春节等节假日是"四风"问题易发多发期，全体干部职工要以此为鉴，严格遵守中央八项规定精神，厘清正常人情往来与违纪违法行为的界限，筑牢廉洁自律防线，切勿因小失大。</p>
+            <p class="text-gray-700 mb-2">中共××县纪律检查委员会 ××县监察委员会</p>
+            <p class="text-gray-700 mb-2">2026 年 3 月 20 日</p>
+            <p class="text-gray-700 text-sm italic">(此件为内部资料，严禁外传，阅后请按保密规定处理）</p>
+        </div>
+    </div>
+</body>
+</html>
