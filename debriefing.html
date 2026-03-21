@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实验后说明 - 学术研究问卷调查</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a56db',
+                        secondary: '#e5edff',
+                        accent: '#0e3a80',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#4b5563'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #1a56db 0%, #0e3a80 100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <!-- 顶部导航栏 -->
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <!-- 不显示任何内容 -->
+                </div>
+                <div id="progress-container" class="hidden md:flex items-center">
+                    <div class="text-sm text-gray-600 mr-2">问卷进度:</div>
+                    <div class="w-64 bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-primary h-2.5 rounded-full" style="width: 77.8%"></div>
+                    </div>
+                    <span id="progress-text" class="ml-2 text-sm text-gray-600">77.8%</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+            <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-card overflow-hidden">
+                <!-- 实验后说明页面内容 -->
+                <div id="debriefing-page" class="p-6 md:p-8">
+                    <div class="mb-8"></div>
+                    
+                    <div class="space-y-6 mb-8">
+                        <p class="text-gray-700">本研究的目的是评估腐败案件曝光是否会影响公职人员组织信任。本研究的参与者被随机分配到了不同的组别，并阅读了关于腐败案件曝光的一些虚构信息。</p>
+                        
+                        <div class="bg-blue-50 border-l-4 border-primary p-4 my-6">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fa fa-info-circle text-primary"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-gray-700">
+                                        请访问中央纪委国家监委网站，了解其真实的腐败案件情况：<a href="https://www.ccdi.gov.cn" target="_blank" class="text-primary hover:underline">https://www.ccdi.gov.cn</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-700">如果您想了解更多关于本研究的信息，请联系：<a href="mailto:feizx25@mails.tsinghua.edu.cn" class="text-primary hover:underline">feizx25@mails.tsinghua.edu.cn</a></p>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
+                            <i class="fa fa-arrow-left mr-2"></i>返回
+                        </button>
+                        
+                        <button id="next-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
+                            继续<i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="bg-gray-100 border-t border-gray-200 py-4">
+            <div class="container mx-auto px-4 text-center text-sm text-gray-600">
+                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 全局变量
+        const totalPages = 9; // 总页面数
+        let currentPage = 7; // 当前页面索引
+        let participantId = ''; // 参与者ID
+        let group = 0; // 分组 (1, 2, 或 3)
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载问卷数据
+            loadQuestionnaireData();
+            
+            // 绑定按钮事件
+            document.getElementById('back-btn').addEventListener('click', goBack);
+            document.getElementById('next-btn').addEventListener('click', goNext);
+        });
+        
+        // 加载问卷数据
+        function loadQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                participantId = data.participantId;
+                group = data.group;
+                currentPage = data.currentPage || 6;
+                
+                updateProgress();
+            } else {
+                // 如果没有保存的数据，返回欢迎页
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // 更新进度条
+        function updateProgress() {
+            const progress = Math.round((currentPage / totalPages) * 100);
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `${progress}%`;
+        }
+        
+        // 返回上一页
+        function goBack() {
+            window.location.href = 'corruption-perception.html';
+        }
+        
+        // 前进到下一页
+        function goNext() {
+            // 更新当前页面
+            currentPage = 8;
+            
+            // 保存问卷数据
+            saveQuestionnaireData();
+            
+            // 导航到下一页
+            window.location.href = 'interview.html';
+        }
+        
+        // 保存问卷数据
+        function saveQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学术研究问卷调查</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a56db',
+                        secondary: '#e5edff',
+                        accent: '#0e3a80',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#4b5563'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #1a56db 0%, #0e3a80 100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <!-- 顶部导航栏 -->
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <!-- 不显示任何内容 -->
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div id="progress-container" class="hidden md:flex items-center">
+                        <div class="text-sm text-gray-600 mr-2">问卷进度:</div>
+                        <div class="w-64 bg-gray-200 rounded-full h-2.5">
+                            <div id="progress-bar" class="bg-primary h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <span id="progress-text" class="ml-2 text-sm text-gray-600">0%</span>
+                    </div>
+                    <button id="export-toggle" class="text-xs text-gray-500 hover:text-primary transition-colors">
+                        数据导出
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+            <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-card overflow-hidden">
+                <!-- 欢迎页面内容 -->
+                <div id="welcome-page" class="p-6 md:p-8">
+                    <div class="text-center mb-8">
+                        <h1 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">关于公职人员的相关认知与行为机制的问卷调查</h1>
+                        <!-- 删除感谢参与的文本 -->
+                    </div>
+                    
+                    <div class="mb-8 text-gray-700">
+                        <p class="mb-4">尊敬的受访者：</p>
+                        <p class="mb-4">您好！感谢您参与本次问卷调查。</p>
+                        <p class="mb-4">本研究由清华大学纪检监察研究院博士生组织开展，旨在从学术角度分析公职人员的相关认知与行为机制，为制度优化提供经验依据。本问卷为匿名调查，不涉及任何个人身份信息的收集。所有数据仅用于学术分析，并将严格保密，请您放心填写。问卷不存在对错之分，请根据您的真实情况和直观感受作答。您的回答对本研究具有重要价值。</p>
+                        <p>衷心感谢您的支持与配合！祝您工作顺利！</p>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <button id="start-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
+                            开始问卷
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="bg-gray-100 border-t border-gray-200 py-4">
+            <div class="container mx-auto px-4 text-center text-sm text-gray-600">
+                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 数据导出密码验证模态框 -->
+    <div id="export-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+            <div class="text-center mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">问卷数据导出</h3>
+                <p class="text-gray-600">请输入密码以访问问卷数据</p>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <input type="password" id="export-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="请输入密码">
+                </div>
+                
+                <div id="export-error" class="hidden bg-red-50 text-red-600 p-3 rounded-md text-sm">
+                    <i class="fa fa-exclamation-circle mr-2"></i>密码错误，请重试
+                </div>
+                
+                <div class="flex space-x-3">
+                    <button id="export-cancel" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-all-300">
+                        取消
+                    </button>
+                    <button id="export-verify" class="flex-1 bg-primary hover:bg-accent text-white font-medium py-2 px-4 rounded-md transition-all-300">
+                        验证
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        const totalPages = 9; // 总页面数
+        let currentPage = 0; // 当前页面索引
+        let participantId = ''; // 参与者ID
+        let group = 0; // 分组 (1, 2, 或 3)
+        const EXPORT_PASSWORD = '2025311741'; // 数据导出密码
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生成唯一参与者ID
+            participantId = generateParticipantId();
+            
+            // 绑定开始按钮事件
+            document.getElementById('start-btn').addEventListener('click', startQuestionnaire);
+            
+            // 绑定数据导出相关事件
+            document.getElementById('export-toggle').addEventListener('click', showExportModal);
+            document.getElementById('export-cancel').addEventListener('click', hideExportModal);
+            document.getElementById('export-verify').addEventListener('click', verifyExportPassword);
+            
+            // 绑定密码输入框的回车键事件
+            document.getElementById('export-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verifyExportPassword();
+                }
+            });
+            
+            // 检查是否有未完成的问卷
+            checkForIncompleteQuestionnaire();
+        });
+        
+        // 生成唯一参与者ID
+        function generateParticipantId() {
+            const timestamp = new Date().getTime();
+            const random = Math.floor(Math.random() * 10000);
+            return `P${timestamp}${random}`;
+        }
+        
+        // 检查是否有未完成的问卷
+        function checkForIncompleteQuestionnaire() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                if (data.participantId && !data.completed) {
+                    const confirmContinue = confirm('检测到您有未完成的问卷，是否继续？');
+                    if (confirmContinue) {
+                        participantId = data.participantId;
+                        group = data.group;
+                        currentPage = data.currentPage || 0;
+                        updateProgress();
+                        navigateToPage(currentPage + 1); // +1 因为页面从1开始
+                    } else {
+                        // 清除旧数据
+                        localStorage.removeItem('questionnaire_data');
+                    }
+                }
+            }
+        }
+        
+        // 开始问卷
+        function startQuestionnaire() {
+            // 随机分组
+            group = assignRandomGroup();
+            
+            // 初始化问卷数据
+            const questionnaireData = {
+                participantId: participantId,
+                group: group,
+                currentPage: 1, // 从预测试页开始
+                preTest: {},
+                attentionTest: {
+                    answers: [],
+                    attempts: 0,
+                    passed: false
+                },
+                mainQuestionnaire: {},
+                demographics: {},
+                contactInfo: '',
+                startTime: new Date().toISOString(),
+                completed: false
+            };
+            
+            // 保存到本地存储
+            localStorage.setItem('questionnaire_data', JSON.stringify(questionnaireData));
+            
+            // 更新进度
+            currentPage = 1;
+            updateProgress();
+            
+            // 导航到预测试页
+            navigateToPage('pre-test.html');
+        }
+        
+        // 随机分组 (1, 2, 或 3)
+        function assignRandomGroup() {
+            const random = Math.random();
+            if (random < 0.333) {
+                return 1; // 第一组 (无案例)
+            } else if (random < 0.666) {
+                return 2; // 第二组 (严重违纪违法案例)
+            } else {
+                return 3; // 第三组 (轻微违纪案例)
+            }
+        }
+        
+        // 更新进度条
+        function updateProgress() {
+            const progress = Math.round((currentPage / totalPages) * 100);
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `${progress}%`;
+        }
+        
+        // 显示数据导出模态框
+        function showExportModal() {
+            document.getElementById('export-modal').classList.remove('hidden');
+            document.getElementById('export-password').value = '';
+            document.getElementById('export-error').classList.add('hidden');
+        }
+        
+        // 隐藏数据导出模态框
+        function hideExportModal() {
+            document.getElementById('export-modal').classList.add('hidden');
+        }
+        
+        // 验证导出密码
+        function verifyExportPassword() {
+            const password = document.getElementById('export-password').value;
+            
+            if (password === EXPORT_PASSWORD) {
+                // 密码正确，跳转到导出页面
+                window.location.href = 'export.html';
+            } else {
+                // 密码错误，显示错误消息
+                document.getElementById('export-error').classList.remove('hidden');
+            }
+        }
+        
+        // 导航到指定页面
+        function navigateToPage(page) {
+            window.location.href = page;
+        }
+    </script>
+
+</body></html>

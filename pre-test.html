@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>预测试 - 学术研究问卷调查</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a56db',
+                        secondary: '#e5edff',
+                        accent: '#0e3a80',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#4b5563'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #1a56db 0%, #0e3a80 100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <!-- 顶部导航栏 -->
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <!-- 不显示任何内容 -->
+                </div>
+                <div id="progress-container" class="hidden md:flex items-center">
+                    <div class="text-sm text-gray-600 mr-2">问卷进度:</div>
+                    <div class="w-64 bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-primary h-2.5 rounded-full" style="width: 11.1%"></div>
+                    </div>
+                    <span id="progress-text" class="ml-2 text-sm text-gray-600">11.1%</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+            <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-card overflow-hidden">
+                <!-- 预测试页面内容 -->
+                <div id="pre-test-page" class="p-6 md:p-8">
+                    <div class="mb-8"></div>
+                    
+                    <div class="space-y-6 mb-8">
+                        <p class="text-gray-700 mb-4">在您看来，对腐败典型案例进行通报曝光有作用吗，其最主要的作用是什么？（单选题）</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <input type="radio" id="pre-q1-a" name="pre-q1" value="A" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                <label for="pre-q1-a" class="ml-3 text-gray-700">
+                                    有作用，主要是为了惩罚当事人，警示他人"不敢腐"。
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <input type="radio" id="pre-q1-b" name="pre-q1" value="B" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                <label for="pre-q1-b" class="ml-3 text-gray-700">
+                                    有作用，主要是为了澄清边界，教育大多数干部"不想腐"。
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <input type="radio" id="pre-q1-c" name="pre-q1" value="C" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                <label for="pre-q1-c" class="ml-3 text-gray-700">
+                                    有作用，主要是为了回应公众关切，展示监督过程本身。
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <input type="radio" id="pre-q1-d" name="pre-q1" value="D" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                <label for="pre-q1-d" class="ml-3 text-gray-700">
+                                    无作用。
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="error-message" class="hidden bg-red-50 text-red-600 p-3 rounded-md text-sm mt-4">
+                            <i class="fa fa-exclamation-circle mr-2"></i>请选择一个选项
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
+                            <i class="fa fa-arrow-left mr-2"></i>返回
+                        </button>
+                        
+                        <button id="next-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
+                            继续<i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="bg-gray-100 border-t border-gray-200 py-4">
+            <div class="container mx-auto px-4 text-center text-sm text-gray-600">
+                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 全局变量
+        const totalPages = 9; // 总页面数
+        let currentPage = 1; // 当前页面索引
+        let participantId = ''; // 参与者ID
+        let group = 0; // 分组 (1, 2, 或 3)
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载问卷数据
+            loadQuestionnaireData();
+            
+            // 绑定按钮事件
+            document.getElementById('back-btn').addEventListener('click', goBack);
+            document.getElementById('next-btn').addEventListener('click', goNext);
+            
+            // 绑定选项变更事件
+            const radioButtons = document.querySelectorAll('input[name="pre-q1"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // 隐藏错误消息
+                    document.getElementById('error-message').classList.add('hidden');
+                });
+            });
+        });
+        
+        // 加载问卷数据
+        function loadQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                participantId = data.participantId;
+                group = data.group;
+                currentPage = data.currentPage || 1;
+                
+                // 如果有已保存的答案，恢复选择
+                if (data.preTest && data.preTest['pre-q1']) {
+                    const savedAnswer = data.preTest['pre-q1'];
+                    const radioButton = document.getElementById(`pre-q1-${savedAnswer.toLowerCase()}`);
+                    if (radioButton) {
+                        radioButton.checked = true;
+                    }
+                }
+                
+                updateProgress();
+            } else {
+                // 如果没有保存的数据，返回欢迎页
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // 更新进度条
+        function updateProgress() {
+            const progress = Math.round((currentPage / totalPages) * 100);
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `${progress}%`;
+        }
+        
+        // 返回上一页
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+        
+        // 前进到下一页
+        function goNext() {
+            // 验证是否选择了选项
+            const selectedOption = document.querySelector('input[name="pre-q1"]:checked');
+            if (!selectedOption) {
+                document.getElementById('error-message').classList.remove('hidden');
+                return;
+            }
+            
+            // 保存答案
+            saveAnswer('pre-q1', selectedOption.value);
+            
+            // 更新当前页面
+            currentPage = 2;
+            
+            // 保存问卷数据
+            saveQuestionnaireData();
+            
+            // 导航到下一页
+            window.location.href = 'intervention.html';
+        }
+        
+        // 保存答案
+        function saveAnswer(questionId, answer) {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                if (!data.preTest) {
+                    data.preTest = {};
+                }
+                data.preTest[questionId] = answer;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+        }
+        
+        // 保存问卷数据
+        function saveQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自变量材料干预 - 学术研究问卷调查</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a56db',
+                        secondary: '#e5edff',
+                        accent: '#0e3a80',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#4b5563'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #1a56db 0%, #0e3a80 100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <!-- 顶部导航栏 -->
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <!-- 不显示任何内容 -->
+                </div>
+                <div id="progress-container" class="hidden md:flex items-center">
+                    <div class="text-sm text-gray-600 mr-2">问卷进度:</div>
+                    <div class="w-64 bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-primary h-2.5 rounded-full" style="width: 22.2%"></div>
+                    </div>
+                    <span id="progress-text" class="ml-2 text-sm text-gray-600">22.2%</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+            <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-card overflow-hidden">
+                <!-- 自变量材料干预页面内容 -->
+                <div id="intervention-page" class="p-6 md:p-8">
+                    <div class="mb-8"></div>
+                    
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fa fa-info-circle text-yellow-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-gray-700">
+                                    <strong>声明：</strong>以下是一份<strong>完全虚构的、用于学术研究的模拟组织内部通报</strong>。其中涉及的单位、人物、事件均不存在于现实，仅为模拟情境而设计。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <p class="text-gray-700 mb-4">请您假设：<strong>您是某镇综合执法办公室的一名非领导职务公务员</strong>。您已在该单位工作数年，熟悉单位的文化、人员和工作流程。接下来，您将看到一份您所在单位内部系统或上级主管部门发布的一份工作材料。<strong>请您以本单位一员的身份</strong>，仔细阅读并思考。</p>
+                    </div>
+                    
+                    <!-- 第一组材料 (默认隐藏) -->
+                    <div id="group-1-material" class="hidden bg-white border border-gray-200 rounded-lg p-6 mb-8">
+                        <p class="text-gray-700 mb-4">2025年，全国共查处违反中央八项规定精神问题29.07万起，处理37.56万人，其中党纪政务处分26.18万人。推进国家治理现代化，要求公职人员牢固树立宗旨意识，坚持依法用权、廉洁用权。在工作中须严守纪律红线，杜绝利益输送，并自觉规范"八小时之外"的行为。同时，要主动接受监督，与全社会共同营造风清气正的政治生态，为高质量发展提供坚实的纪律保障。</p>
+                    </div>
+                    
+                    <!-- 第二组材料 (默认隐藏) -->
+                    <div id="group-2-material" class="hidden bg-white border border-gray-200 rounded-lg p-6 mb-8">
+                        <p class="text-gray-700 mb-4">2025年，全国共查处违反中央八项规定精神问题29.07万起，处理37.56万人，其中党纪政务处分26.18万人。推进国家治理现代化，要求公职人员牢固树立宗旨意识，坚持依法用权、廉洁用权。在工作中须严守纪律红线，杜绝利益输送，并自觉规范"八小时之外"的行为。同时，要主动接受监督，与全社会共同营造风清气正的政治生态，为高质量发展提供坚实的纪律保障。</p>
+                        
+                        <h3 class="font-bold text-gray-800 mb-3 mt-6 text-center text-lg md:text-xl">关于某市某镇综合执法办公室工作人员李某严重违纪违法问题的通报</h3>
+                        
+                        <p class="text-gray-700 mb-4">为进一步严明纪律规矩，强化警示教育，现将某市某镇综合执法办公室工作人员李某<strong>严重违纪违法问题</strong>通报如下。</p>
+                        
+                        <p class="text-gray-700 mb-4">李某，系某镇综合执法办公室工作人员，主要负责辖区内企业日常检查、材料审核及政策咨询服务等工作。经查，李某在履职过程中，利用与企业接触频繁的便利条件，<strong>在节假日期间多次收受管理服务对象赠送的高档烟酒、高额购物卡等礼品礼金。</strong>起初，李某对相关行为有所顾虑，但随着交往增多，逐渐放松要求，在"人情往来"中失守底线。在企业项目申报、日常检查等工作中，对相关企业给予关照，在材料审核、问题处置等方面"从宽处理"。<strong>期间，部分企业以现金形式表示"感谢"，李某均予以收受，累计折合人民币约46万元。</strong></p>
+                        
+                        <p class="text-gray-700 mb-4">李某收受财物后，对部分企业存在的违规经营问题未依法依规查处，甚至在检查中予以回避，<strong>致使相关问题长期未被整改，造成较大经济损失和不良社会影响，严重损害了党和政府形象，破坏了当地营商环境。</strong></p>
+                        
+                        <p class="text-gray-700 mb-4">李某行为<strong>已构成严重违纪违法问题。依据有关规定，给予其开除党籍、开除公职处分，其涉嫌犯罪问题移送司法机关依法处理。</strong></p>
+                    </div>
+                    
+                    <!-- 第三组材料 (默认隐藏) -->
+                    <div id="group-3-material" class="hidden bg-white border border-gray-200 rounded-lg p-6 mb-8">
+                        <p class="text-gray-700 mb-4">2025年，全国共查处违反中央八项规定精神问题29.07万起，处理37.56万人，其中党纪政务处分26.18万人。推进国家治理现代化，要求公职人员牢固树立宗旨意识，坚持依法用权、廉洁用权。在工作中须严守纪律红线，杜绝利益输送，并自觉规范"八小时之外"的行为。同时，要主动接受监督，与全社会共同营造风清气正的政治生态，为高质量发展提供坚实的纪律保障。</p>
+                        
+                        <h3 class="font-bold text-gray-800 mb-3 mt-6 text-center text-lg md:text-xl">关于某市某镇综合执法办公室工作人员李某违反廉洁纪律问题的通报</h3>
+                        
+                        <p class="text-gray-700 mb-4">为进一步严明纪律规矩，强化警示教育，现将某市某镇综合执法办公室工作人员李某<strong>违反廉洁纪律问题</strong>通报如下。</p>
+                        
+                        <p class="text-gray-700 mb-4">李某，系某镇综合执法办公室工作人员，主要负责辖区内企业日常检查、材料审核及政策咨询服务等工作。经查，李某在履职过程中，利用与企业接触频繁的便利条件，<strong>在节假日期间收受个别管理服务对象赠送的少量土特产、购物卡等礼品礼金。</strong>起初，李某对相关行为有所顾虑，但在日常交往中逐渐放松要求，对相关行为未加拒绝。在企业项目申报、日常检查等工作中，对相关企业给予一定便利，在材料审核和问题处理中存在把关不严、处理不够及时等情况。<strong>期间，个别企业以购物卡等形式表示感谢，李某亦未拒绝，累计收受财物折合人民币约2.6万元。</strong></p>
+                        
+                        <p class="text-gray-700 mb-4">李某收受财物后，对个别企业存在的一般性问题未及时督促整改，<strong>造成一定程度的管理疏漏，产生了一定负面影响，但未造成严重后果。</strong></p>
+                        
+                        <p class="text-gray-700 mb-4">李某行为<strong>违反廉洁纪律，构成违纪问题。依据有关规定，给予其党内严重警告处分，并对其进行岗位调整。</strong></p>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
+                            <i class="fa fa-arrow-left mr-2"></i>返回
+                        </button>
+                        
+                        <button id="next-btn" class="bg-gray-300 text-gray-400 font-medium py-2 px-6 rounded-md transition-all-300 cursor-not-allowed" disabled>
+                            继续<span id="countdown" class="ml-2">(15秒)</span><i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="bg-gray-100 border-t border-gray-200 py-4">
+            <div class="container mx-auto px-4 text-center text-sm text-gray-600">
+                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 全局变量
+        const totalPages = 9; // 总页面数
+        let currentPage = 2; // 当前页面索引
+        let participantId = ''; // 参与者ID
+        let group = 0; // 分组 (1, 2, 或 3)
+        const MIN_READ_TIME = 15; // 最少阅读时间（秒）
+        let countdownTimer = null;
+        let remainingTime = MIN_READ_TIME;
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载问卷数据
+            loadQuestionnaireData();
+            
+            // 绑定按钮事件
+            document.getElementById('back-btn').addEventListener('click', goBack);
+            document.getElementById('next-btn').addEventListener('click', goNext);
+            
+            // 启动倒计时
+            startCountdown();
+        });
+        
+        // 启动倒计时
+        function startCountdown() {
+            const nextBtn = document.getElementById('next-btn');
+            const countdownEl = document.getElementById('countdown');
+            
+            // 每秒更新倒计时
+            countdownTimer = setInterval(function() {
+                remainingTime--;
+                
+                if (remainingTime <= 0) {
+                    // 倒计时结束，启用按钮
+                    clearInterval(countdownTimer);
+                    nextBtn.disabled = false;
+                    nextBtn.classList.remove('bg-gray-300', 'text-gray-400', 'cursor-not-allowed');
+                    nextBtn.classList.add('bg-primary', 'hover:bg-accent', 'text-white', 'shadow-md', 'hover:shadow-lg');
+                    countdownEl.textContent = '';
+                } else {
+                    // 更新倒计时显示
+                    countdownEl.textContent = `(${remainingTime}秒)`;
+                }
+            }, 1000);
+        }
+        
+        // 加载问卷数据
+        function loadQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                participantId = data.participantId;
+                group = data.group;
+                currentPage = data.currentPage || 2;
+                
+                // 根据分组显示相应的材料
+                displayMaterialByGroup(group);
+                
+                updateProgress();
+            } else {
+                // 如果没有保存的数据，返回欢迎页
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // 根据分组显示相应的材料
+        function displayMaterialByGroup(group) {
+            // 隐藏所有材料
+            document.getElementById('group-1-material').classList.add('hidden');
+            document.getElementById('group-2-material').classList.add('hidden');
+            document.getElementById('group-3-material').classList.add('hidden');
+            
+            // 显示对应分组的材料
+            document.getElementById(`group-${group}-material`).classList.remove('hidden');
+        }
+        
+        // 更新进度条
+        function updateProgress() {
+            const progress = Math.round((currentPage / totalPages) * 100);
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `${progress}%`;
+        }
+        
+        // 返回上一页
+        function goBack() {
+            // 清除倒计时
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+            }
+            window.location.href = 'pre-test.html';
+        }
+        
+        // 前进到下一页
+        function goNext() {
+            // 检查是否可以继续
+            if (remainingTime > 0) {
+                return;
+            }
+            
+            // 更新当前页面
+            currentPage = 3;
+            
+            // 保存问卷数据
+            saveQuestionnaireData();
+            
+            // 根据分组决定下一页
+            if (group === 1) {
+                // 第一组直接跳到主问卷
+                window.location.href = 'main-questionnaire.html';
+            } else {
+                // 第二组和第三组需要进行注意力测试
+                window.location.href = 'attention-test.html';
+            }
+        }
+        
+        // 保存问卷数据
+        function saveQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+        }
+    </script>
+</body>
+</html>

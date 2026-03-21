@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注意力测试 - 学术研究问卷调查</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a56db',
+                        secondary: '#e5edff',
+                        accent: '#0e3a80',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#4b5563'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #1a56db 0%, #0e3a80 100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <!-- 顶部导航栏 -->
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <!-- 不显示任何内容 -->
+                </div>
+                <div id="progress-container" class="hidden md:flex items-center">
+                    <div class="text-sm text-gray-600 mr-2">问卷进度:</div>
+                    <div class="w-64 bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-primary h-2.5 rounded-full" style="width: 33.3%"></div>
+                    </div>
+                    <span id="progress-text" class="ml-2 text-sm text-gray-600">33.3%</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+            <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-card overflow-hidden">
+                <!-- 注意力测试页面内容 -->
+                <div id="attention-test-page" class="p-6 md:p-8">
+                    <div class="mb-8"></div>
+                    
+                    <div class="bg-blue-50 border-l-4 border-primary p-4 mb-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fa fa-info-circle text-primary"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-gray-700">
+                                    请结合已阅读内容，判断下列表述是否正确。作答过程中可随时查阅原文。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 第二组题目 (默认隐藏) -->
+                    <div id="group-2-questions" class="hidden space-y-8 mb-8">
+                        <!-- 问题1 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">1、李某收受管理服务对象所送高额礼品礼金，累计折合人民币约46万元。</p>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q1-2-a" name="attn-q1-2" value="正确" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q1-2-a" class="ml-3 text-gray-700">正确</label>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q1-2-b" name="attn-q1-2" value="错误" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q1-2-b" class="ml-3 text-gray-700">错误</label>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q1-2-c" name="attn-q1-2" value="无信息" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q1-2-c" class="ml-3 text-gray-700">无信息</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题2 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">2、李某的行为已构成严重违纪违法，给予其开除党籍、开除公职处分，其涉嫌犯罪问题移送司法机关依法处理，并非一般性违纪问题。</p>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q2-2-a" name="attn-q2-2" value="正确" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q2-2-a" class="ml-3 text-gray-700">正确</label>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q2-2-b" name="attn-q2-2" value="错误" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q2-2-b" class="ml-3 text-gray-700">错误</label>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q2-2-c" name="attn-q2-2" value="无信息" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q2-2-c" class="ml-3 text-gray-700">无信息</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 第三组题目 (默认隐藏) -->
+                    <div id="group-3-questions" class="hidden space-y-8 mb-8">
+                        <!-- 问题1 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">1、李某收受管理服务对象所送低额礼品礼金，累计折合人民币约2.6万元。</p>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q1-3-a" name="attn-q1-3" value="正确" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q1-3-a" class="ml-3 text-gray-700">正确</label>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q1-3-b" name="attn-q1-3" value="错误" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q1-3-b" class="ml-3 text-gray-700">错误</label>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q1-3-c" name="attn-q1-3" value="无信息" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q1-3-c" class="ml-3 text-gray-700">无信息</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题2 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">2、李某的行为违反廉洁纪律，已构成违纪，但未达到严重违纪违法程度，也不涉嫌犯罪。</p>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q2-3-a" name="attn-q2-3" value="正确" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q2-3-a" class="ml-3 text-gray-700">正确</label>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q2-3-b" name="attn-q2-3" value="错误" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q2-3-b" class="ml-3 text-gray-700">错误</label>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <input type="radio" id="attn-q2-3-c" name="attn-q2-3" value="无信息" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="attn-q2-3-c" class="ml-3 text-gray-700">无信息</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 错误提示 (默认隐藏) -->
+                    <div id="error-message" class="hidden bg-red-50 text-red-600 p-4 rounded-md mb-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fa fa-exclamation-circle"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm">您的回答有误，请重新阅读材料并作答。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 重读原文按钮 -->
+                    <div class="mb-8">
+                        <button id="review-btn" class="bg-secondary hover:bg-blue-100 text-primary font-medium py-2 px-6 rounded-md transition-all-300 flex items-center">
+                            <i class="fa fa-eye mr-2"></i>重读原文
+                        </button>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
+                            <i class="fa fa-arrow-left mr-2"></i>返回
+                        </button>
+                        
+                        <button id="next-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
+                            继续<i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 原文预览模态框 (默认隐藏) -->
+                <div id="material-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                    <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full max-h-[80vh] overflow-y-auto">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-bold text-gray-800">原文预览</h3>
+                                <button id="close-modal-btn" class="text-gray-500 hover:text-gray-700">
+                                    <i class="fa fa-times text-xl"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- 第二组材料预览 -->
+                            <div id="group-2-preview" class="hidden">
+                                <p class="text-gray-700 mb-4">2025年，全国共查处违反中央八项规定精神问题29.07万起，处理37.56万人，其中党纪政务处分26.18万人。推进国家治理现代化，要求公职人员牢固树立宗旨意识，坚持依法用权、廉洁用权。在工作中须严守纪律红线，杜绝利益输送，并自觉规范"八小时之外"的行为。同时，要主动接受监督，与全社会共同营造风清气正的政治生态，为高质量发展提供坚实的纪律保障。</p>
+                                
+                                <h3 class="font-bold text-gray-800 mb-3 mt-6 text-center text-lg md:text-xl">关于某市某镇综合执法办公室工作人员李某严重违纪违法问题的通报</h3>
+                                
+                                <p class="text-gray-700 mb-4">为进一步严明纪律规矩，强化警示教育，现将某市某镇综合执法办公室工作人员李某<strong>严重违纪违法问题</strong>通报如下。</p>
+                                
+                                <p class="text-gray-700 mb-4">李某，系某镇综合执法办公室工作人员，主要负责辖区内企业日常检查、材料审核及政策咨询服务等工作。经查，李某在履职过程中，利用与企业接触频繁的便利条件，<strong>在节假日期间多次收受管理服务对象赠送的高档烟酒、高额购物卡等礼品礼金。</strong>起初，李某对相关行为有所顾虑，但随着交往增多，逐渐放松要求，在"人情往来"中失守底线。在企业项目申报、日常检查等工作中，对相关企业给予关照，在材料审核、问题处置等方面"从宽处理"。<strong>期间，部分企业以现金形式表示"感谢"，李某均予以收受，累计折合人民币约46万元。</strong></p>
+                                
+                                <p class="text-gray-700 mb-4">李某收受财物后，对部分企业存在的违规经营问题未依法依规查处，甚至在检查中予以回避，<strong>致使相关问题长期未被整改，造成较大经济损失和不良社会影响，严重损害了党和政府形象，破坏了当地营商环境。</strong></p>
+                                
+                                <p class="text-gray-700 mb-4">李某行为<strong>已构成严重违纪违法问题。依据有关规定，给予其开除党籍、开除公职处分，其涉嫌犯罪问题移送司法机关依法处理。</strong></p>
+                            </div>
+                            
+                            <!-- 第三组材料预览 -->
+                            <div id="group-3-preview" class="hidden">
+                                <p class="text-gray-700 mb-4">2025年，全国共查处违反中央八项规定精神问题29.07万起，处理37.56万人，其中党纪政务处分26.18万人。推进国家治理现代化，要求公职人员牢固树立宗旨意识，坚持依法用权、廉洁用权。在工作中须严守纪律红线，杜绝利益输送，并自觉规范"八小时之外"的行为。同时，要主动接受监督，与全社会共同营造风清气正的政治生态，为高质量发展提供坚实的纪律保障。</p>
+                                
+                                <h3 class="font-bold text-gray-800 mb-3 mt-6 text-center text-lg md:text-xl">关于某市某镇综合执法办公室工作人员李某违反廉洁纪律问题的通报</h3>
+                                
+                                <p class="text-gray-700 mb-4">为进一步严明纪律规矩，强化警示教育，现将某市某镇综合执法办公室工作人员李某<strong>违反廉洁纪律问题</strong>通报如下。</p>
+                                
+                                <p class="text-gray-700 mb-4">李某，系某镇综合执法办公室工作人员，主要负责辖区内企业日常检查、材料审核及政策咨询服务等工作。经查，李某在履职过程中，利用与企业接触频繁的便利条件，<strong>在节假日期间收受个别管理服务对象赠送的少量土特产、购物卡等礼品礼金。</strong>起初，李某对相关行为有所顾虑，但在日常交往中逐渐放松要求，对相关行为未加拒绝。在企业项目申报、日常检查等工作中，对相关企业给予一定便利，在材料审核和问题处理中存在把关不严、处理不够及时等情况。<strong>期间，个别企业以购物卡等形式表示感谢，李某亦未拒绝，累计收受财物折合人民币约2.6万元。</strong></p>
+                                
+                                <p class="text-gray-700 mb-4">李某收受财物后，对个别企业存在的一般性问题未及时督促整改，<strong>造成一定程度的管理疏漏，产生了一定负面影响，但未造成严重后果。</strong></p>
+                                
+                                <p class="text-gray-700 mb-4">李某行为<strong>违反廉洁纪律，构成违纪问题。依据有关规定，给予其党内严重警告处分，并对其进行岗位调整。</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="bg-gray-100 border-t border-gray-200 py-4">
+            <div class="container mx-auto px-4 text-center text-sm text-gray-600">
+                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 全局变量
+        const totalPages = 9; // 总页面数
+        let currentPage = 3; // 当前页面索引
+        let participantId = ''; // 参与者ID
+        let group = 0; // 分组 (1, 2, 或 3)
+        let attemptCount = 0; // 尝试次数
+        
+        // 正确答案
+        const correctAnswers = {
+            2: { // 第二组
+                'attn-q1-2': '正确',
+                'attn-q2-2': '正确'
+            },
+            3: { // 第三组
+                'attn-q1-3': '正确',
+                'attn-q2-3': '正确'
+            }
+        };
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载问卷数据
+            loadQuestionnaireData();
+            
+            // 绑定按钮事件
+            document.getElementById('back-btn').addEventListener('click', goBack);
+            document.getElementById('next-btn').addEventListener('click', goNext);
+            document.getElementById('review-btn').addEventListener('click', openMaterialModal);
+            document.getElementById('close-modal-btn').addEventListener('click', closeMaterialModal);
+            
+            // 绑定选项变更事件
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // 隐藏错误消息
+                    document.getElementById('error-message').classList.add('hidden');
+                });
+            });
+        });
+        
+        // 加载问卷数据
+        function loadQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                participantId = data.participantId;
+                group = data.group;
+                currentPage = data.currentPage || 3;
+                
+                // 如果是第一组，不应该访问这个页面
+                if (group === 1) {
+                    window.location.href = 'main-questionnaire.html';
+                    return;
+                }
+                
+                // 根据分组显示相应的题目
+                displayQuestionsByGroup(group);
+                
+                // 恢复之前的选择
+                if (data.attentionTest && data.attentionTest.answers) {
+                    const savedAnswers = data.attentionTest.answers;
+                    for (const [questionId, answer] of Object.entries(savedAnswers)) {
+                        const radioButton = document.querySelector(`input[name="${questionId}"][value="${answer}"]`);
+                        if (radioButton) {
+                            radioButton.checked = true;
+                        }
+                    }
+                    
+                    // 恢复尝试次数
+                    attemptCount = data.attentionTest.attempts || 0;
+                }
+                
+                updateProgress();
+            } else {
+                // 如果没有保存的数据，返回欢迎页
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // 根据分组显示相应的题目
+        function displayQuestionsByGroup(group) {
+            // 隐藏所有题目
+            document.getElementById('group-2-questions').classList.add('hidden');
+            document.getElementById('group-3-questions').classList.add('hidden');
+            document.getElementById('group-2-preview').classList.add('hidden');
+            document.getElementById('group-3-preview').classList.add('hidden');
+            
+            // 显示对应分组的题目和预览
+            document.getElementById(`group-${group}-questions`).classList.remove('hidden');
+            document.getElementById(`group-${group}-preview`).classList.remove('hidden');
+        }
+        
+        // 更新进度条
+        function updateProgress() {
+            const progress = Math.round((currentPage / totalPages) * 100);
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `${progress}%`;
+        }
+        
+        // 打开原文预览模态框
+        function openMaterialModal() {
+            document.getElementById('material-modal').classList.remove('hidden');
+        }
+        
+        // 关闭原文预览模态框
+        function closeMaterialModal() {
+            document.getElementById('material-modal').classList.add('hidden');
+        }
+        
+        // 返回上一页
+        function goBack() {
+            window.location.href = 'intervention.html';
+        }
+        
+        // 前进到下一页
+        function goNext() {
+            // 验证是否所有问题都已回答
+            const questions = group === 2 ? ['attn-q1-2', 'attn-q2-2'] : ['attn-q1-3', 'attn-q2-3'];
+            const answers = {};
+            let allAnswered = true;
+            
+            for (const questionId of questions) {
+                const selectedOption = document.querySelector(`input[name="${questionId}"]:checked`);
+                if (!selectedOption) {
+                    allAnswered = false;
+                    break;
+                }
+                answers[questionId] = selectedOption.value;
+            }
+            
+            if (!allAnswered) {
+                document.getElementById('error-message').classList.remove('hidden');
+                document.getElementById('error-message').innerHTML = '<div class="flex"><div class="flex-shrink-0"><i class="fa fa-exclamation-circle"></i></div><div class="ml-3"><p class="text-sm">请回答所有问题。</p></div></div>';
+                return;
+            }
+            
+            // 增加尝试次数
+            attemptCount++;
+            
+            // 检查答案是否正确
+            const correctAnswersForGroup = correctAnswers[group];
+            let allCorrect = true;
+            
+            for (const [questionId, correctAnswer] of Object.entries(correctAnswersForGroup)) {
+                if (answers[questionId] !== correctAnswer) {
+                    allCorrect = false;
+                    break;
+                }
+            }
+            
+            // 保存答案
+            saveAttentionTestAnswers(answers, allCorrect);
+            
+            // 如果有错误，显示提示
+            if (!allCorrect) {
+                document.getElementById('error-message').classList.remove('hidden');
+                document.getElementById('error-message').innerHTML = '<div class="flex"><div class="flex-shrink-0"><i class="fa fa-exclamation-circle"></i></div><div class="ml-3"><p class="text-sm">您的回答有误，请重新阅读材料并作答。</p></div></div>';
+                return;
+            }
+            
+            // 更新当前页面
+            currentPage = 4;
+            
+            // 保存问卷数据
+            saveQuestionnaireData();
+            
+            // 导航到下一页
+            window.location.href = 'main-questionnaire.html';
+        }
+        
+        // 保存注意力测试答案
+        function saveAttentionTestAnswers(answers, passed) {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                if (!data.attentionTest) {
+                    data.attentionTest = {};
+                }
+                data.attentionTest.answers = answers;
+                data.attentionTest.attempts = attemptCount;
+                data.attentionTest.passed = passed;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+        }
+        
+        // 保存问卷数据
+        function saveQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+        }
+    </script>
+</body>
+</html>

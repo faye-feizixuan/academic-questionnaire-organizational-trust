@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人口统计学变量测量 - 学术研究问卷调查</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a56db',
+                        secondary: '#e5edff',
+                        accent: '#0e3a80',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#4b5563'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #1a56db 0%, #0e3a80 100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <!-- 顶部导航栏 -->
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <!-- 不显示任何内容 -->
+                </div>
+                <div id="progress-container" class="hidden md:flex items-center">
+                    <div class="text-sm text-gray-600 mr-2">问卷进度:</div>
+                    <div class="w-64 bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-primary h-2.5 rounded-full" style="width: 55.6%"></div>
+                    </div>
+                    <span id="progress-text" class="ml-2 text-sm text-gray-600">55.6%</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+            <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-card overflow-hidden">
+                <!-- 人口统计学变量测量页面内容 -->
+                <div id="demographics-page" class="p-6 md:p-8">
+                    <div class="mb-8"></div>
+                    
+                    <div class="space-y-8 mb-8">
+                        <!-- 问题1：性别 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">1、您的性别是：</p>
+                            
+                            <div class="flex flex-wrap gap-6">
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q1-male" name="demo-q1" value="男" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q1-male" class="ml-3 text-gray-700">男</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q1-female" name="demo-q1" value="女" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q1-female" class="ml-3 text-gray-700">女</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题2：出生年份 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">2、您的出生年份是：</p>
+                            
+                            <div class="flex items-center">
+                                <input type="number" id="demo-q2" min="1900" max="2026" class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="例如：1990">
+                                <span class="ml-2 text-gray-700">年</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题3：政治面貌 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">3、您的政治面貌是：</p>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q3-party" name="demo-q3" value="中共党员" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q3-party" class="ml-3 text-gray-700">中共党员</label>
+                                    <div id="party-year-container" class="ml-4 hidden">
+                                        <span class="text-gray-700">入党年份：</span>
+                                        <input type="number" id="demo-q3-party-year" min="1900" max="2026" class="w-24 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="例如：2010">
+                                        <span class="ml-2 text-gray-700">年</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q3-mass" name="demo-q3" value="群众" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q3-mass" class="ml-3 text-gray-700">群众</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q3-demo" name="demo-q3" value="民主党派" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q3-demo" class="ml-3 text-gray-700">民主党派</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q3-non" name="demo-q3" value="无党派人士" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q3-non" class="ml-3 text-gray-700">无党派人士</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题4：参加公职年份 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">4、您参加公职的年份是：</p>
+                            
+                            <div class="flex items-center">
+                                <input type="number" id="demo-q4" min="1900" max="2026" class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="例如：2015">
+                                <span class="ml-2 text-gray-700">年</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题5：工作职级 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">5、您目前的工作职级是：</p>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q5-clerk" name="demo-q5" value="科员" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q5-clerk" class="ml-3 text-gray-700">科员</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q5-director" name="demo-q5" value="主任科员" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q5-director" class="ml-3 text-gray-700">主任科员</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q5-researcher" name="demo-q5" value="调研员" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q5-researcher" class="ml-3 text-gray-700">调研员</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q5-inspector" name="demo-q5" value="巡视员" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q5-inspector" class="ml-3 text-gray-700">巡视员</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q5-other" name="demo-q5" value="其他" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q5-other" class="ml-3 text-gray-700">其他</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题6：职务类型 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">6、您的职务类型是：</p>
+                            
+                            <div class="flex flex-wrap gap-6">
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q6-leader" name="demo-q6" value="领导职务" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q6-leader" class="ml-3 text-gray-700">领导职务</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q6-nonleader" name="demo-q6" value="非领导职务" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q6-nonleader" class="ml-3 text-gray-700">非领导职务</label>
+                                </div>
+                            </div>
+                            
+                            <p class="text-xs text-gray-500">注：领导职务指乡科级及以上的正副职，包括乡科级正副职等</p>
+                        </div>
+                    </div>
+                    
+                    <div id="error-message" class="hidden bg-red-50 text-red-600 p-4 rounded-md mb-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fa fa-exclamation-circle"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm" id="error-text">请填写所有必填项。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button id="back-btn" class="bg-gray-200 text-gray-400 font-medium py-2 px-6 rounded-md transition-all-300 cursor-not-allowed" disabled>
+                            <i class="fa fa-arrow-left mr-2"></i>返回
+                        </button>
+                        
+                        <button id="next-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
+                            继续<i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="bg-gray-100 border-t border-gray-200 py-4">
+            <div class="container mx-auto px-4 text-center text-sm text-gray-600">
+                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 全局变量
+        const totalPages = 9; // 总页面数
+        let currentPage = 5; // 当前页面索引
+        let participantId = ''; // 参与者ID
+        let group = 0; // 分组 (1, 2, 或 3)
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载问卷数据
+            loadQuestionnaireData();
+            
+            // 绑定按钮事件
+            document.getElementById('back-btn').addEventListener('click', goBack);
+            document.getElementById('next-btn').addEventListener('click', goNext);
+            
+            // 绑定政治面貌选项变更事件
+            const politicalRadioButtons = document.querySelectorAll('input[name="demo-q3"]');
+            politicalRadioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // 如果选择了中共党员，显示入党年份输入框
+                    if (this.value === '中共党员') {
+                        document.getElementById('party-year-container').classList.remove('hidden');
+                    } else {
+                        document.getElementById('party-year-container').classList.add('hidden');
+                    }
+                });
+            });
+        });
+        
+        // 加载问卷数据
+        function loadQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                participantId = data.participantId;
+                group = data.group;
+                currentPage = data.currentPage || 5;
+                
+                // 如果有已保存的答案，恢复选择
+                if (data.demographics) {
+                    const demographics = data.demographics;
+                    
+                    // 恢复性别选择
+                    if (demographics['demo-q1']) {
+                        const radioButton = document.querySelector(`input[name="demo-q1"][value="${demographics['demo-q1']}"]`);
+                        if (radioButton) {
+                            radioButton.checked = true;
+                        }
+                    }
+                    
+                    // 恢复出生年份
+                    if (demographics['demo-q2']) {
+                        document.getElementById('demo-q2').value = demographics['demo-q2'];
+                    }
+                    
+                    // 恢复政治面貌
+                    if (demographics['demo-q3']) {
+                        const radioButton = document.querySelector(`input[name="demo-q3"][value="${demographics['demo-q3']}"]`);
+                        if (radioButton) {
+                            radioButton.checked = true;
+                            
+                            // 如果是中共党员，显示入党年份输入框
+                            if (demographics['demo-q3'] === '中共党员') {
+                                document.getElementById('party-year-container').classList.remove('hidden');
+                                
+                                // 恢复入党年份
+                                if (demographics['demo-q3-party-year']) {
+                                    document.getElementById('demo-q3-party-year').value = demographics['demo-q3-party-year'];
+                                }
+                            }
+                        }
+                    }
+                    
+                    // 恢复参加公职年份
+                    if (demographics['demo-q4']) {
+                        document.getElementById('demo-q4').value = demographics['demo-q4'];
+                    }
+                    
+                    // 恢复工作职级
+                    if (demographics['demo-q5']) {
+                        const radioButton = document.querySelector(`input[name="demo-q5"][value="${demographics['demo-q5']}"]`);
+                        if (radioButton) {
+                            radioButton.checked = true;
+                        }
+                    }
+                    
+                    // 恢复职务类型
+                    if (demographics['demo-q6']) {
+                        const radioButton = document.querySelector(`input[name="demo-q6"][value="${demographics['demo-q6']}"]`);
+                        if (radioButton) {
+                            radioButton.checked = true;
+                        }
+                    }
+                }
+                
+                updateProgress();
+            } else {
+                // 如果没有保存的数据，返回欢迎页
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // 更新进度条
+        function updateProgress() {
+            const progress = Math.round((currentPage / totalPages) * 100);
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `${progress}%`;
+        }
+        
+        // 返回上一页
+        function goBack() {
+            window.location.href = 'main-questionnaire.html';
+        }
+        
+        // 前进到下一页
+        function goNext() {
+            // 验证所有必填项
+            const answers = {};
+            let isValid = true;
+            let errorMessage = '';
+            
+            // 验证性别
+            const gender = document.querySelector('input[name="demo-q1"]:checked');
+            if (!gender) {
+                isValid = false;
+                errorMessage = '请选择您的性别。';
+            } else {
+                answers['demo-q1'] = gender.value;
+            }
+            
+            // 验证出生年份
+            const birthYear = document.getElementById('demo-q2').value;
+            if (!birthYear) {
+                isValid = false;
+                errorMessage = '请输入您的出生年份。';
+            } else {
+                const year = parseInt(birthYear);
+                if (year < 1900 || year > 2026) {
+                    isValid = false;
+                    errorMessage = '请输入有效的出生年份（1900-2026）。';
+                } else {
+                    answers['demo-q2'] = birthYear;
+                }
+            }
+            
+            // 验证政治面貌
+            const political = document.querySelector('input[name="demo-q3"]:checked');
+            if (!political) {
+                isValid = false;
+                errorMessage = '请选择您的政治面貌。';
+            } else {
+                answers['demo-q3'] = political.value;
+                
+                // 如果是中共党员，验证入党年份
+                if (political.value === '中共党员') {
+                    const partyYear = document.getElementById('demo-q3-party-year').value;
+                    if (!partyYear) {
+                        isValid = false;
+                        errorMessage = '请输入您的入党年份。';
+                    } else {
+                        const year = parseInt(partyYear);
+                        if (year < 1900 || year > 2026) {
+                            isValid = false;
+                            errorMessage = '请输入有效的入党年份（1900-2026）。';
+                        } else {
+                            answers['demo-q3-party-year'] = partyYear;
+                        }
+                    }
+                }
+            }
+            
+            // 验证参加公职年份
+            const publicServiceYear = document.getElementById('demo-q4').value;
+            if (!publicServiceYear) {
+                isValid = false;
+                errorMessage = '请输入您参加公职的年份。';
+            } else {
+                const year = parseInt(publicServiceYear);
+                if (year < 1900 || year > 2026) {
+                    isValid = false;
+                    errorMessage = '请输入有效的参加公职年份（1900-2026）。';
+                } else {
+                    answers['demo-q4'] = publicServiceYear;
+                }
+            }
+            
+            // 验证工作职级
+            const rank = document.querySelector('input[name="demo-q5"]:checked');
+            if (!rank) {
+                isValid = false;
+                errorMessage = '请选择您的工作职级。';
+            } else {
+                answers['demo-q5'] = rank.value;
+            }
+            
+            // 验证职务类型
+            const position = document.querySelector('input[name="demo-q6"]:checked');
+            if (!position) {
+                isValid = false;
+                errorMessage = '请选择您的职务类型。';
+            } else {
+                answers['demo-q6'] = position.value;
+            }
+            
+            // 如果验证失败，显示错误消息
+            if (!isValid) {
+                document.getElementById('error-text').textContent = errorMessage;
+                document.getElementById('error-message').classList.remove('hidden');
+                return;
+            }
+            
+            // 保存答案
+            saveAnswers(answers);
+            
+            // 更新当前页面
+            currentPage = 6;
+            
+            // 保存问卷数据
+            saveQuestionnaireData();
+            
+            // 导航到下一页
+            window.location.href = 'corruption-perception.html';
+        }
+        
+        // 保存答案
+        function saveAnswers(answers) {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.demographics = answers;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+        }
+        
+        // 保存问卷数据
+        function saveQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+        }
+    </script>
+</body>
+</html>
