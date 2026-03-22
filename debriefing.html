@@ -178,7 +178,7 @@
         
         // 返回上一页
         function goBack() {
-            window.location.href = 'interview.html';
+            window.location.href = 'demographics.html';
         }
         
         // 前进到下一页
@@ -186,11 +186,11 @@
             // 更新当前页面
             currentPage = 8;
             
-            // 标记问卷为已完成
-            completeQuestionnaire();
+            // 保存问卷数据
+            saveQuestionnaireData();
             
-            // 显示完成模态框
-            document.getElementById('completion-modal').classList.remove('hidden');
+            // 导航到访谈邀请页
+            window.location.href = 'interview.html';
         }
         
         // 标记问卷为已完成
