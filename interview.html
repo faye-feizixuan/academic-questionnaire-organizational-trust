@@ -199,11 +199,11 @@
             // 更新当前页面
             currentPage = 8;
             
-            // 标记问卷为已完成
-            completeQuestionnaire();
+            // 保存问卷数据
+            saveQuestionnaireData();
             
-            // 显示完成模态框
-            document.getElementById('completion-modal').classList.remove('hidden');
+            // 跳转到实验后说明页
+            window.location.href = 'debriefing.html';
         }
         
         // 保存联系方式

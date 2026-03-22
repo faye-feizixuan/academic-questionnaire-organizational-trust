@@ -109,6 +109,26 @@
         </footer>
     </div>
 
+    <!-- 完成问卷模态框 -->
+    <div id="completion-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+            <div class="text-center">
+                <div class="mb-4">
+                    <i class="fa fa-check-circle text-green-500 text-5xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">问卷已完成！</h3>
+                <p class="text-gray-600 mb-4">感谢您的参与，您的回答对我们非常重要。</p>
+                <div class="bg-gray-50 p-4 rounded-md mb-4">
+                    <p class="text-sm text-gray-700">您的参与ID：<span id="participant-id-display" class="font-bold text-primary"></span></p>
+                    <p class="text-xs text-gray-500 mt-1">请截图保存此ID，以便后续查询</p>
+                </div>
+                <button id="close-modal-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 全局变量
         const totalPages = 8; // 总页面数
@@ -124,6 +144,13 @@
             // 绑定按钮事件
             document.getElementById('back-btn').addEventListener('click', goBack);
             document.getElementById('next-btn').addEventListener('click', goNext);
+            document.getElementById('close-modal-btn').addEventListener('click', closeCompletionModal);
+            
+            // 显示参与者ID
+            const participantIdDisplay = document.getElementById('participant-id-display');
+            if (participantIdDisplay && participantId) {
+                participantIdDisplay.textContent = participantId;
+            }
         });
         
         // 加载问卷数据
@@ -157,10 +184,41 @@
         // 前进到下一页
         function goNext() {
             // 更新当前页面
-            currentPage = 7;
+            currentPage = 8;
             
-            // 保存问卷数据
-            saveQuestionnaireData();
+            // 标记问卷为已完成
+            completeQuestionnaire();
+            
+            // 显示完成模态框
+            document.getElementById('completion-modal').classList.remove('hidden');
+        }
+        
+        // 标记问卷为已完成
+        function completeQuestionnaire() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                data.completed = true;
+                data.completionTime = new Date().toISOString();
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                
+                // 在实际应用中，这里会发送数据到服务器
+                // 这里我们只是模拟这个过程
+                console.log('问卷数据:', data);
+            }
+        }
+        
+        // 关闭完成模态框
+        function closeCompletionModal() {
+            document.getElementById('completion-modal').classList.add('hidden');
+            
+            // 保存问卷数据到带ID的键，以便后续导出
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                localStorage.setItem(`questionnaire_data_${data.participantId}`, savedData);
+            }
             
             // 导航到欢迎页
             window.location.href = 'index.html';
