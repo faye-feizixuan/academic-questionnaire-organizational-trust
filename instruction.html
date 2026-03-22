@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>填写说明 - 基层政府组织信任研究</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e3a8a',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <!-- 不显示任何内容 -->
+            </div>
+            <div id="progress-container" class="hidden md:flex items-center">
+                <div class="text-sm text-gray-600 mr-2">问卷进度:</div>
+                <div class="w-64 bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-primary h-2.5 rounded-full transition-all duration-500" style="width: 50%"></div>
+                </div>
+                <span id="progress-text" class="ml-2 text-sm text-gray-600">50%</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-8 fade-in">
+                <!-- 页面标题 -->
+                <div class="text-center mb-8">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-2">填写说明</h1>
+                    <div class="w-16 h-1 bg-primary mx-auto rounded"></div>
+                </div>
+
+                <!-- 提示信息 -->
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8 rounded-r-lg">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i class="fa fa-exclamation-circle text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-blue-600 mb-2">特别注意</h3>
+                            <p class="text-gray-700 leading-relaxed">
+                                在阅读前述情景设定后，请您以<strong class="text-blue-600">某县人民政府一名非领导职务公务员</strong>的身份进行代入，并据此完成以下题目。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 说明内容 -->
+                <div class="space-y-6 mb-8">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">1</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-1">角色代入</h4>
+                            <p class="text-gray-600 text-sm">请想象自己是某县人民政府的一名普通公务员（非领导职务），基于这个身份来回答后续问题。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">2</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-1">真实感受</h4>
+                            <p class="text-gray-600 text-sm">请根据您对所描述情境的理解，表达您真实的感受和看法，没有对错之分。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">3</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-1">独立完成</h4>
+                            <p class="text-gray-600 text-sm">请独立作答，不要与他人讨论，以确保研究结果的真实性和有效性。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 按钮 -->
+                <div class="flex justify-between">
+                    <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
+                        <i class="fa fa-arrow-left mr-2"></i>返回
+                    </button>
+
+                    <button id="next-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
+                        开始答题<i class="fa fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-4">
+        <div class="container mx-auto px-4 text-center text-sm text-gray-600">
+            <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+        </div>
+    </footer>
+
+    <script>
+        // 全局变量
+        const totalPages = 8;
+        let currentPage = 4;
+        let participantId = '';
+        let group = 0;
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载问卷数据
+            loadQuestionnaireData();
+
+            // 绑定按钮事件
+            document.getElementById('back-btn').addEventListener('click', goBack);
+            document.getElementById('next-btn').addEventListener('click', goNext);
+
+            // 更新进度条
+            updateProgress();
+        });
+
+        // 加载问卷数据
+        function loadQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                participantId = data.participantId;
+                group = data.group;
+                currentPage = data.currentPage || 4;
+            } else {
+                // 如果没有保存的数据，返回欢迎页
+                window.location.href = 'index.html';
+            }
+        }
+
+        // 更新进度条
+        function updateProgress() {
+            const progress = Math.round((currentPage / totalPages) * 100);
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `${progress}%`;
+        }
+
+        // 返回上一页
+        function goBack() {
+            // 根据分组决定返回哪一页
+            if (group === 1) {
+                window.location.href = 'intervention.html';
+            } else {
+                window.location.href = 'attention-test.html';
+            }
+        }
+
+        // 前进到下一页
+        function goNext() {
+            // 更新当前页面
+            currentPage = 5;
+
+            // 保存问卷数据
+            saveQuestionnaireData();
+
+            // 导航到主问卷页面
+            window.location.href = 'main-questionnaire.html';
+        }
+
+        // 保存问卷数据
+        function saveQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+        }
+    </script>
+</body>
+</html>
