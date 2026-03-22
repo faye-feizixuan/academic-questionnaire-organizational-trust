@@ -102,8 +102,115 @@
                             </div>
                         </div>
                         
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">2、近半年内，贵单位平均每月开展各类违纪违法典型案例通报的次数为</p>
+                            <div class="flex items-center">
+                                <input type="number" id="cp-q1" min="0" class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="请输入次数">
+                                <span class="ml-2 text-gray-700">次</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">3、贵单位通报曝光的腐败案例来源包括哪些？（多选题）</p>
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q2-1" name="cp-q2" value="中央纪委国家监委发布的典型案例" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q2-1" class="ml-3 text-gray-700">中央纪委国家监委发布的典型案例</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q2-2" name="cp-q2" value="本省/本市（县）纪委监委通报的典型案例" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q2-2" class="ml-3 text-gray-700">本省/本市（县）纪委监委通报的典型案例</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q2-3" name="cp-q2" value="其他省/市（县）纪委监委通报的典型案例" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q2-3" class="ml-3 text-gray-700">其他省/市（县）纪委监委通报的典型案例</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q2-4" name="cp-q2" value="本系统/本行业内的典型案例" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q2-4" class="ml-3 text-gray-700">本系统/本行业内的典型案例</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q2-5" name="cp-q2" value="本单位/本部门工作人员为主体的典型案例" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q2-5" class="ml-3 text-gray-700">本单位/本部门工作人员为主体的典型案例</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q2-6" name="cp-q2" value="极少通报典型案例" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q2-6" class="ml-3 text-gray-700">极少通报典型案例</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">4、您认为您所在单位的腐败案例通报对防治腐败、规范履职的效果如何？</p>
+                            <p class="text-sm text-gray-500">（请在0-10分之间做出选择，0分代表"完全无效"，10分代表"效果显著"）</p>
+                            <div class="space-y-2">
+                                <div class="flex items-center space-x-2">
+                                    <div id="cp-q3-container" class="flex space-x-1 w-full">
+                                        <!-- 11个方框将通过JavaScript动态生成 -->
+                                    </div>
+                                    <span id="cp-q3-value" class="text-primary font-medium w-8 text-center">-</span>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>0 = 完全无效</span>
+                                    <span>10 = 效果显著</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">5、您是否支持持续加大对腐败案件的通报曝光力度？</p>
+                            <p class="text-sm text-gray-500">（请在0-10分之间做出选择，0分代表"非常不支持"，10分代表"非常支持"）</p>
+                            <div class="space-y-2">
+                                <div class="flex items-center space-x-2">
+                                    <div id="cp-q4-container" class="flex space-x-1 w-full">
+                                        <!-- 11个方框将通过JavaScript动态生成 -->
+                                    </div>
+                                    <span id="cp-q4-value" class="text-primary font-medium w-8 text-center">-</span>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>0 = 非常不支持</span>
+                                    <span>10 = 非常支持</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">6、您所在的单位运用违纪违法典型案例开展的警示教育采用哪些形式？（多选题）</p>
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q5-1" name="cp-q5" value="召开专题民主生活会、典型案例通报会" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q5-1" class="ml-3 text-gray-700">召开专题民主生活会、典型案例通报会</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q5-2" name="cp-q5" value="集中学习上级党组织通报的典型案例文件" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q5-2" class="ml-3 text-gray-700">集中学习上级党组织通报的典型案例文件</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q5-3" name="cp-q5" value="观看警示教育片、庭审实录" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q5-3" class="ml-3 text-gray-700">观看警示教育片、庭审实录</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q5-4" name="cp-q5" value="单位公众号线上推送" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q5-4" class="ml-3 text-gray-700">单位公众号线上推送</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q5-5" name="cp-q5" value="廉政党课结合案例剖析" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q5-5" class="ml-3 text-gray-700">廉政党课结合案例剖析</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q5-6" name="cp-q5" value="组织旁听职务犯罪案件庭审" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1">
+                                    <label for="cp-q5-6" class="ml-3 text-gray-700">组织旁听职务犯罪案件庭审</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="cp-q5-7" name="cp-q5" value="其他" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 mt-1" onchange="toggleOtherInput(this)">
+                                    <label for="cp-q5-7" class="ml-3 text-gray-700">其他：</label>
+                                    <input type="text" id="cp-q5-other" class="flex-1 ml-2 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary disabled:bg-gray-100" placeholder="请说明" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div id="error-message" class="hidden bg-red-50 text-red-600 p-3 rounded-md text-sm mt-4">
-                            <i class="fa fa-exclamation-circle mr-2"></i>请选择一个选项
+                            <i class="fa fa-exclamation-circle mr-2"></i>请填写所有必填项
                         </div>
                     </div>
                     
@@ -130,7 +237,7 @@
 
     <script>
         // 全局变量
-        const totalPages = 9; // 总页面数
+        const totalPages = 8; // 总页面数
         let currentPage = 1; // 当前页面索引
         let participantId = ''; // 参与者ID
         let group = 0; // 分组 (1, 2, 或 3)
@@ -152,7 +259,81 @@
                     document.getElementById('error-message').classList.add('hidden');
                 });
             });
+            
+            // 初始化所有问题的方框选择器
+            initAllBoxSelectors();
         });
+        
+        // 初始化所有问题的方框选择器
+        function initAllBoxSelectors() {
+            // 获取所有需要转换为方框选择器的问题ID
+            const questionIds = [
+                'cp-q3', 'cp-q4'
+            ];
+            
+            // 为每个问题创建方框选择器
+            questionIds.forEach(questionId => {
+                createBoxSelector(questionId);
+            });
+        }
+        
+        // 为单个问题创建方框选择器
+        function createBoxSelector(questionId) {
+            const container = document.getElementById(`${questionId}-container`);
+            if (!container) return;
+            
+            // 创建11个方框（0-10分）
+            for (let i = 0; i <= 10; i++) {
+                const box = document.createElement('div');
+                box.className = 'flex-1 aspect-square border border-gray-300 rounded cursor-pointer transition-all hover:bg-primary hover:border-primary flex items-center justify-center text-xs text-gray-600';
+                box.dataset.value = i;
+                box.textContent = i;
+                
+                // 添加点击事件
+                box.addEventListener('click', function() {
+                    // 移除同组其他方框的选中状态
+                    const boxes = container.querySelectorAll('div');
+                    boxes.forEach(b => {
+                        b.classList.remove('bg-primary', 'text-white', 'border-primary');
+                        b.classList.add('border-gray-300', 'text-gray-600');
+                    });
+                    
+                    // 设置当前方框为选中状态
+                    this.classList.remove('border-gray-300', 'text-gray-600');
+                    this.classList.add('bg-primary', 'text-white', 'border-primary');
+                    
+                    // 更新显示的分值
+                    const valueDisplay = document.getElementById(`${questionId}-value`);
+                    if (valueDisplay) {
+                        valueDisplay.textContent = i;
+                    }
+                    
+                    // 存储选中的值
+                    const hiddenInput = document.getElementById(questionId);
+                    if (hiddenInput) {
+                        hiddenInput.value = i;
+                    } else {
+                        // 如果隐藏输入框不存在，创建一个
+                        const newHiddenInput = document.createElement('input');
+                        newHiddenInput.type = 'hidden';
+                        newHiddenInput.id = questionId;
+                        newHiddenInput.name = questionId;
+                        newHiddenInput.value = i;
+                        container.parentNode.appendChild(newHiddenInput);
+                    }
+                });
+                
+                container.appendChild(box);
+            }
+        }
+        
+        function toggleOtherInput(checkbox) {
+            const otherInput = document.getElementById('cp-q5-other');
+            otherInput.disabled = !checkbox.checked;
+            if (!checkbox.checked) {
+                otherInput.value = '';
+            }
+        }
         
         // 加载问卷数据
         function loadQuestionnaireData() {
@@ -164,11 +345,90 @@
                 currentPage = data.currentPage || 1;
                 
                 // 如果有已保存的答案，恢复选择
-                if (data.preTest && data.preTest['pre-q1']) {
-                    const savedAnswer = data.preTest['pre-q1'];
-                    const radioButton = document.getElementById(`pre-q1-${savedAnswer.toLowerCase()}`);
-                    if (radioButton) {
-                        radioButton.checked = true;
+                if (data.preTest) {
+                    const pt = data.preTest;
+                    
+                    // 恢复pre-q1
+                    if (pt['pre-q1']) {
+                        const savedAnswer = pt['pre-q1'];
+                        const radioButton = document.getElementById(`pre-q1-${savedAnswer.toLowerCase()}`);
+                        if (radioButton) {
+                            radioButton.checked = true;
+                        }
+                    }
+                    
+                    // 恢复cp-q1
+                    if (pt['cp-q1'] !== undefined) {
+                        document.getElementById('cp-q1').value = pt['cp-q1'];
+                    }
+                    
+                    // 恢复cp-q2
+                    if (pt['cp-q2'] && Array.isArray(pt['cp-q2'])) {
+                        pt['cp-q2'].forEach(value => {
+                            const checkbox = document.querySelector(`input[name="cp-q2"][value="${value}"]`);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                    }
+                    
+                    // 恢复cp-q3
+                    if (pt['cp-q3'] !== undefined) {
+                        const valueDisplay = document.getElementById('cp-q3-value');
+                        if (valueDisplay) {
+                            valueDisplay.textContent = pt['cp-q3'];
+                        }
+                        
+                        // 选中对应的方框
+                        const container = document.getElementById('cp-q3-container');
+                        if (container) {
+                            const boxes = container.querySelectorAll('div');
+                            boxes.forEach(box => {
+                                const boxValue = parseInt(box.dataset.value);
+                                if (boxValue === pt['cp-q3']) {
+                                    box.classList.remove('border-gray-300', 'text-gray-600');
+                                    box.classList.add('bg-primary', 'text-white', 'border-primary');
+                                }
+                            });
+                        }
+                    }
+                    
+                    // 恢复cp-q4
+                    if (pt['cp-q4'] !== undefined) {
+                        const valueDisplay = document.getElementById('cp-q4-value');
+                        if (valueDisplay) {
+                            valueDisplay.textContent = pt['cp-q4'];
+                        }
+                        
+                        // 选中对应的方框
+                        const container = document.getElementById('cp-q4-container');
+                        if (container) {
+                            const boxes = container.querySelectorAll('div');
+                            boxes.forEach(box => {
+                                const boxValue = parseInt(box.dataset.value);
+                                if (boxValue === pt['cp-q4']) {
+                                    box.classList.remove('border-gray-300', 'text-gray-600');
+                                    box.classList.add('bg-primary', 'text-white', 'border-primary');
+                                }
+                            });
+                        }
+                    }
+                    
+                    // 恢复cp-q5
+                    if (pt['cp-q5'] && Array.isArray(pt['cp-q5'])) {
+                        pt['cp-q5'].forEach(value => {
+                            if (value === '其他') {
+                                const checkbox = document.getElementById('cp-q5-7');
+                                if (checkbox) {
+                                    checkbox.checked = true;
+                                    const otherInput = document.getElementById('cp-q5-other');
+                                    if (otherInput) {
+                                        otherInput.disabled = false;
+                                    }
+                                }
+                            } else {
+                                const checkbox = document.querySelector(`input[name="cp-q5"][value="${value}"]`);
+                                if (checkbox) checkbox.checked = true;
+                            }
+                        });
                     }
                 }
                 
@@ -200,8 +460,69 @@
                 return;
             }
             
-            // 保存答案
+            // 验证是否填写了次数
+            const cpQ1Value = document.getElementById('cp-q1').value;
+            if (cpQ1Value === '' || cpQ1Value < 0) {
+                document.getElementById('error-message').classList.remove('hidden');
+                return;
+            }
+            
+            // 验证是否选择了案例来源
+            const cpQ2Selected = document.querySelectorAll('input[name="cp-q2"]:checked');
+            if (cpQ2Selected.length === 0) {
+                document.getElementById('error-message').classList.remove('hidden');
+                return;
+            }
+            
+            // 验证是否选择了效果评分
+            const cpQ3Value = document.getElementById('cp-q3').value;
+            if (cpQ3Value === '' || cpQ3Value === undefined) {
+                document.getElementById('error-message').classList.remove('hidden');
+                return;
+            }
+            
+            // 验证是否选择了支持力度评分
+            const cpQ4Value = document.getElementById('cp-q4').value;
+            if (cpQ4Value === '' || cpQ4Value === undefined) {
+                document.getElementById('error-message').classList.remove('hidden');
+                return;
+            }
+            
+            // 验证是否选择了警示教育形式
+            const cpQ5Selected = document.querySelectorAll('input[name="cp-q5"]:checked');
+            if (cpQ5Selected.length === 0) {
+                document.getElementById('error-message').classList.remove('hidden');
+                return;
+            }
+            
+            // 验证"其他"选项是否填写了说明
+            const cpQ5Other = document.getElementById('cp-q5-7');
+            if (cpQ5Other.checked) {
+                const otherInput = document.getElementById('cp-q5-other');
+                if (!otherInput.value.trim()) {
+                    document.getElementById('error-message').classList.remove('hidden');
+                    return;
+                }
+            }
+            
+            // 保存所有答案
             saveAnswer('pre-q1', selectedOption.value);
+            saveAnswer('cp-q1', cpQ1Value);
+            
+            const cpQ2Values = [];
+            cpQ2Selected.forEach(checkbox => {
+                cpQ2Values.push(checkbox.value);
+            });
+            saveAnswer('cp-q2', cpQ2Values);
+            
+            saveAnswer('cp-q3', cpQ3Value);
+            saveAnswer('cp-q4', cpQ4Value);
+            
+            const cpQ5Values = [];
+            cpQ5Selected.forEach(checkbox => {
+                cpQ5Values.push(checkbox.value);
+            });
+            saveAnswer('cp-q5', cpQ5Values);
             
             // 更新当前页面
             currentPage = 2;

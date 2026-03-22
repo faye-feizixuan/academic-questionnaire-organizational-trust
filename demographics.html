@@ -225,8 +225,8 @@
 
     <script>
         // 全局变量
-        const totalPages = 9; // 总页面数
-        let currentPage = 5; // 当前页面索引
+        const totalPages = 8; // 总页面数
+        let currentPage = 6; // 当前页面索引
         let participantId = ''; // 参与者ID
         let group = 0; // 分组 (1, 2, 或 3)
         
@@ -439,13 +439,13 @@
             saveAnswers(answers);
             
             // 更新当前页面
-            currentPage = 6;
+            currentPage = 7;
             
             // 保存问卷数据
             saveQuestionnaireData();
             
             // 导航到下一页
-            window.location.href = 'corruption-perception.html';
+            window.location.href = 'interview.html';
         }
         
         // 保存答案

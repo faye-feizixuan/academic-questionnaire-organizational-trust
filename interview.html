@@ -141,8 +141,8 @@
 
     <script>
         // 全局变量
-        const totalPages = 9; // 总页面数
-        let currentPage = 8; // 当前页面索引
+        const totalPages = 8; // 总页面数
+        let currentPage = 7; // 当前页面索引
         let participantId = ''; // 参与者ID
         let group = 0; // 分组 (1, 2, 或 3)
         
@@ -187,7 +187,7 @@
         
         // 返回上一页
         function goBack() {
-            window.location.href = 'debriefing.html';
+            window.location.href = 'demographics.html';
         }
         
         // 提交问卷
@@ -197,7 +197,7 @@
             saveContactInfo(contactInfo);
             
             // 更新当前页面
-            currentPage = 9;
+            currentPage = 8;
             
             // 标记问卷为已完成
             completeQuestionnaire();
