@@ -132,7 +132,7 @@
     <script>
         // 全局变量
         const totalPages = 8; // 总页面数
-        let currentPage = 6; // 当前页面索引
+        let currentPage = 7; // 当前页面索引
         let participantId = ''; // 参与者ID
         let group = 0; // 分组 (1, 2, 或 3)
         
@@ -160,7 +160,7 @@
                 const data = JSON.parse(savedData);
                 participantId = data.participantId;
                 group = data.group;
-                currentPage = data.currentPage || 6;
+                currentPage = data.currentPage || 7;
                 
                 updateProgress();
             } else {
