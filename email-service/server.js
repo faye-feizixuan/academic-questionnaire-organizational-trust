@@ -24,10 +24,16 @@ const transporter = nodemailer.createTransport({
 
 // 发送邮件的API
 app.post('/api/send-email', (req, res) => {
+    console.log('收到邮件发送请求');
+    console.log('请求时间:', new Date().toISOString());
+    
     try {
         const { data } = req.body;
         
+        console.log('收到的数据:', JSON.stringify(data, null, 2));
+        
         if (!data) {
+            console.log('错误: 缺少数据');
             return res.status(400).json({ 
                 success: false, 
                 message: '缺少数据' 
@@ -75,6 +81,10 @@ app.post('/api/send-email', (req, res) => {
             text: body
         };
         
+        console.log('准备发送邮件...');
+        console.log('邮件主题:', subject);
+        console.log('收件人:', '954079744@qq.com');
+        
         // 发送邮件
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
@@ -86,6 +96,7 @@ app.post('/api/send-email', (req, res) => {
             }
             
             console.log('邮件发送成功:', info.response);
+            console.log('邮件ID:', info.messageId);
             res.json({ 
                 success: true, 
                 message: '邮件发送成功',

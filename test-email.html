@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试邮件发送</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>测试邮件发送功能</h1>
+        <p>点击下面的按钮测试邮件发送功能：</p>
+        
+        <button onclick="sendTestEmail()">发送测试邮件</button>
+        <button onclick="sendRealData()">发送真实问卷数据</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = type;
+            resultDiv.innerHTML = message;
+        }
+
+        async function sendTestEmail() {
+            showResult('正在发送测试邮件...', 'info');
+            
+            const testData = {
+                participantId: 'TEST-' + Date.now(),
+                group: '1',
+                startTime: new Date().toISOString(),
+                completionTime: new Date().toISOString(),
+                preTest: { q1: 'test answer', q2: 'test answer' },
+                attentionTest: { q1: 'test answer' },
+                mainQuestionnaire: { q1: 'test answer', q2: 'test answer' },
+                demographics: { age: 25, gender: 'test' },
+                corruptionPerception: { q1: 'test answer' },
+                contactInfo: 'test@example.com'
+            };
+
+            try {
+                const response = await fetch('http://localhost:3002/api/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ data: testData })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult('✅ 测试邮件发送成功！<br>请检查您的邮箱 954079744@qq.com<br>详细信息: ' + result.info, 'success');
+                } else {
+                    showResult('❌ 邮件发送失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showResult('❌ 发送邮件时出错: ' + error.message, 'error');
+            }
+        }
+
+        async function sendRealData() {
+            showResult('正在从localStorage读取问卷数据...', 'info');
+            
+            const savedData = localStorage.getItem('questionnaire_data');
+            
+            if (!savedData) {
+                showResult('❌ 没有找到问卷数据，请先完成问卷填写', 'error');
+                return;
+            }
+
+            const data = JSON.parse(savedData);
+            
+            try {
+                const response = await fetch('http://localhost:3002/api/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ data: data })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult('✅ 真实问卷数据邮件发送成功！<br>请检查您的邮箱 954079744@qq.com<br>参与者ID: ' + data.participantId + '<br>详细信息: ' + result.info, 'success');
+                } else {
+                    showResult('❌ 邮件发送失败: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showResult('❌ 发送邮件时出错: ' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
