@@ -147,6 +147,8 @@
 
 
 
+
+
     <script>
         // 全局变量
         const totalPages = 8; // 总页面数
@@ -199,7 +201,7 @@
         }
         
         // 提交问卷
-        function submitQuestionnaire() {
+        async function submitQuestionnaire() {
             // 保存联系方式
             const contactInfo = document.getElementById('contact-info').value;
             saveContactInfo(contactInfo);
@@ -208,7 +210,7 @@
             currentPage = 8;
             
             // 标记问卷为已完成
-            completeQuestionnaire();
+            await completeQuestionnaire();
             
             // 显示完成模态框
             document.getElementById('completion-modal').classList.remove('hidden');
@@ -225,7 +227,7 @@
         }
         
         // 标记问卷为已完成
-        function completeQuestionnaire() {
+        async function completeQuestionnaire() {
             const savedData = localStorage.getItem('questionnaire_data');
             if (savedData) {
                 const data = JSON.parse(savedData);
@@ -235,7 +237,7 @@
                 localStorage.setItem('questionnaire_data', JSON.stringify(data));
                 
                 // 发送邮件到研究团队
-                sendEmailWithData(data);
+                await sendEmailWithData(data);
                 
                 // 在实际应用中，这里会发送数据到服务器
                 // 这里我们只是模拟这个过程
@@ -244,52 +246,29 @@
         }
         
         // 发送邮件
-        function sendEmailWithData(data) {
-            // 准备邮件内容
-            const subject = `问卷数据 - 参与者 ${data.participantId} - 第${data.group}组`;
-            
-            let body = `问卷数据\n`;
-            body += `=================================\n`;
-            body += `参与者ID: ${data.participantId || 'N/A'}\n`;
-            body += `分组: 第${data.group || 'N/A'}组\n`;
-            body += `开始时间: ${formatDate(data.startTime) || 'N/A'}\n`;
-            body += `完成时间: ${formatDate(data.completionTime) || 'N/A'}\n`;
-            body += `=================================\n`;
-            
-            if (data.preTest) {
-                body += `\n预测试答案:\n${JSON.stringify(data.preTest, null, 2)}\n`;
+        async function sendEmailWithData(data) {
+            try {
+                // 发送数据到邮件服务
+                const response = await fetch('http://localhost:3002/api/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ data: data })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    console.log('邮件发送成功:', result);
+                    document.getElementById('email-status').classList.remove('hidden');
+                } else {
+                    console.error('邮件发送失败:', result.message);
+                    // 即使邮件发送失败，也不影响问卷提交
+                }
+            } catch (error) {
+                console.error('发送邮件时出错:', error);
+                // 即使邮件发送失败，也不影响问卷提交
             }
-            
-            if (data.attentionTest) {
-                body += `\n注意力测试:\n${JSON.stringify(data.attentionTest, null, 2)}\n`;
-            }
-            
-            if (data.mainQuestionnaire) {
-                body += `\n主问卷答案:\n${JSON.stringify(data.mainQuestionnaire, null, 2)}\n`;
-            }
-            
-            if (data.demographics) {
-                body += `\n人口统计学数据:\n${JSON.stringify(data.demographics, null, 2)}\n`;
-            }
-            
-            if (data.corruptionPerception) {
-                body += `\n腐败感知数据:\n${JSON.stringify(data.corruptionPerception, null, 2)}\n`;
-            }
-            
-            body += `\n联系方式: ${data.contactInfo || 'N/A'}\n`;
-            
-            // 编码邮件内容
-            const encodedSubject = encodeURIComponent(subject);
-            const encodedBody = encodeURIComponent(body);
-            
-            // 生成邮件链接
-            const mailtoLink = `mailto:954079744@qq.com?subject=${encodedSubject}&body=${encodedBody}`;
-            
-            // 打开邮件客户端
-            window.location.href = mailtoLink;
-            
-            // 显示邮件发送状态
-            document.getElementById('email-status').classList.remove('hidden');
         }
         
         // 格式化日期
