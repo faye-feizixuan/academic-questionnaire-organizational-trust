@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const nodemailer = require('nodemailer');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -12,11 +11,14 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
 // 邮件配置
-const transporter = nodemailer.createTransporter({
-    service: 'qq',
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+    host: 'smtp.qq.com',
+    port: 587,
+    secure: false,
     auth: {
         user: '954079744@qq.com',
-        pass: 'YOUR_QQ_EMAIL_AUTH_CODE' // QQ邮箱授权码
+        pass: 'ywvjzvtdwckdbdih' // QQ邮箱授权码
     }
 });
 
