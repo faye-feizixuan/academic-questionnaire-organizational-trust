@@ -202,17 +202,22 @@
         
         // 提交问卷
         async function submitQuestionnaire() {
+            console.log('=== 开始提交问卷 ===');
+            
             // 保存联系方式
             const contactInfo = document.getElementById('contact-info').value;
+            console.log('联系方式:', contactInfo);
             saveContactInfo(contactInfo);
             
             // 更新当前页面
             currentPage = 8;
             
             // 标记问卷为已完成
+            console.log('准备完成问卷...');
             await completeQuestionnaire();
             
             // 显示完成模态框
+            console.log('显示完成模态框');
             document.getElementById('completion-modal').classList.remove('hidden');
         }
         
@@ -228,27 +233,44 @@
         
         // 标记问卷为已完成
         async function completeQuestionnaire() {
+            console.log('completeQuestionnaire: 开始执行');
+            
             const savedData = localStorage.getItem('questionnaire_data');
+            console.log('completeQuestionnaire: 从localStorage读取数据');
+            
             if (savedData) {
                 const data = JSON.parse(savedData);
+                console.log('completeQuestionnaire: 解析数据成功', data.participantId);
+                
                 data.currentPage = currentPage;
                 data.completed = true;
                 data.completionTime = new Date().toISOString();
                 localStorage.setItem('questionnaire_data', JSON.stringify(data));
                 
+                console.log('completeQuestionnaire: 数据已保存，准备发送邮件');
+                
                 // 发送邮件到研究团队
                 await sendEmailWithData(data);
+                
+                console.log('completeQuestionnaire: 邮件发送完成');
                 
                 // 在实际应用中，这里会发送数据到服务器
                 // 这里我们只是模拟这个过程
                 console.log('问卷数据:', data);
+            } else {
+                console.error('completeQuestionnaire: 没有找到问卷数据');
             }
         }
         
         // 发送邮件
         async function sendEmailWithData(data) {
+            console.log('sendEmailWithData: 开始发送邮件');
+            console.log('sendEmailWithData: 邮件服务URL', 'http://localhost:3002/api/send-email');
+            console.log('sendEmailWithData: 发送的数据', JSON.stringify(data, null, 2));
+            
             try {
                 // 发送数据到邮件服务
+                console.log('sendEmailWithData: 准备发送fetch请求');
                 const response = await fetch('http://localhost:3002/api/send-email', {
                     method: 'POST',
                     headers: {
@@ -257,7 +279,11 @@
                     body: JSON.stringify({ data: data })
                 });
                 
+                console.log('sendEmailWithData: 收到响应', response.status);
+                
                 const result = await response.json();
+                console.log('sendEmailWithData: 响应数据', result);
+                
                 if (result.success) {
                     console.log('邮件发送成功:', result);
                     document.getElementById('email-status').classList.remove('hidden');
@@ -267,6 +293,8 @@
                 }
             } catch (error) {
                 console.error('发送邮件时出错:', error);
+                console.error('错误详情:', error.message);
+                console.error('错误堆栈:', error.stack);
                 // 即使邮件发送失败，也不影响问卷提交
             }
         }
