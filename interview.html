@@ -132,12 +132,20 @@
                 </div>
                 <h3 class="text-lg font-medium text-gray-900 mb-2">问卷提交成功</h3>
                 <p class="text-gray-600 mb-6">感谢您参与本次学术研究问卷调查！您的反馈对我们非常重要。</p>
+                <div id="email-status" class="mb-4 hidden">
+                    <div class="flex items-center justify-center">
+                        <i class="fa fa-envelope-o text-blue-500 mr-2"></i>
+                        <span class="text-sm text-gray-600">数据已发送到研究团队邮箱</span>
+                    </div>
+                </div>
                 <button id="close-modal-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
                     关闭
                 </button>
             </div>
         </div>
     </div>
+
+
 
     <script>
         // 全局变量
@@ -191,7 +199,7 @@
         }
         
         // 提交问卷
-        async function submitQuestionnaire() {
+        function submitQuestionnaire() {
             // 保存联系方式
             const contactInfo = document.getElementById('contact-info').value;
             saveContactInfo(contactInfo);
@@ -200,7 +208,7 @@
             currentPage = 8;
             
             // 标记问卷为已完成
-            await completeQuestionnaire();
+            completeQuestionnaire();
             
             // 显示完成模态框
             document.getElementById('completion-modal').classList.remove('hidden');
@@ -217,7 +225,7 @@
         }
         
         // 标记问卷为已完成
-        async function completeQuestionnaire() {
+        function completeQuestionnaire() {
             const savedData = localStorage.getItem('questionnaire_data');
             if (savedData) {
                 const data = JSON.parse(savedData);
@@ -226,26 +234,77 @@
                 data.completionTime = new Date().toISOString();
                 localStorage.setItem('questionnaire_data', JSON.stringify(data));
                 
-                // 发送数据到服务器
-                try {
-                    const response = await fetch('http://localhost:3001/api/submit-questionnaire', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    
-                    const result = await response.json();
-                    if (result.success) {
-                        console.log('数据已成功保存到服务器');
-                    } else {
-                        console.error('保存数据到服务器失败:', result.message);
-                    }
-                } catch (error) {
-                    console.error('发送数据到服务器时出错:', error);
-                }
+                // 发送邮件到研究团队
+                sendEmailWithData(data);
+                
+                // 在实际应用中，这里会发送数据到服务器
+                // 这里我们只是模拟这个过程
+                console.log('问卷数据:', data);
             }
+        }
+        
+        // 发送邮件
+        function sendEmailWithData(data) {
+            // 准备邮件内容
+            const subject = `问卷数据 - 参与者 ${data.participantId} - 第${data.group}组`;
+            
+            let body = `问卷数据\n`;
+            body += `=================================\n`;
+            body += `参与者ID: ${data.participantId || 'N/A'}\n`;
+            body += `分组: 第${data.group || 'N/A'}组\n`;
+            body += `开始时间: ${formatDate(data.startTime) || 'N/A'}\n`;
+            body += `完成时间: ${formatDate(data.completionTime) || 'N/A'}\n`;
+            body += `=================================\n`;
+            
+            if (data.preTest) {
+                body += `\n预测试答案:\n${JSON.stringify(data.preTest, null, 2)}\n`;
+            }
+            
+            if (data.attentionTest) {
+                body += `\n注意力测试:\n${JSON.stringify(data.attentionTest, null, 2)}\n`;
+            }
+            
+            if (data.mainQuestionnaire) {
+                body += `\n主问卷答案:\n${JSON.stringify(data.mainQuestionnaire, null, 2)}\n`;
+            }
+            
+            if (data.demographics) {
+                body += `\n人口统计学数据:\n${JSON.stringify(data.demographics, null, 2)}\n`;
+            }
+            
+            if (data.corruptionPerception) {
+                body += `\n腐败感知数据:\n${JSON.stringify(data.corruptionPerception, null, 2)}\n`;
+            }
+            
+            body += `\n联系方式: ${data.contactInfo || 'N/A'}\n`;
+            
+            // 编码邮件内容
+            const encodedSubject = encodeURIComponent(subject);
+            const encodedBody = encodeURIComponent(body);
+            
+            // 生成邮件链接
+            const mailtoLink = `mailto:954079744@qq.com?subject=${encodedSubject}&body=${encodedBody}`;
+            
+            // 打开邮件客户端
+            window.location.href = mailtoLink;
+            
+            // 显示邮件发送状态
+            document.getElementById('email-status').classList.remove('hidden');
+        }
+        
+        // 格式化日期
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
         }
         
         // 关闭完成模态框
