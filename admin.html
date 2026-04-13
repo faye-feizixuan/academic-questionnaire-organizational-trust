@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问卷数据管理 - 学术研究问卷调查</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a56db',
+                        secondary: '#e5edff',
+                        accent: '#0e3a80',
+                        neutral: '#f3f4f6',
+                        'neutral-dark': '#4b5563'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+            .bg-gradient-blue {
+                background: linear-gradient(135deg, #1a56db 0%, #0e3a80 100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <!-- 顶部导航栏 -->
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-gray-800">问卷数据管理系统</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="refresh-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-all-300">
+                        <i class="fa fa-refresh mr-2"></i>刷新
+                    </button>
+                    <button id="export-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-4 rounded-md transition-all-300 shadow-md hover:shadow-lg">
+                        <i class="fa fa-download mr-2"></i>导出Excel
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="flex-grow container mx-auto px-4 py-8 md:py-12">
+            <!-- 统计信息卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow-card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">总参与者数</p>
+                            <p id="stat-total" class="text-3xl font-bold text-gray-800">0</p>
+                        </div>
+                        <div class="text-primary text-3xl">
+                            <i class="fa fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">已完成问卷</p>
+                            <p id="stat-completed" class="text-3xl font-bold text-green-600">0</p>
+                        </div>
+                        <div class="text-green-600 text-3xl">
+                            <i class="fa fa-check-circle"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">第1组</p>
+                            <p id="stat-group1" class="text-3xl font-bold text-blue-600">0</p>
+                        </div>
+                        <div class="text-blue-600 text-3xl">
+                            <i class="fa fa-group"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-card p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">第2组</p>
+                            <p id="stat-group2" class="text-3xl font-bold text-purple-600">0</p>
+                        </div>
+                        <div class="text-purple-600 text-3xl">
+                            <i class="fa fa-group"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 数据表格 -->
+            <div class="bg-white rounded-lg shadow-card overflow-hidden">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-gray-800">问卷数据列表</h2>
+                        <div class="flex items-center space-x-2">
+                            <input type="text" id="search-input" placeholder="搜索参与者ID..." class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary">
+                            <select id="filter-group" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary">
+                                <option value="">所有分组</option>
+                                <option value="1">第1组</option>
+                                <option value="2">第2组</option>
+                                <option value="3">第3组</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr id="table-header">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">参与者ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">分组</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">开始时间</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">完成时间</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">注意力测试</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">联系方式</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                                    <i class="fa fa-spinner fa-spin text-2xl mb-4"></i>
+                                    <p>正在加载数据...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="no-data-message" class="hidden text-center py-12">
+                    <i class="fa fa-inbox text-6xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">暂无问卷数据</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="bg-gray-100 border-t border-gray-200 py-4">
+            <div class="container mx-auto px-4 text-center text-sm text-gray-600">
+                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3001/api';
+        let allData = [];
+        
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定按钮事件
+            document.getElementById('refresh-btn').addEventListener('click', loadData);
+            document.getElementById('export-btn').addEventListener('click', exportData);
+            document.getElementById('search-input').addEventListener('input', filterData);
+            document.getElementById('filter-group').addEventListener('change', filterData);
+            
+            // 加载数据
+            loadData();
+        });
+        
+        // 加载数据
+        async function loadData() {
+            try {
+                // 加载统计数据
+                const statsResponse = await fetch(`${API_BASE_URL}/stats`);
+                const statsResult = await statsResponse.json();
+                
+                if (statsResult.success) {
+                    updateStats(statsResult.data);
+                }
+                
+                // 加载问卷数据
+                const dataResponse = await fetch(`${API_BASE_URL}/questionnaires`);
+                const dataResult = await dataResponse.json();
+                
+                if (dataResult.success) {
+                    allData = dataResult.data;
+                    displayData(allData);
+                }
+                
+            } catch (error) {
+                console.error('加载数据时出错:', error);
+                showError('加载数据失败，请确保后端服务器正在运行');
+            }
+        }
+        
+        // 更新统计信息
+        function updateStats(stats) {
+            document.getElementById('stat-total').textContent = stats.total;
+            document.getElementById('stat-completed').textContent = stats.completed;
+            
+            const group1 = stats.groups.find(g => g.group_number === 1);
+            const group2 = stats.groups.find(g => g.group_number === 2);
+            
+            document.getElementById('stat-group1').textContent = group1 ? group1.count : 0;
+            document.getElementById('stat-group2').textContent = group2 ? group2.count : 0;
+        }
+        
+        // 显示数据
+        function displayData(data) {
+            const tableBody = document.getElementById('table-body');
+            const noDataMessage = document.getElementById('no-data-message');
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = '';
+                noDataMessage.classList.remove('hidden');
+                return;
+            }
+            
+            noDataMessage.classList.add('hidden');
+            tableBody.innerHTML = '';
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                
+                const attentionTestPassed = item.attentionTest && item.attentionTest.passed ? 
+                    '<span class="text-green-600"><i class="fa fa-check-circle"></i> 通过</span>' : 
+                    '<span class="text-red-600"><i class="fa fa-times-circle"></i> 未通过</span>';
+                
+                const attentionAttempts = item.attentionTestAttempts || 0;
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.participantId}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">第${item.group}组</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(item.startTime)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(item.completionTime)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${attentionTestPassed} <span class="text-xs text-gray-400">(${attentionAttempts}次尝试)</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${item.contactInfo || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <button onclick="viewDetails('${item.participantId}')" class="text-primary hover:text-accent mr-3">
+                            <i class="fa fa-eye"></i> 查看
+                        </button>
+                        <button onclick="deleteData('${item.participantId}')" class="text-red-600 hover:text-red-800">
+                            <i class="fa fa-trash"></i> 删除
+                        </button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // 筛选数据
+        function filterData() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const groupFilter = document.getElementById('filter-group').value;
+            
+            const filteredData = allData.filter(item => {
+                const matchesSearch = item.participantId.toLowerCase().includes(searchTerm);
+                const matchesGroup = !groupFilter || item.group.toString() === groupFilter;
+                return matchesSearch && matchesGroup;
+            });
+            
+            displayData(filteredData);
+        }
+        
+        // 查看详情
+        function viewDetails(participantId) {
+            const item = allData.find(d => d.participantId === participantId);
+            if (!item) return;
+            
+            const details = `
+参与者ID: ${item.participantId}
+分组: 第${item.group}组
+开始时间: ${formatDate(item.startTime)}
+完成时间: ${formatDate(item.completionTime)}
+注意力测试尝试次数: ${item.attentionTestAttempts}
+联系方式: ${item.contactInfo || '无'}
+
+预测试数据: ${JSON.stringify(item.preTest, null, 2)}
+注意力测试数据: ${JSON.stringify(item.attentionTest, null, 2)}
+主问卷数据: ${JSON.stringify(item.mainQuestionnaire, null, 2)}
+人口统计学数据: ${JSON.stringify(item.demographics, null, 2)}
+腐败感知数据: ${JSON.stringify(item.corruptionPerception, null, 2)}
+            `;
+            
+            alert(details);
+        }
+        
+        // 删除数据
+        async function deleteData(participantId) {
+            if (!confirm(`确定要删除参与者 ${participantId} 的数据吗？此操作不可恢复。`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/questionnaires/${participantId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('数据删除成功');
+                    loadData();
+                } else {
+                    alert('删除失败: ' + result.message);
+                }
+                
+            } catch (error) {
+                console.error('删除数据时出错:', error);
+                alert('删除数据失败，请检查网络连接');
+            }
+        }
+        
+        // 导出数据
+        function exportData() {
+            window.open(`${API_BASE_URL}/export`, '_blank');
+        }
+        
+        // 显示错误
+        function showError(message) {
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="px-6 py-12 text-center text-red-600">
+                        <i class="fa fa-exclamation-circle text-4xl mb-4"></i>
+                        <p>${message}</p>
+                    </td>
+                </tr>
+            `;
+        }
+        
+        // 格式化日期
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            
+            const date = new Date(dateString);
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+    </script>
+</body>
+</html>
