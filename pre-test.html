@@ -940,7 +940,8 @@
             }
             try {
                 const sortData = JSON.parse(preQ1Result);
-                if (!sortData || sortData.length !== 3) {
+                const keys = Object.keys(sortData);
+                if (!sortData || keys.length !== 3) {
                     showError('请完成第1题排序题');
                     return;
                 }
