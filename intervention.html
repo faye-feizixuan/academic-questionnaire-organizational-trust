@@ -530,11 +530,14 @@
                 return;
             }
             
-            // 更新当前页面
+            // 更新当前页面（先保存到本地）
             currentPage = 3;
-            
-            // 保存问卷数据
-            await saveQuestionnaireData();
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
             
             // 根据分组决定下一页
             if (group === 1) {

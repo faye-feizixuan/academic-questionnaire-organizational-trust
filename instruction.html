@@ -152,11 +152,14 @@
 
         // 前进到下一页
         async function goNext() {
-            // 更新当前页面
+            // 更新当前页面（先保存到本地）
             currentPage = 7;
-
-            // 保存问卷数据
-            await saveQuestionnaireData();
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
 
             // 导航到主问卷页面
             window.location.href = 'main-questionnaire.html';

@@ -1052,11 +1052,14 @@
                 saveAnswer(`pre-q3-${i}`, selected ? selected.value : '');
             }
             
-            // 更新当前页面
+            // 更新当前页面（先保存到本地）
             currentPage = 2;
-            
-            // 保存问卷数据
-            await saveQuestionnaireData();
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
             
             // 导航到下一页
             window.location.href = 'intervention.html';

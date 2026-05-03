@@ -285,13 +285,16 @@
             
             // 保存答案
             await saveListingAnswer(answerName, selectedAnswer);
-            
-            // 更新当前页面
+
+            // 更新当前页面（先保存到本地）
             currentPage = 6;
-            
-            // 保存问卷数据
-            await saveQuestionnaireData();
-            
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+
             // 导航到填写说明页
             window.location.href = 'instruction.html';
         }
