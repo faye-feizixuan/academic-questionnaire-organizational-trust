@@ -6,6 +6,10 @@
     <title>填写说明 - 基层政府组织信任研究</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- API配置 -->
+    <script src="config.js"></script>
+    <!-- API服务 -->
+    <script src="api.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -38,14 +42,14 @@
     <header class="bg-white shadow-sm">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center">
-                <!-- 不显示任何内容 -->
+                <h1 class="text-lg font-semibold text-gray-800">填写说明</h1>
             </div>
             <div id="progress-container" class="hidden md:flex items-center">
                 <div class="text-sm text-gray-600 mr-2">问卷进度:</div>
                 <div class="w-64 bg-gray-200 rounded-full h-2.5">
-                    <div id="progress-bar" class="bg-primary h-2.5 rounded-full transition-all duration-500" style="width: 50%"></div>
+                    <div id="progress-bar" class="bg-primary h-2.5 rounded-full transition-all duration-500" style="width: 66.7%"></div>
                 </div>
-                <span id="progress-text" class="ml-2 text-sm text-gray-600">50%</span>
+                <span id="progress-text" class="ml-2 text-sm text-gray-600">66.7%</span>
             </div>
         </div>
     </header>
@@ -56,7 +60,7 @@
             <div class="bg-white rounded-lg shadow-md p-8 fade-in">
                 <!-- 页面标题 -->
                 <div class="text-center mb-8">
-                    <h1 class="text-2xl font-bold text-gray-800 mb-2">填写说明</h1>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">填写说明</h2>
                     <div class="w-16 h-1 bg-primary mx-auto rounded"></div>
                 </div>
 
@@ -69,13 +73,14 @@
                         <div class="ml-4">
                             <h3 class="text-lg font-semibold text-red-600 mb-2">特别注意</h3>
                             <p class="text-gray-700 leading-relaxed">
-                                请您在阅读完前述情景设定后，以<strong class="text-blue-600">该县人民政府一名非领导职务公务员</strong>的身份代入，<strong class="text-blue-600">假设该县发生了相关事件</strong>，并在此情境下完成以下题目。
+                                以下题项并非要求您评价现实中的真实单位或真实领导。<strong class="text-red-600">请您设想自己身处材料所描述的单位</strong>，并在该单位发生前述事件后，根据您的即时感受完成以下题目。
+                            </p>
+                            <p class="text-gray-700 leading-relaxed font-bold mt-2">
+                                您的答案仅代表您对该虚构情境的主观反应，不涉及任何现实责任或评价。
                             </p>
                         </div>
                     </div>
                 </div>
-
-
 
                 <!-- 按钮 -->
                 <div class="flex justify-between">
@@ -84,7 +89,7 @@
                     </button>
 
                     <button id="next-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
-                        开始答题<i class="fa fa-arrow-right ml-2"></i>
+                        开始作答<i class="fa fa-arrow-right ml-2"></i>
                     </button>
                 </div>
             </div>
@@ -94,16 +99,16 @@
     <!-- 页脚 -->
     <footer class="bg-gray-100 border-t border-gray-200 py-4">
         <div class="container mx-auto px-4 text-center text-sm text-gray-600">
-            <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+            <p>© 2026 清华大学纪检监察研究院 | 学术研究专用</p>
         </div>
     </footer>
 
     <script>
         // 全局变量
-        const totalPages = 8;
-        let currentPage = 4;
-        let participantId = '';
-        let group = 0;
+        const totalPages = 9; // 总页面数
+        let currentPage = 6; // 当前页面索引
+        let participantId = ''; // 参与者ID
+        let group = 0; // 分组 (1, 2, 或 3)
 
         // 初始化应用
         document.addEventListener('DOMContentLoaded', function() {
@@ -125,7 +130,8 @@
                 const data = JSON.parse(savedData);
                 participantId = data.participantId;
                 group = data.group;
-                currentPage = data.currentPage || 4;
+                currentPage = data.currentPage || 6;
+                updateProgress();
             } else {
                 // 如果没有保存的数据，返回欢迎页
                 window.location.href = 'index.html';
@@ -141,33 +147,36 @@
 
         // 返回上一页
         function goBack() {
-            // 根据分组决定返回哪一页
-            if (group === 1) {
-                window.location.href = 'intervention.html';
-            } else {
-                window.location.href = 'attention-test.html';
-            }
+            window.location.href = 'experiment-flow.html';
         }
 
         // 前进到下一页
-        function goNext() {
+        async function goNext() {
             // 更新当前页面
-            currentPage = 5;
+            currentPage = 7;
 
             // 保存问卷数据
-            saveQuestionnaireData();
+            await saveQuestionnaireData();
 
             // 导航到主问卷页面
             window.location.href = 'main-questionnaire.html';
         }
 
         // 保存问卷数据
-        function saveQuestionnaireData() {
+        async function saveQuestionnaireData() {
             const savedData = localStorage.getItem('questionnaire_data');
             if (savedData) {
                 const data = JSON.parse(savedData);
                 data.currentPage = currentPage;
                 localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                
+                // 保存到服务器
+                try {
+                    await autoSaveData(data);
+                    console.log('数据已成功保存到服务器');
+                } catch (error) {
+                    console.error('保存数据失败:', error);
+                }
             }
         }
     </script>

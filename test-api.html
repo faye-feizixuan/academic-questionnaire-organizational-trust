@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API连接测试</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">
+                <i class="fas fa-server mr-2"></i>问卷系统API连接测试
+            </h1>
+
+            <!-- API配置 -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">
+                    <i class="fas fa-cog mr-2"></i>API配置
+                </h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">API地址</label>
+                        <input type="text" id="apiUrl" value="http://47.114.85.2:3001/api"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <button onclick="updateApiUrl()" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
+                        <i class="fas fa-save mr-2"></i>更新配置
+                    </button>
+                </div>
+            </div>
+
+            <!-- 测试结果 -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">
+                    <i class="fas fa-check-circle mr-2"></i>测试结果
+                </h2>
+                <div id="testResults" class="space-y-4">
+                    <!-- 测试结果将在这里显示 -->
+                </div>
+            </div>
+
+            <!-- 测试按钮 -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">
+                    <i class="fas fa-play-circle mr-2"></i>运行测试
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="testHealth()" class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition">
+                        <i class="fas fa-heartbeat mr-2"></i>健康检查
+                    </button>
+                    <button onclick="testSaveData()" class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
+                        <i class="fas fa-save mr-2"></i>保存测试数据
+                    </button>
+                    <button onclick="testGetData()" class="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition">
+                        <i class="fas fa-download mr-2"></i>获取测试数据
+                    </button>
+                    <button onclick="testStats()" class="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition">
+                        <i class="fas fa-chart-bar mr-2"></i>获取统计信息
+                    </button>
+                    <button onclick="testExport()" class="bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition">
+                        <i class="fas fa-file-export mr-2"></i>导出数据
+                    </button>
+                    <button onclick="runAllTests()" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition">
+                        <i class="fas fa-running mr-2"></i>运行所有测试
+                    </button>
+                </div>
+            </div>
+
+            <!-- 响应详情 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">
+                    <i class="fas fa-code mr-2"></i>响应详情
+                </h2>
+                <pre id="responseDetails" class="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
+                    等待测试...
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let apiUrl = 'http://47.114.85.2:3001/api';
+        let testParticipantId = null;
+
+        function updateApiUrl() {
+            apiUrl = document.getElementById('apiUrl').value;
+            alert('API地址已更新为: ' + apiUrl);
+        }
+
+        function showResult(testName, success, message) {
+            const resultsDiv = document.getElementById('testResults');
+            const resultHtml = `
+                <div class="flex items-center p-4 rounded-lg ${success ? 'bg-green-100 border border-green-300' : 'bg-red-100 border border-red-300'}">
+                    <i class="fas ${success ? 'fa-check-circle text-green-600' : 'fa-times-circle text-red-600'} text-2xl mr-4"></i>
+                    <div class="flex-1">
+                        <h3 class="font-semibold ${success ? 'text-green-800' : 'text-red-800'}">${testName}</h3>
+                        <p class="text-sm ${success ? 'text-green-600' : 'text-red-600'}">${message}</p>
+                    </div>
+                </div>
+            `;
+            resultsDiv.insertAdjacentHTML('beforeend', resultHtml);
+        }
+
+        function showResponse(data) {
+            const detailsDiv = document.getElementById('responseDetails');
+            detailsDiv.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function testHealth() {
+            try {
+                const response = await fetch(`${apiUrl}/health`);
+                const data = await response.json();
+                showResponse(data);
+                
+                if (data.status === 'ok') {
+                    showResult('健康检查', true, '服务运行正常');
+                } else {
+                    showResult('健康检查', false, '服务异常');
+                }
+            } catch (error) {
+                showResponse({ error: error.message });
+                showResult('健康检查', false, '连接失败: ' + error.message);
+            }
+        }
+
+        async function testSaveData() {
+            try {
+                const testData = {
+                    participantId: 'TEST_' + Date.now(),
+                    group: 1,
+                    preTest: { q1: 5, q2: 4 },
+                    attentionTest: { q1: 3, q2: 4 },
+                    mainQuestionnaire: { q1: 7, q2: 8 },
+                    demographics: { gender: 'male', age: 30 },
+                    contactInfo: 'test@example.com',
+                    startTime: new Date().toISOString(),
+                    completed: false
+                };
+
+                const response = await fetch(`${apiUrl}/questionnaire/save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testData)
+                });
+                const data = await response.json();
+                showResponse(data);
+
+                if (data.success) {
+                    testParticipantId = data.data.participantId;
+                    showResult('保存测试数据', true, '数据已保存，ID: ' + testParticipantId);
+                } else {
+                    showResult('保存测试数据', false, data.message || '保存失败');
+                }
+            } catch (error) {
+                showResponse({ error: error.message });
+                showResult('保存测试数据', false, '连接失败: ' + error.message);
+            }
+        }
+
+        async function testGetData() {
+            if (!testParticipantId) {
+                showResult('获取测试数据', false, '请先保存测试数据');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiUrl}/questionnaire/${testParticipantId}`);
+                const data = await response.json();
+                showResponse(data);
+
+                if (data.success) {
+                    showResult('获取测试数据', true, '成功获取数据');
+                } else {
+                    showResult('获取测试数据', false, data.message || '获取失败');
+                }
+            } catch (error) {
+                showResponse({ error: error.message });
+                showResult('获取测试数据', false, '连接失败: ' + error.message);
+            }
+        }
+
+        async function testStats() {
+            try {
+                const response = await fetch(`${apiUrl}/admin/stats`);
+                const data = await response.json();
+                showResponse(data);
+
+                if (data.success) {
+                    showResult('获取统计信息', true, `总问卷数: ${data.data.total}, 已完成: ${data.data.completed}`);
+                } else {
+                    showResult('获取统计信息', false, data.message || '获取失败');
+                }
+            } catch (error) {
+                showResponse({ error: error.message });
+                showResult('获取统计信息', false, '连接失败: ' + error.message);
+            }
+        }
+
+        async function testExport() {
+            try {
+                const response = await fetch(`${apiUrl}/admin/export?format=json`);
+                const data = await response.json();
+                showResponse(data);
+
+                if (data.success) {
+                    showResult('导出数据', true, `成功导出 ${data.data.length} 条记录`);
+                } else {
+                    showResult('导出数据', false, data.message || '导出失败');
+                }
+            } catch (error) {
+                showResponse({ error: error.message });
+                showResult('导出数据', false, '连接失败: ' + error.message);
+            }
+        }
+
+        async function runAllTests() {
+            document.getElementById('testResults').innerHTML = '';
+            await testHealth();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testSaveData();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testGetData();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testStats();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testExport();
+        }
+
+        // 页面加载时自动运行健康检查
+        window.onload = function() {
+            testHealth();
+        };
+    </script>
+</body>
+</html>

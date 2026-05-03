@@ -8,6 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- API配置 -->
+    <script src="config.js"></script>
+    <!-- API函数 -->
+    <script src="api.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -108,7 +112,7 @@
                         </button>
                         
                         <button id="submit-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
-                            提交问卷<i class="fa fa-check ml-2"></i>
+                            下一页<i class="fa fa-arrow-right ml-2"></i>
                         </button>
                     </div>
                 </div>
@@ -118,7 +122,7 @@
         <!-- 页脚 -->
         <footer class="bg-gray-100 border-t border-gray-200 py-4">
             <div class="container mx-auto px-4 text-center text-sm text-gray-600">
-                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+                <p>© 2026 清华大学纪检监察研究院 | 学术研究专用</p>
             </div>
         </footer>
     </div>
@@ -132,12 +136,6 @@
                 </div>
                 <h3 class="text-lg font-medium text-gray-900 mb-2">问卷提交成功</h3>
                 <p class="text-gray-600 mb-6">感谢您参与本次学术研究问卷调查！您的反馈对我们非常重要。</p>
-                <div id="email-status" class="mb-4 hidden">
-                    <div class="flex items-center justify-center">
-                        <i class="fa fa-envelope-o text-blue-500 mr-2"></i>
-                        <span class="text-sm text-gray-600">数据已发送到研究团队邮箱</span>
-                    </div>
-                </div>
                 <button id="close-modal-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
                     关闭
                 </button>
@@ -151,8 +149,8 @@
 
     <script>
         // 全局变量
-        const totalPages = 8; // 总页面数
-        let currentPage = 7; // 当前页面索引
+        const totalPages = 9; // 总页面数
+        let currentPage = 9; // 当前页面索引
         let participantId = ''; // 参与者ID
         let group = 0; // 分组 (1, 2, 或 3)
         
@@ -174,7 +172,7 @@
                 const data = JSON.parse(savedData);
                 participantId = data.participantId;
                 group = data.group;
-                currentPage = data.currentPage || 7;
+                currentPage = data.currentPage || 9;
                 
                 // 如果有已保存的联系方式，恢复填写
                 if (data.contactInfo) {
@@ -197,12 +195,12 @@
         
         // 返回上一页
         function goBack() {
-            window.location.href = 'debriefing.html';
+            window.location.href = 'demographics.html';
         }
         
         // 提交问卷
         async function submitQuestionnaire() {
-            console.log('=== 开始提交问卷 ===');
+            console.log('=== 保存联系方式并继续 ===');
             
             // 保存联系方式
             const contactInfo = document.getElementById('contact-info').value;
@@ -213,12 +211,25 @@
             currentPage = 8;
             
             // 标记问卷为已完成
-            console.log('准备完成问卷...');
-            await completeQuestionnaire();
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.completed = true;
+                data.completionTime = new Date().toISOString();
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
             
-            // 显示完成模态框
-            console.log('显示完成模态框');
-            document.getElementById('completion-modal').classList.remove('hidden');
+            // 保存问卷数据
+            try {
+                await saveQuestionnaireData();
+                console.log('数据保存成功，准备导航');
+                // 导航到信息提醒页
+                window.location.href = 'debriefing.html';
+            } catch (error) {
+                console.error('保存失败:', error);
+                // 即使保存失败，也继续导航
+                window.location.href = 'debriefing.html';
+            }
         }
         
         // 保存联系方式
@@ -228,6 +239,24 @@
                 const data = JSON.parse(savedData);
                 data.contactInfo = contactInfo;
                 localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+        }
+        
+        // 保存问卷数据
+        async function saveQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                
+                // 保存到服务器
+                try {
+                    await autoSaveData(data);
+                    console.log('数据已成功保存到服务器');
+                } catch (error) {
+                    console.warn('保存到服务器失败，数据已保存到本地:', error.message);
+                }
             }
         }
         
@@ -247,55 +276,19 @@
                 data.completionTime = new Date().toISOString();
                 localStorage.setItem('questionnaire_data', JSON.stringify(data));
                 
-                console.log('completeQuestionnaire: 数据已保存，准备发送邮件');
+                console.log('completeQuestionnaire: 数据已保存，准备保存到服务器');
                 
-                // 发送邮件到研究团队
-                await sendEmailWithData(data);
+                // 保存数据到服务器
+                try {
+                    await autoSaveData(data, true);
+                    console.log('completeQuestionnaire: 数据保存到服务器成功');
+                } catch (error) {
+                    console.warn('保存到服务器失败，数据已保存到本地:', error.message);
+                }
                 
-                console.log('completeQuestionnaire: 邮件发送完成');
-                
-                // 在实际应用中，这里会发送数据到服务器
-                // 这里我们只是模拟这个过程
                 console.log('问卷数据:', data);
             } else {
                 console.error('completeQuestionnaire: 没有找到问卷数据');
-            }
-        }
-        
-        // 发送邮件
-        async function sendEmailWithData(data) {
-            console.log('sendEmailWithData: 开始发送邮件');
-            console.log('sendEmailWithData: 邮件服务URL', 'http://localhost:3002/api/send-email');
-            console.log('sendEmailWithData: 发送的数据', JSON.stringify(data, null, 2));
-            
-            try {
-                // 发送数据到邮件服务
-                console.log('sendEmailWithData: 准备发送fetch请求');
-                const response = await fetch('http://localhost:3002/api/send-email', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ data: data })
-                });
-                
-                console.log('sendEmailWithData: 收到响应', response.status);
-                
-                const result = await response.json();
-                console.log('sendEmailWithData: 响应数据', result);
-                
-                if (result.success) {
-                    console.log('邮件发送成功:', result);
-                    document.getElementById('email-status').classList.remove('hidden');
-                } else {
-                    console.error('邮件发送失败:', result.message);
-                    // 即使邮件发送失败，也不影响问卷提交
-                }
-            } catch (error) {
-                console.error('发送邮件时出错:', error);
-                console.error('错误详情:', error.message);
-                console.error('错误堆栈:', error.stack);
-                // 即使邮件发送失败，也不影响问卷提交
             }
         }
         

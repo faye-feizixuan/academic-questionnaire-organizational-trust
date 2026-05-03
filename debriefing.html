@@ -8,6 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- API配置 -->
+    <script src="config.js"></script>
+    <!-- API服务 -->
+    <script src="api.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -90,14 +94,14 @@
                     </div>
                     
                     <div class="flex justify-between">
-                        <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
-                            <i class="fa fa-arrow-left mr-2"></i>返回
-                        </button>
-                        
-                        <button id="next-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
-                            继续<i class="fa fa-arrow-right ml-2"></i>
-                        </button>
-                    </div>
+                <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
+                    <i class="fa fa-arrow-left mr-2"></i>返回
+                </button>
+                
+                <button id="submit-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
+                    提交问卷<i class="fa fa-check ml-2"></i>
+                </button>
+            </div>
                 </div>
             </div>
         </main>
@@ -105,7 +109,7 @@
         <!-- 页脚 -->
         <footer class="bg-gray-100 border-t border-gray-200 py-4">
             <div class="container mx-auto px-4 text-center text-sm text-gray-600">
-                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+                <p>© 2026 清华大学纪检监察研究院 | 学术研究专用</p>
             </div>
         </footer>
     </div>
@@ -133,7 +137,7 @@
     <script>
         // 全局变量
         const totalPages = 8; // 总页面数
-        let currentPage = 7; // 当前页面索引
+        let currentPage = 8; // 当前页面索引
         let participantId = ''; // 参与者ID
         let group = 0; // 分组 (1, 2, 或 3)
         
@@ -144,7 +148,7 @@
             
             // 绑定按钮事件
             document.getElementById('back-btn').addEventListener('click', goBack);
-            document.getElementById('next-btn').addEventListener('click', goNext);
+            document.getElementById('submit-btn').addEventListener('click', submitQuestionnaire);
             document.getElementById('close-modal-btn').addEventListener('click', closeCompletionModal);
             
             // 显示参与者ID
@@ -179,34 +183,53 @@
         
         // 返回上一页
         function goBack() {
-            window.location.href = 'demographics.html';
-        }
-        
-        // 前进到下一页
-        function goNext() {
-            // 更新当前页面
-            currentPage = 8;
-            
-            // 保存问卷数据
-            saveQuestionnaireData();
-            
-            // 导航到访谈邀请页
             window.location.href = 'interview.html';
         }
         
+        // 提交问卷
+        async function submitQuestionnaire() {
+            // 标记问卷为已完成
+            await completeQuestionnaire();
+            
+            // 显示完成模态框
+            document.getElementById('completion-modal').classList.remove('hidden');
+            
+            // 显示参与者ID
+            const participantIdDisplay = document.getElementById('participant-id-display');
+            if (participantIdDisplay) {
+                participantIdDisplay.textContent = participantId;
+            }
+        }
+        
         // 标记问卷为已完成
-        function completeQuestionnaire() {
+        async function completeQuestionnaire() {
+            console.log('completeQuestionnaire: 开始执行');
+            
             const savedData = localStorage.getItem('questionnaire_data');
+            console.log('completeQuestionnaire: 从localStorage读取数据');
+            
             if (savedData) {
                 const data = JSON.parse(savedData);
+                console.log('completeQuestionnaire: 解析数据成功', data.participantId);
+                
                 data.currentPage = currentPage;
                 data.completed = true;
                 data.completionTime = new Date().toISOString();
                 localStorage.setItem('questionnaire_data', JSON.stringify(data));
                 
-                // 在实际应用中，这里会发送数据到服务器
-                // 这里我们只是模拟这个过程
+                console.log('completeQuestionnaire: 数据已保存，准备保存到服务器');
+                
+                // 保存数据到服务器
+                try {
+                    await autoSaveData(data, true);
+                    console.log('completeQuestionnaire: 数据保存到服务器成功');
+                } catch (error) {
+                    console.warn('保存到服务器失败，数据已保存到本地:', error.message);
+                }
+                
                 console.log('问卷数据:', data);
+            } else {
+                console.error('completeQuestionnaire: 没有找到问卷数据');
             }
         }
         
@@ -226,12 +249,20 @@
         }
         
         // 保存问卷数据
-        function saveQuestionnaireData() {
+        async function saveQuestionnaireData() {
             const savedData = localStorage.getItem('questionnaire_data');
             if (savedData) {
                 const data = JSON.parse(savedData);
                 data.currentPage = currentPage;
                 localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                
+                // 保存到服务器
+                try {
+                    await autoSaveData(data);
+                    console.log('数据已成功保存到服务器');
+                } catch (error) {
+                    console.warn('保存到服务器失败，数据已保存到本地:', error.message);
+                }
             }
         }
     </script>

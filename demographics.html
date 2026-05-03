@@ -8,6 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- API配置 -->
+    <script src="config.js"></script>
+    <!-- API服务 -->
+    <script src="api.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -70,9 +74,9 @@
                     <div class="mb-8"></div>
                     
                     <div class="space-y-8 mb-8">
-                        <!-- 问题1：性别 -->
+                        <!-- 问题18：性别 -->
                         <div class="space-y-4">
-                            <p class="text-gray-700 font-medium">1、您的性别是：</p>
+                            <p class="text-gray-700 font-medium">18、您的性别是：</p>
                             
                             <div class="flex flex-wrap gap-6">
                                 <div class="flex items-center">
@@ -87,9 +91,9 @@
                             </div>
                         </div>
                         
-                        <!-- 问题2：出生年份 -->
+                        <!-- 问题19：出生年份 -->
                         <div class="space-y-4">
-                            <p class="text-gray-700 font-medium">2、您的出生年份是：</p>
+                            <p class="text-gray-700 font-medium">19、您的出生年份是：</p>
                             
                             <div class="flex items-center">
                                 <input type="number" id="demo-q2" min="1900" max="2026" class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="例如：1990">
@@ -97,9 +101,9 @@
                             </div>
                         </div>
                         
-                        <!-- 问题3：政治面貌 -->
+                        <!-- 问题20：政治面貌 -->
                         <div class="space-y-4">
-                            <p class="text-gray-700 font-medium">3、您的政治面貌是：</p>
+                            <p class="text-gray-700 font-medium">20、您的政治面貌是：</p>
                             
                             <div class="space-y-3">
                                 <div class="flex items-center">
@@ -129,9 +133,9 @@
                             </div>
                         </div>
                         
-                        <!-- 问题4：参加公职年份 -->
+                        <!-- 问题21：参加公职年份 -->
                         <div class="space-y-4">
-                            <p class="text-gray-700 font-medium">4、您参加公职的年份是：</p>
+                            <p class="text-gray-700 font-medium">21、您参加公职的年份是：</p>
                             
                             <div class="flex items-center">
                                 <input type="number" id="demo-q4" min="1900" max="2026" class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="例如：2015">
@@ -139,9 +143,9 @@
                             </div>
                         </div>
                         
-                        <!-- 问题5：工作职级 -->
+                        <!-- 问题22：工作职级 -->
                         <div class="space-y-4">
-                            <p class="text-gray-700 font-medium">5、您目前的工作职级是：</p>
+                            <p class="text-gray-700 font-medium">22、您目前的工作职级是：</p>
                             
                             <div class="space-y-3">
                                 <div class="flex items-center">
@@ -171,9 +175,9 @@
                             </div>
                         </div>
                         
-                        <!-- 问题6：职务类型 -->
+                        <!-- 问题23：职务类型 -->
                         <div class="space-y-4">
-                            <p class="text-gray-700 font-medium">6、您的职务类型是：</p>
+                            <p class="text-gray-700 font-medium">23、您的职务类型是：</p>
                             
                             <div class="flex flex-wrap gap-6">
                                 <div class="flex items-center">
@@ -188,6 +192,97 @@
                             </div>
                             
                             <p class="text-xs text-gray-500">注：领导职务指乡科级及以上的正副职，包括乡科级正副职等</p>
+                        </div>
+                        
+                        <!-- 问题24：工作所在地 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">24、您目前主要工作所在地属于：</p>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q24-east" name="demo-q24" value="东部地区" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q24-east" class="ml-3 text-gray-700">东部地区（北京/天津/河北/上海/江苏/浙江/福建/山东/广东/海南）</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q24-central" name="demo-q24" value="中部地区" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q24-central" class="ml-3 text-gray-700">中部地区（山西/安徽/江西/河南/湖北/湖南）</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q24-west" name="demo-q24" value="西部地区" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q24-west" class="ml-3 text-gray-700">西部地区（内蒙古/广西/重庆/四川/贵州/云南/西藏/陕西/甘肃/青海/宁夏/新疆）</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q24-northeast" name="demo-q24" value="东北地区" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q24-northeast" class="ml-3 text-gray-700">东北地区（辽宁/吉林/黑龙江）</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q24-hk" name="demo-q24" value="港澳台地区" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q24-hk" class="ml-3 text-gray-700">港澳台地区</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q24-secret" name="demo-q24" value="不便透露" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q24-secret" class="ml-3 text-gray-700">不便透露</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q24-other" name="demo-q24" value="其他" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q24-other" class="ml-3 text-gray-700">其他，请说明：</label>
+                                    <input type="text" id="demo-q24-other-text" class="ml-2 flex-1 max-w-xs px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="请输入">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题25：单位类型 -->
+                        <div class="space-y-4">
+                            <p class="text-gray-700 font-medium">25、您目前所在单位或部门主要属于以下哪一类型？</p>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q25-1" name="demo-q25" value="纪检监察、巡视巡察、审计等监督执纪类部门" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q25-1" class="ml-3 text-gray-700">纪检监察、巡视巡察、审计等监督执纪类部门</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q25-2" name="demo-q25" value="公安、检察、法院、司法行政等政法系统部门" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q25-2" class="ml-3 text-gray-700">公安、检察、法院、司法行政等政法系统部门</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q25-3" name="demo-q25" value="党委职能部门、政府综合管理部门或机关内设综合部门" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q25-3" class="ml-3 text-gray-700">党委职能部门、政府综合管理部门或机关内设综合部门</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q25-4" name="demo-q25" value="发改、财政、商务、市场监管、行政审批等经济发展与综合管理类部门" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q25-4" class="ml-3 text-gray-700">发改、财政、商务、市场监管、行政审批等经济发展与综合管理类部门</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q25-5" name="demo-q25" value="教育、卫健、民政、人社等民生服务与社会保障部门" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q25-5" class="ml-3 text-gray-700">教育、卫健、民政、人社等民生服务与社会保障部门</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q25-6" name="demo-q25" value="乡镇、街道、开发区/园区或基层治理相关单位" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q25-6" class="ml-3 text-gray-700">乡镇、街道、开发区/园区或基层治理相关单位</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q25-secret" name="demo-q25" value="不便透露" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q25-secret" class="ml-3 text-gray-700">不便透露</label>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="radio" id="demo-q25-other" name="demo-q25" value="其他" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="demo-q25-other" class="ml-3 text-gray-700">其他，请说明：</label>
+                                    <input type="text" id="demo-q25-other-text" class="ml-2 flex-1 max-w-xs px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary" placeholder="请输入">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -218,15 +313,15 @@
         <!-- 页脚 -->
         <footer class="bg-gray-100 border-t border-gray-200 py-4">
             <div class="container mx-auto px-4 text-center text-sm text-gray-600">
-                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+                <p>© 2026 清华大学纪检监察研究院 | 学术研究专用</p>
             </div>
         </footer>
     </div>
 
     <script>
         // 全局变量
-        const totalPages = 8; // 总页面数
-        let currentPage = 6; // 当前页面索引
+        const totalPages = 9; // 总页面数
+        let currentPage = 8; // 当前页面索引
         let participantId = ''; // 参与者ID
         let group = 0; // 分组 (1, 2, 或 3)
         
@@ -260,7 +355,7 @@
                 const data = JSON.parse(savedData);
                 participantId = data.participantId;
                 group = data.group;
-                currentPage = data.currentPage || 5;
+                currentPage = data.currentPage || 8;
                 
                 // 如果有已保存的答案，恢复选择
                 if (data.demographics) {
@@ -317,6 +412,30 @@
                             radioButton.checked = true;
                         }
                     }
+                    
+                    // 恢复工作所在地
+                    if (demographics['demo-q24']) {
+                        const radioButton = document.querySelector(`input[name="demo-q24"][value="${demographics['demo-q24']}"]`);
+                        if (radioButton) {
+                            radioButton.checked = true;
+                        }
+                        // 恢复其他说明
+                        if (demographics['demo-q24-other']) {
+                            document.getElementById('demo-q24-other-text').value = demographics['demo-q24-other'];
+                        }
+                    }
+                    
+                    // 恢复单位类型
+                    if (demographics['demo-q25']) {
+                        const radioButton = document.querySelector(`input[name="demo-q25"][value="${demographics['demo-q25']}"]`);
+                        if (radioButton) {
+                            radioButton.checked = true;
+                        }
+                        // 恢复其他说明
+                        if (demographics['demo-q25-other']) {
+                            document.getElementById('demo-q25-other-text').value = demographics['demo-q25-other'];
+                        }
+                    }
                 }
                 
                 updateProgress();
@@ -339,7 +458,7 @@
         }
         
         // 前进到下一页
-        function goNext() {
+        async function goNext() {
             // 验证所有必填项
             const answers = {};
             let isValid = true;
@@ -428,6 +547,34 @@
                 answers['demo-q6'] = position.value;
             }
             
+            // 验证工作所在地
+            const location = document.querySelector('input[name="demo-q24"]:checked');
+            if (!location) {
+                isValid = false;
+                errorMessage = '请选择您的工作所在地。';
+            } else {
+                answers['demo-q24'] = location.value;
+                // 如果选择了其他，保存说明文字
+                if (location.value === '其他') {
+                    const otherText = document.getElementById('demo-q24-other-text').value;
+                    answers['demo-q24-other'] = otherText;
+                }
+            }
+            
+            // 验证单位类型
+            const unitType = document.querySelector('input[name="demo-q25"]:checked');
+            if (!unitType) {
+                isValid = false;
+                errorMessage = '请选择您的单位类型。';
+            } else {
+                answers['demo-q25'] = unitType.value;
+                // 如果选择了其他，保存说明文字
+                if (unitType.value === '其他') {
+                    const otherText = document.getElementById('demo-q25-other-text').value;
+                    answers['demo-q25-other'] = otherText;
+                }
+            }
+            
             // 如果验证失败，显示错误消息
             if (!isValid) {
                 document.getElementById('error-text').textContent = errorMessage;
@@ -439,13 +586,13 @@
             saveAnswers(answers);
             
             // 更新当前页面
-            currentPage = 7;
+            currentPage = 9;
             
             // 保存问卷数据
-            saveQuestionnaireData();
+            await saveQuestionnaireData();
             
-            // 导航到实验后说明页
-            window.location.href = 'debriefing.html';
+            // 导航到联系方式与问卷提交页
+            window.location.href = 'interview.html';
         }
         
         // 保存答案
@@ -459,12 +606,20 @@
         }
         
         // 保存问卷数据
-        function saveQuestionnaireData() {
+        async function saveQuestionnaireData() {
             const savedData = localStorage.getItem('questionnaire_data');
             if (savedData) {
                 const data = JSON.parse(savedData);
                 data.currentPage = currentPage;
                 localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                
+                // 保存到服务器
+                try {
+                    await autoSaveData(data);
+                    console.log('数据已成功保存到服务器');
+                } catch (error) {
+                    console.warn('保存到服务器失败，数据已保存到本地:', error.message);
+                }
             }
         }
     </script>

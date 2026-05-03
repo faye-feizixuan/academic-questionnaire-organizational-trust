@@ -8,6 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- API配置 -->
+    <script src="config.js"></script>
+    <!-- API服务 -->
+    <script src="api.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -17,7 +21,8 @@
                         secondary: '#e5edff',
                         accent: '#0e3a80',
                         neutral: '#f3f4f6',
-                        'neutral-dark': '#4b5563'
+                        'neutral-dark': '#4b5563',
+                        purple: '#7e22ce'
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif']
@@ -75,308 +80,312 @@
                 <div id="main-questionnaire-page" class="p-6 md:p-8">
                     <div class="mb-8"></div>
                     
-                    <!-- 第一部分：1-12题 -->
+                    <!-- 第一部分：16题 -->
                     <div id="section-1" class="mb-10">
-                        <p class="text-gray-700 mb-2">1、请您对下列表述进行评价：</p>
-                        <p class="text-sm text-gray-500 mb-6">（请在0-10分之间做出选择，0分代表"非常不同意"，10分代表"非常同意"）</p>
+                        <p class="text-gray-700 mb-2 font-bold">16、请您对下列表述进行评价：（单选题）</p>
+                        <p class="text-sm text-gray-500 mb-6">（请在1-5分之间做出选择，1=非常不同意；5=非常同意）</p>
                         
                         <div class="space-y-8">
-                            <!-- 问题1 -->
+                            <!-- 问题16-1 -->
                             <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（1）我认为我所在的单位清廉正直。</p>
-                                <div class="flex items-center space-x-2">
-                                    <div id="main-q1-1-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-1-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
+                                <p class="text-gray-700 font-medium">（1）我认为<span class="font-bold text-purple">材料中我所在的单位</span>清廉正直。</p>
+                                <div class="grid grid-cols-5 gap-2">
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-1-1" name="main-q16-1" value="1" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">1</span>
+                                        <span class="text-xs text-gray-500 text-center">非常不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-1-2" name="main-q16-1" value="2" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">2</span>
+                                        <span class="text-xs text-gray-500 text-center">比较不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-1-3" name="main-q16-1" value="3" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">3</span>
+                                        <span class="text-xs text-gray-500 text-center">一般</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-1-4" name="main-q16-1" value="4" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">4</span>
+                                        <span class="text-xs text-gray-500 text-center">比较同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-1-5" name="main-q16-1" value="5" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">5</span>
+                                        <span class="text-xs text-gray-500 text-center">非常同意</span>
+                                    </label>
                                 </div>
                             </div>
                             
-                            <!-- 问题2 -->
+                            <!-- 问题16-2 -->
                             <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（2）我确信单位能够坚持按制度办事。</p>
-                                <div class="flex items-center space-x-2">
-                                    <div id="main-q1-2-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-2-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
+                                <p class="text-gray-700 font-medium">（2）我确信<span class="font-bold text-purple">材料中我所在的单位</span>能够坚持按制度办事。</p>
+                                <div class="grid grid-cols-5 gap-2">
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-2-1" name="main-q16-2" value="1" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">1</span>
+                                        <span class="text-xs text-gray-500 text-center">非常不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-2-2" name="main-q16-2" value="2" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">2</span>
+                                        <span class="text-xs text-gray-500 text-center">比较不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-2-3" name="main-q16-2" value="3" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">3</span>
+                                        <span class="text-xs text-gray-500 text-center">一般</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-2-4" name="main-q16-2" value="4" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">4</span>
+                                        <span class="text-xs text-gray-500 text-center">比较同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-2-5" name="main-q16-2" value="5" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">5</span>
+                                        <span class="text-xs text-gray-500 text-center">非常同意</span>
+                                    </label>
                                 </div>
                             </div>
                             
-                            <!-- 问题3 -->
+                            <!-- 问题16-3 -->
                             <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（3）我认为单位的决策/行为的出发点都是负责任且顾全大局的。</p>
-                                <div class="flex items-center space-x-4">
-                                    <div id="main-q1-3-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-3-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
+                                <p class="text-gray-700 font-medium">（3）我认为<span class="font-bold text-purple">材料中我所在的单位</span>的决策/行为的出发点都是负责任且顾全大局的。</p>
+                                <div class="grid grid-cols-5 gap-2">
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-3-1" name="main-q16-3" value="1" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">1</span>
+                                        <span class="text-xs text-gray-500 text-center">非常不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-3-2" name="main-q16-3" value="2" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">2</span>
+                                        <span class="text-xs text-gray-500 text-center">比较不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-3-3" name="main-q16-3" value="3" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">3</span>
+                                        <span class="text-xs text-gray-500 text-center">一般</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-3-4" name="main-q16-3" value="4" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">4</span>
+                                        <span class="text-xs text-gray-500 text-center">比较同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-3-5" name="main-q16-3" value="5" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">5</span>
+                                        <span class="text-xs text-gray-500 text-center">非常同意</span>
+                                    </label>
                                 </div>
                             </div>
                             
-                            <!-- 问题4 -->
+                            <!-- 问题16-4 -->
                             <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（4）单位及领导班子在与我沟通时，能够做到坦诚相待。</p>
-                                <div class="flex items-center space-x-4">
-                                    <div id="main-q1-4-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-4-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
+                                <p class="text-gray-700 font-medium">（4）为确保问卷质量，请您在本题选择"比较同意"。</p>
+                                <div class="grid grid-cols-5 gap-2">
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-4-1" name="main-q16-4" value="1" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">1</span>
+                                        <span class="text-xs text-gray-500 text-center">非常不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-4-2" name="main-q16-4" value="2" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">2</span>
+                                        <span class="text-xs text-gray-500 text-center">比较不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-4-3" name="main-q16-4" value="3" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">3</span>
+                                        <span class="text-xs text-gray-500 text-center">一般</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-4-4" name="main-q16-4" value="4" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">4</span>
+                                        <span class="text-xs text-gray-500 text-center">比较同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-4-5" name="main-q16-4" value="5" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">5</span>
+                                        <span class="text-xs text-gray-500 text-center">非常同意</span>
+                                    </label>
                                 </div>
                             </div>
                             
-                            <!-- 问题5 -->
+                            <!-- 问题16-5 -->
                             <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（5）我相信我的领导会尽可能以公正的方式对待我。</p>
-                                <div class="flex items-center space-x-4">
-                                    <div id="main-q1-5-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-5-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
+                                <p class="text-gray-700 font-medium">（5）我认为<span class="font-bold text-purple">材料中我所在单位</span>及领导班子在与我沟通时，能够做到坦诚相待。</p>
+                                <div class="grid grid-cols-5 gap-2">
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-5-1" name="main-q16-5" value="1" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">1</span>
+                                        <span class="text-xs text-gray-500 text-center">非常不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-5-2" name="main-q16-5" value="2" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">2</span>
+                                        <span class="text-xs text-gray-500 text-center">比较不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-5-3" name="main-q16-5" value="3" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">3</span>
+                                        <span class="text-xs text-gray-500 text-center">一般</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-5-4" name="main-q16-5" value="4" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">4</span>
+                                        <span class="text-xs text-gray-500 text-center">比较同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-5-5" name="main-q16-5" value="5" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">5</span>
+                                        <span class="text-xs text-gray-500 text-center">非常同意</span>
+                                    </label>
                                 </div>
                             </div>
                             
-                            <!-- 问题6 -->
+                            <!-- 问题16-6 -->
                             <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（6）我相信我的领导所说的话是诚实可信的。</p>
-                                <div class="flex items-center space-x-4">
-                                    <div id="main-q1-6-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-6-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
+                                <p class="text-gray-700 font-medium">（6）我认为<span class="font-bold text-purple">材料中我所在单位</span>在系统内及社会上享有良好的声誉和较高的认可度。</p>
+                                <div class="grid grid-cols-5 gap-2">
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-6-1" name="main-q16-6" value="1" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">1</span>
+                                        <span class="text-xs text-gray-500 text-center">非常不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-6-2" name="main-q16-6" value="2" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">2</span>
+                                        <span class="text-xs text-gray-500 text-center">比较不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-6-3" name="main-q16-6" value="3" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">3</span>
+                                        <span class="text-xs text-gray-500 text-center">一般</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-6-4" name="main-q16-6" value="4" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">4</span>
+                                        <span class="text-xs text-gray-500 text-center">比较同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-6-5" name="main-q16-6" value="5" class="h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-lg font-bold text-gray-700">5</span>
+                                        <span class="text-xs text-gray-500 text-center">非常同意</span>
+                                    </label>
                                 </div>
                             </div>
-                            
-                            <!-- 问题7 -->
-                            <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（7）我相信我的领导会尽可能地考虑我的正当权益。</p>
-                                <div class="flex items-center space-x-4">
-                                    <div id="main-q1-7-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-7-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
-                                </div>
-                            </div>
-                            
-                            <!-- 问题8 -->
-                            <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（8）我相信我的领导会以诚恳的态度对待下属的意见。</p>
-                                <div class="flex items-center space-x-4">
-                                    <div id="main-q1-8-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-8-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
-                                </div>
-                            </div>
-                            
-                            <!-- 问题9 -->
-                            <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（9）我相信我的领导在任何时候都会在工作上支持与协助我。</p>
-                                <div class="flex items-center space-x-4">
-                                    <div id="main-q1-9-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-9-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
-                                </div>
-                            </div>
-                            
-                            <!-- 问题10 -->
-                            <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（10）我充分相信单位同事们的业务能力。</p>
-                                <div class="flex items-center space-x-4">
-                                    <div id="main-q1-10-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-10-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
-                                </div>
-                            </div>
-                            
-                            <!-- 问题11 -->
-                            <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（11）当我工作任务繁重时，我相信同事会帮助我。</p>
-                                <div class="flex items-center space-x-4">
-                                    <div id="main-q1-11-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-11-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
-                                </div>
-                            </div>
-                            
-                            <!-- 问题12 -->
-                            <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（12）我相信同事在工作协作中对我的承诺与保证。</p>
-                                <div class="flex items-center space-x-4">
-                                    <div id="main-q1-12-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-12-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
-                                </div>
-                            </div>
-                            
-                            <!-- 问题13 -->
-                            <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（13）当我在工作中遇到困难时，我相信同事们会支援我。</p>
-                                <div class="flex items-center space-x-4">
-                                    <div id="main-q1-13-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-13-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
-                                </div>
-                            </div>
-                            
-                            <!-- 问题14 -->
-                            <div class="space-y-3">
-                                <p class="text-gray-700 font-medium">（14）我们单位在系统内及社会上享有良好的声誉和较高的认可度。</p>
-                                <div class="flex items-center space-x-2">
-                                    <div id="main-q1-14-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q1-14-value" class="text-primary font-medium w-8 text-center">-</span>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 非常不同意</span>
-                                    <span>10 = 非常同意</span>
-                                </div>
-                            </div>
-                            
                         </div>
                     </div>
                     
-                    <!-- 第二部分：23-25题 -->
-                    <div id="section-2" class="mb-8">
-                        <p class="text-gray-700 mb-6">2、下列题目请您先仔细阅读题干，而后进行作答。</p>
+                    <!-- 第17题 -->
+                    <div id="section-2" class="mb-10">
+                        <p class="text-gray-700 mb-4 font-bold">17、下列题目请您先仔细阅读题干，而后进行作答。（单选题）</p>
                         
-                        <div class="space-y-8">
-                            <!-- 问题15 -->
-                            <div class="space-y-4">
-                                <p class="text-gray-700 mb-4">（1）程序公平是指单位成员对单位内部各项制度、决策过程以及资源分配是否公正的整体感受。一个具有良好程序公平的单位通常具备以下特征：各项分配和奖惩制度有章可循且公开透明；所有人在制度面前一律平等，且规定都能得到严格且一致的落实；同时，大家有渠道参与相关制度的讨论与制定，确保这些制度能够真实代表大多数人的意愿。
-                                <p class="text-gray-700 font-medium">综合上述描述以及您的切身感受，请您对本单位的"程序公平程度"进行评分：</p>
-                                <p class="text-sm text-gray-500 mb-2">（请在0-10分之间做出选择，0分代表"完全不公平"，10分代表"完全公平"）</p>
-                                
-                                <div class="flex items-center space-x-2">
-                                    <div id="main-q2-1-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q2-1-value" class="text-primary font-medium w-8 text-center">-</span>
+                        <!-- 17-1 程序公平 -->
+                        <div class="mb-8 ml-4">
+                            <p class="text-gray-700 mb-3">（1）程序公平是指单位成员对单位内部各项制度、决策过程以及资源分配是否公正的整体感受。一个具有良好程序公平的单位通常具备以下特征：各项分配和奖惩制度有章可循且公开透明；所有人在制度面前一律平等，且规定都能得到严格且一致的落实；同时，大家有渠道参与相关制度的讨论与制定，确保这些制度能够真实代表大多数人的意愿。</p>
+                            <p class="text-gray-700 mb-3">综合上述描述以及您的切身感受，请您对<span class="font-bold text-purple">材料中您所在单位</span>的"程序公平程度"进行评分：</p>
+                            <div class="space-y-3 ml-4">
+                                <div class="flex items-start">
+                                    <input type="radio" id="main-q17-1-1" name="main-q17-1" value="非常不公平" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="main-q17-1-1" class="ml-3 text-gray-700">非常不公平</label>
                                 </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 完全不公平</span>
-                                    <span>10 = 完全公平</span>
+                                <div class="flex items-start">
+                                    <input type="radio" id="main-q17-1-2" name="main-q17-1" value="比较不公平" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="main-q17-1-2" class="ml-3 text-gray-700">比较不公平</label>
                                 </div>
-                            </div>
-                            
-                            <!-- 问题16 -->
-                            <div class="space-y-4">
-                                <p class="text-gray-700 mb-4">（2）日常工作中，单位的廉洁纪律与监督约束机制至关重要，其主要体现在各项纪律规定的贯彻执行情况中。一般而言，若单位能够做到纪律严明、执纪严格，对违纪违规问题坚持"零容忍"、"一视同仁"，则可以提高违规成本，切实发挥纪律约束的震慑作用。</p>
-                                <p class="text-gray-700 font-medium">综合上述描述以及您的切身感受，请您对本单位"廉洁纪律与监督约束机制的执行严格程度、威慑效果及制度有效性"进行评分：</p>
-                                <p class="text-sm text-gray-500 mb-2">（请在0-10分之间做出选择，0分代表"形同虚设、完全无效"，10分代表"执行极其严格、运行非常有效"）</p>
-                                
-                                <div class="flex items-center space-x-2">
-                                    <div id="main-q2-2-container" class="flex space-x-1 w-full">
-                                        <!-- 10个方框将通过JavaScript动态生成 -->
-                                    </div>
-                                    <span id="main-q2-2-value" class="text-primary font-medium w-8 text-center">-</span>
+                                <div class="flex items-start">
+                                    <input type="radio" id="main-q17-1-3" name="main-q17-1" value="一般" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="main-q17-1-3" class="ml-3 text-gray-700">一般</label>
                                 </div>
-                                <div class="flex justify-between text-xs text-gray-500">
-                                    <span>0 = 形同虚设、完全无效</span>
-                                    <span>10 = 执行极其严格、运行非常有效</span>
+                                <div class="flex items-start">
+                                    <input type="radio" id="main-q17-1-4" name="main-q17-1" value="比较公平" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="main-q17-1-4" class="ml-3 text-gray-700">比较公平</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="radio" id="main-q17-1-5" name="main-q17-1" value="非常公平" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="main-q17-1-5" class="ml-3 text-gray-700">非常公平</label>
                                 </div>
                             </div>
-                            
+                        </div>
+                        
+                        <!-- 17-2 廉洁纪律 -->
+                        <div class="ml-4">
+                            <p class="text-gray-700 mb-3">（2）日常工作中，单位的廉洁纪律与监督约束机制至关重要，其主要体现在各项纪律规定的贯彻执行情况中。一般而言，若单位能够做到纪律严明、执纪严格，对违纪违规问题坚持"零容忍"、"一视同仁"，则可以提高违规成本，切实发挥纪律约束的震慑作用。</p>
+                            <p class="text-gray-700 mb-3">综合上述描述以及您的切身感受，请您对<span class="font-bold text-purple">材料中您所在单位</span>"廉洁纪律与监督约束机制的执行严格程度、威慑效果及制度有效性"进行评分：</p>
+                            <div class="space-y-3 ml-4">
+                                <div class="flex items-start">
+                                    <input type="radio" id="main-q17-2-1" name="main-q17-2" value="效果非常弱" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="main-q17-2-1" class="ml-3 text-gray-700">效果非常弱</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="radio" id="main-q17-2-2" name="main-q17-2" value="效果比较弱" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="main-q17-2-2" class="ml-3 text-gray-700">效果比较弱</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="radio" id="main-q17-2-3" name="main-q17-2" value="一般" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="main-q17-2-3" class="ml-3 text-gray-700">一般</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="radio" id="main-q17-2-4" name="main-q17-2" value="效果比较强" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="main-q17-2-4" class="ml-3 text-gray-700">效果比较强</label>
+                                </div>
+                                <div class="flex items-start">
+                                    <input type="radio" id="main-q17-2-5" name="main-q17-2" value="效果非常强" class="mt-1 h-4 w-4 text-primary focus:ring-primary border-gray-300">
+                                    <label for="main-q17-2-5" class="ml-3 text-gray-700">效果非常强</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="flex justify-between">
-                        <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
+                    <!-- 错误提示 -->
+                    <div id="error-message" class="hidden bg-red-50 text-red-600 p-4 rounded-md mb-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fa fa-exclamation-circle"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm">请完成所有题目后再提交。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 导航按钮 -->
+                    <div class="flex justify-between mt-10">
+                        <button id="back-btn" class="flex items-center px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all-300">
                             <i class="fa fa-arrow-left mr-2"></i>返回
                         </button>
-                        
-                        <button id="next-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
+                        <button id="next-btn" class="flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-accent transition-all-300 shadow-md hover:shadow-lg">
                             继续<i class="fa fa-arrow-right ml-2"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </main>
-
+        
         <!-- 页脚 -->
         <footer class="bg-gray-100 border-t border-gray-200 py-4">
             <div class="container mx-auto px-4 text-center text-sm text-gray-600">
-                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+                <p>© 2026 清华大学纪检监察研究院 | 学术研究专用</p>
             </div>
         </footer>
     </div>
 
     <script>
         // 全局变量
-        const totalPages = 8; // 总页面数
-        let currentPage = 5; // 当前页面索引
-        let participantId = ''; // 参与者ID
-        let group = 0; // 分组 (1, 2, 或 3)
+        const totalPages = 9;
+        let currentPage = 7;
+        let participantId = '';
+        let group = 0;
         
         // 初始化应用
         document.addEventListener('DOMContentLoaded', function() {
-            // 加载问卷数据
             loadQuestionnaireData();
-            
-            // 绑定按钮事件
-            document.getElementById('back-btn').addEventListener('click', goBack);
-            document.getElementById('next-btn').addEventListener('click', goNext);
-            
-            // 初始化所有问题的方框选择器
-            initAllBoxSelectors();
+            bindEvents();
+            updateProgress();
         });
         
         // 加载问卷数据
@@ -386,35 +395,150 @@
                 const data = JSON.parse(savedData);
                 participantId = data.participantId;
                 group = data.group;
-                currentPage = data.currentPage || 4;
+                currentPage = data.currentPage || 7;
                 
-                // 如果有已保存的答案，恢复选择
-                if (data.mainQuestionnaire) {
-                    for (const [questionId, answer] of Object.entries(data.mainQuestionnaire)) {
-                        const container = document.getElementById(`${questionId}-container`);
-                        const valueDisplay = document.getElementById(`${questionId}-value`);
-                        if (container && valueDisplay) {
-                            // 找到对应数值的方框并设置选中状态
-                            const boxes = container.querySelectorAll('div');
-                            boxes.forEach(box => {
-                                if (parseInt(box.dataset.value) === parseInt(answer)) {
-                                    box.classList.remove('border-gray-300', 'text-gray-600');
-                                    box.classList.add('bg-primary', 'text-white', 'border-primary');
-                                } else {
-                                    box.classList.remove('bg-primary', 'text-white', 'border-primary');
-                                    box.classList.add('border-gray-300', 'text-gray-600');
-                                }
-                            });
-                            valueDisplay.textContent = answer;
-                        }
-                    }
-                }
+                // 恢复之前保存的答案
+                restoreAnswers(data);
                 
                 updateProgress();
             } else {
-                // 如果没有保存的数据，返回欢迎页
                 window.location.href = 'index.html';
             }
+        }
+        
+        // 恢复答案
+        function restoreAnswers(data) {
+            // 恢复16题的6个子问题答案
+            for (let i = 1; i <= 6; i++) {
+                const answer = data[`main-q16-${i}`];
+                if (answer) {
+                    const radioButton = document.querySelector(`input[name="main-q16-${i}"][value="${answer}"]`);
+                    if (radioButton) {
+                        radioButton.checked = true;
+                    }
+                }
+            }
+            
+            // 恢复17-1答案
+            const q17_1Answer = data['main-q17-1'];
+            if (q17_1Answer) {
+                const radioButton = document.querySelector(`input[name="main-q17-1"][value="${q17_1Answer}"]`);
+                if (radioButton) {
+                    radioButton.checked = true;
+                }
+            }
+            
+            // 恢复17-2答案
+            const q17_2Answer = data['main-q17-2'];
+            if (q17_2Answer) {
+                const radioButton = document.querySelector(`input[name="main-q17-2"][value="${q17_2Answer}"]`);
+                if (radioButton) {
+                    radioButton.checked = true;
+                }
+            }
+        }
+        
+        // 绑定事件
+        function bindEvents() {
+            // 绑定返回按钮
+            document.getElementById('back-btn').addEventListener('click', goBack);
+            
+            // 绑定提交按钮
+            document.getElementById('next-btn').addEventListener('click', submitAnswers);
+        }
+        
+        // 保存单个答案
+        function saveAnswer(key, value) {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data[key] = value;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+            }
+        }
+        
+        // 验证所有问题是否都已回答
+        function validateAnswers() {
+            // 验证16题的6个子问题
+            for (let i = 1; i <= 6; i++) {
+                const selected = document.querySelector(`input[name="main-q16-${i}"]:checked`);
+                if (!selected) {
+                    return false;
+                }
+            }
+            
+            // 验证17-1
+            const q17_1Selected = document.querySelector('input[name="main-q17-1"]:checked');
+            if (!q17_1Selected) {
+                return false;
+            }
+            
+            // 验证17-2
+            const q17_2Selected = document.querySelector('input[name="main-q17-2"]:checked');
+            if (!q17_2Selected) {
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // 提交答案
+        async function submitAnswers() {
+            if (!validateAnswers()) {
+                document.getElementById('error-message').classList.remove('hidden');
+                return;
+            }
+            
+            // 保存16题的6个子问题答案
+            for (let i = 1; i <= 6; i++) {
+                const selected = document.querySelector(`input[name="main-q16-${i}"]:checked`);
+                if (selected) {
+                    saveAnswer(`main-q16-${i}`, selected.value);
+                }
+            }
+            
+            // 保存17-1答案
+            const q17_1Selected = document.querySelector('input[name="main-q17-1"]:checked');
+            if (q17_1Selected) {
+                saveAnswer('main-q17-1', q17_1Selected.value);
+            }
+            
+            // 保存17-2答案
+            const q17_2Selected = document.querySelector('input[name="main-q17-2"]:checked');
+            if (q17_2Selected) {
+                saveAnswer('main-q17-2', q17_2Selected.value);
+            }
+            
+            // 更新当前页面
+            currentPage = 8;
+            
+            // 保存问卷数据
+            await saveQuestionnaireData();
+            
+            // 导航到下一页
+            window.location.href = 'demographics.html';
+        }
+        
+        // 保存问卷数据
+        async function saveQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                
+                try {
+                    await autoSaveData(data);
+                    console.log('数据已成功保存到服务器');
+                } catch (error) {
+                    console.error('保存数据失败:', error);
+                }
+            }
+        }
+        
+        // 返回上一页
+        function goBack() {
+            window.location.href = 'instruction.html';
         }
         
         // 更新进度条
@@ -422,162 +546,6 @@
             const progress = Math.round((currentPage / totalPages) * 100);
             document.getElementById('progress-bar').style.width = `${progress}%`;
             document.getElementById('progress-text').textContent = `${progress}%`;
-        }
-        
-        // 返回上一页
-        function goBack() {
-            // 返回到填写说明页
-            window.location.href = 'instruction.html';
-        }
-        
-        // 前进到下一页
-        function goNext() {
-            // 验证所有方框选择器都已被操作
-            const questionIds = [
-                'main-q1-1', 'main-q1-2', 'main-q1-3', 'main-q1-4', 'main-q1-5', 'main-q1-6',
-                'main-q1-7', 'main-q1-8', 'main-q1-9', 'main-q1-10', 'main-q1-11', 'main-q1-12',
-                'main-q1-13', 'main-q1-14',
-                'main-q2-1', 'main-q2-2'
-            ];
-            
-            const answers = {};
-            let allAnswered = true;
-            
-            questionIds.forEach(questionId => {
-                const valueDisplay = document.getElementById(`${questionId}-value`);
-                const value = valueDisplay ? valueDisplay.textContent : '-';
-                
-                if (value === '-') {
-                    allAnswered = false;
-                }
-                
-                answers[questionId] = value;
-            });
-            
-            // 如果有未操作的滑块，显示错误提示
-            if (!allAnswered) {
-                // 创建错误提示元素（如果不存在）
-                let errorMessage = document.getElementById('error-message');
-                if (!errorMessage) {
-                    errorMessage = document.createElement('div');
-                    errorMessage.id = 'error-message';
-                    errorMessage.className = 'bg-red-50 text-red-600 p-4 rounded-md mb-6';
-                    errorMessage.innerHTML = `
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <i class="fa fa-exclamation-circle"></i>
-                            </div>
-                            <div class="ml-3">
-                                <p class="text-sm">请确保所有问题都已作答。</p>
-                            </div>
-                        </div>
-                    `;
-                    // 将错误提示添加到页面
-                    const mainContent = document.querySelector('#main-questionnaire-page > div:first-child');
-                    mainContent.appendChild(errorMessage);
-                } else {
-                    errorMessage.classList.remove('hidden');
-                }
-                return;
-            }
-            
-            // 保存答案
-            saveAnswers(answers);
-            
-            // 更新当前页面
-            currentPage = 5;
-            
-            // 保存问卷数据
-            saveQuestionnaireData();
-            
-            // 导航到下一页
-            window.location.href = 'demographics.html';
-        }
-        
-        // 保存答案
-        function saveAnswers(answers) {
-            const savedData = localStorage.getItem('questionnaire_data');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                data.mainQuestionnaire = answers;
-                localStorage.setItem('questionnaire_data', JSON.stringify(data));
-            }
-        }
-        
-        // 保存问卷数据
-        function saveQuestionnaireData() {
-            const savedData = localStorage.getItem('questionnaire_data');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                data.currentPage = currentPage;
-                localStorage.setItem('questionnaire_data', JSON.stringify(data));
-            }
-        }
-        
-        // 初始化所有问题的方框选择器
-        function initAllBoxSelectors() {
-            // 获取所有需要转换为方框选择器的问题ID
-            const questionIds = [
-                'main-q1-1', 'main-q1-2', 'main-q1-3', 'main-q1-4', 'main-q1-5', 'main-q1-6',
-                'main-q1-7', 'main-q1-8', 'main-q1-9', 'main-q1-10', 'main-q1-11', 'main-q1-12',
-                'main-q1-13', 'main-q1-14', 'main-q1-15',
-                'main-q2-1', 'main-q2-2'
-            ];
-            
-            // 为每个问题创建方框选择器
-            questionIds.forEach(questionId => {
-                createBoxSelector(questionId);
-            });
-        }
-        
-        // 为单个问题创建方框选择器
-        function createBoxSelector(questionId) {
-            const container = document.getElementById(`${questionId}-container`);
-            if (!container) return;
-            
-            // 创建11个方框（0-10分）
-            for (let i = 0; i <= 10; i++) {
-                const box = document.createElement('div');
-                box.className = 'flex-1 aspect-square border border-gray-300 rounded cursor-pointer transition-all hover:bg-primary hover:border-primary flex items-center justify-center text-xs text-gray-600';
-                box.dataset.value = i;
-                box.textContent = i;
-                
-                // 添加点击事件
-                box.addEventListener('click', function() {
-                    // 移除同组其他方框的选中状态
-                    const boxes = container.querySelectorAll('div');
-                    boxes.forEach(b => {
-                        b.classList.remove('bg-primary', 'text-white', 'border-primary');
-                        b.classList.add('border-gray-300', 'text-gray-600');
-                    });
-                    
-                    // 设置当前方框为选中状态
-                    this.classList.remove('border-gray-300', 'text-gray-600');
-                    this.classList.add('bg-primary', 'text-white', 'border-primary');
-                    
-                    // 更新显示的分值
-                    const valueDisplay = document.getElementById(`${questionId}-value`);
-                    if (valueDisplay) {
-                        valueDisplay.textContent = i;
-                    }
-                    
-                    // 存储选中的值
-                    const hiddenInput = document.getElementById(questionId);
-                    if (hiddenInput) {
-                        hiddenInput.value = i;
-                    } else {
-                        // 如果隐藏输入框不存在，创建一个
-                        const newHiddenInput = document.createElement('input');
-                        newHiddenInput.type = 'hidden';
-                        newHiddenInput.id = questionId;
-                        newHiddenInput.name = questionId;
-                        newHiddenInput.value = i;
-                        container.parentNode.appendChild(newHiddenInput);
-                    }
-                });
-                
-                container.appendChild(box);
-            }
         }
     </script>
 </body>

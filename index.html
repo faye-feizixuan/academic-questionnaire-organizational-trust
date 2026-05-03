@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="zh-CN"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -6,6 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- API配置 -->
+    <script src="config.js"></script>
+    <!-- API服务 -->
+    <script src="api.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -78,7 +83,7 @@
                     <div class="mb-8 text-gray-700">
                         <p class="mb-4">尊敬的受访者：</p>
                         <p class="mb-4">您好！感谢您参与本次问卷调查。</p>
-                        <p class="mb-4">本研究由清华大学纪检监察研究院博士生组织开展，旨在从学术角度分析公职人员的相关认知与行为机制，为制度优化提供经验依据。本问卷为匿名调查，不涉及任何个人身份信息的收集。所有数据仅用于学术分析，并将严格保密，请您放心填写。问卷不存在对错之分，请根据您的真实情况和直观感受作答。您的回答对本研究具有重要价值。</p>
+                        <p class="mb-4">本研究由清华大学纪检监察研究院博士生组织开展，旨在从学术角度分析公职人员的相关认知与行为机制，为制度优化提供经验依据。<span class="text-red-600 font-bold">本问卷为匿名调查，不涉及任何个人身份信息的收集。</span>所有数据仅用于学术分析，并将严格保密，请您放心填写。问卷不存在对错之分，请根据您的真实情况和直观感受作答。您的回答对本研究具有重要价值。</p>
                         <p>衷心感谢您的支持与配合！祝您工作顺利！</p>
                     </div>
                     
@@ -94,7 +99,7 @@
         <!-- 页脚 -->
         <footer class="bg-gray-100 border-t border-gray-200 py-4">
             <div class="container mx-auto px-4 text-center text-sm text-gray-600">
-                <p>© 2025 清华大学纪检监察研究院 | 学术研究专用</p>
+                <p>© 2026 清华大学纪检监察研究院 | 学术研究专用</p>
             </div>
         </footer>
     </div>
@@ -134,7 +139,6 @@
         let currentPage = 0; // 当前页面索引
         let participantId = ''; // 参与者ID
         let group = 0; // 分组 (1, 2, 或 3)
-        const EXPORT_PASSWORD = '2025311741'; // 数据导出密码
         
         // 初始化应用
         document.addEventListener('DOMContentLoaded', function() {
@@ -169,68 +173,100 @@
         
         // 检查是否有未完成的问卷
         function checkForIncompleteQuestionnaire() {
-            const savedData = localStorage.getItem('questionnaire_data');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                if (data.participantId && !data.completed) {
-                    const confirmContinue = confirm('检测到您有未完成的问卷，是否继续？');
-                    if (confirmContinue) {
-                        participantId = data.participantId;
-                        group = data.group;
-                        currentPage = data.currentPage || 0;
-                        updateProgress();
-                        navigateToPage(currentPage + 1); // +1 因为页面从1开始
-                    } else {
-                        // 清除旧数据
-                        localStorage.removeItem('questionnaire_data');
+            try {
+                const savedData = localStorage.getItem('questionnaire_data');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    if (data.participantId && !data.completed) {
+                        const confirmContinue = confirm('检测到您有未完成的问卷，是否继续？');
+                        if (confirmContinue) {
+                            participantId = data.participantId;
+                            group = data.group;
+                            currentPage = data.currentPage || 0;
+                            updateProgress();
+                            const pageFileName = getPageFileName(currentPage);
+                            navigateToPage(pageFileName);
+                        } else {
+                            // 清除旧数据
+                            localStorage.removeItem('questionnaire_data');
+                        }
                     }
                 }
+            } catch (error) {
+                console.error('检查未完成问卷时出错:', error);
+                // 如果出错，清除可能损坏的数据
+                localStorage.removeItem('questionnaire_data');
             }
         }
         
         // 开始问卷
         function startQuestionnaire() {
-            // 随机分组
-            group = assignRandomGroup();
-            
-            // 初始化问卷数据
-            const questionnaireData = {
-                participantId: participantId,
-                group: group,
-                currentPage: 1, // 从预测试页开始
-                preTest: {},
-                attentionTest: {
-                    answers: [],
-                    attempts: 0,
-                    passed: false
-                },
-                mainQuestionnaire: {},
-                demographics: {},
-                contactInfo: '',
-                startTime: new Date().toISOString(),
-                completed: false
-            };
-            
-            // 保存到本地存储
-            localStorage.setItem('questionnaire_data', JSON.stringify(questionnaireData));
-            
-            // 更新进度
-            currentPage = 1;
-            updateProgress();
-            
-            // 导航到预测试页
-            navigateToPage('pre-test.html');
+            try {
+                console.log('开始问卷流程...');
+                
+                // 随机分组
+                group = assignRandomGroup();
+                console.log('分组:', group);
+                
+                // 初始化问卷数据
+                const questionnaireData = {
+                    participantId: participantId,
+                    group: group,
+                    currentPage: 1, // 从预测试页开始
+                    preTest: {},
+                    attentionTest: {
+                        answers: [],
+                        attempts: 0,
+                        passed: false
+                    },
+                    mainQuestionnaire: {},
+                    demographics: {},
+                    contactInfo: '',
+                    startTime: new Date().toISOString(),
+                    completed: false
+                };
+                
+                console.log('初始化问卷数据:', questionnaireData);
+                
+                // 保存到本地存储
+                localStorage.setItem('questionnaire_data', JSON.stringify(questionnaireData));
+                console.log('数据已保存到本地存储');
+                
+                // 保存到服务器（后台异步进行，不阻塞页面跳转）
+                autoSaveData(questionnaireData).then(() => {
+                    console.log('数据已成功保存到服务器');
+                }).catch(error => {
+                    console.warn('保存到服务器失败，数据已保存到本地:', error.message);
+                });
+                
+                // 更新进度
+                currentPage = 1;
+                updateProgress();
+                
+                console.log('准备跳转到 pre-test.html');
+                
+                // 导航到预测试页
+                setTimeout(() => {
+                    navigateToPage('pre-test.html');
+                }, 100);
+                
+            } catch (error) {
+                console.error('开始问卷时出错:', error);
+                alert('发生错误，请刷新页面重试。错误信息: ' + error.message);
+            }
         }
         
-        // 随机分组 (1, 2, 或 3)
+        // 随机分组 (1, 2, 3, 或 4)
         function assignRandomGroup() {
             const random = Math.random();
-            if (random < 0.333) {
-                return 1; // 第一组 (无案例)
-            } else if (random < 0.666) {
-                return 2; // 第二组 (严重违纪违法案例)
+            if (random < 0.25) {
+                return 1; // 第一组
+            } else if (random < 0.5) {
+                return 2; // 第二组
+            } else if (random < 0.75) {
+                return 3; // 第三组
             } else {
-                return 3; // 第三组 (轻微违纪案例)
+                return 4; // 第四组
             }
         }
         
@@ -264,6 +300,21 @@
                 // 密码错误，显示错误消息
                 document.getElementById('export-error').classList.remove('hidden');
             }
+        }
+        
+        // 获取页面对应的文件名
+        function getPageFileName(pageNumber) {
+            const pageMap = {
+                1: 'pre-test.html',
+                2: 'intervention.html',
+                3: 'attention-test.html',
+                4: 'instruction.html',
+                5: 'main-questionnaire.html',
+                6: 'demographics.html',
+                7: 'interview.html',
+                8: 'debriefing.html'
+            };
+            return pageMap[pageNumber] || 'index.html';
         }
         
         // 导航到指定页面

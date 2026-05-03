@@ -6,9 +6,17 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 
 // 中间件
-app.use(cors());
+app.use(cors({
+    origin: '*', // 允许所有来源，包括 Safari 的 localhost
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+
+// 处理 OPTIONS 预检请求
+app.options('*', cors());
 
 // 邮件配置
 const nodemailer = require('nodemailer');

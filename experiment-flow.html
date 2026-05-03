@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>列举实验 - 基层政府组织信任研究</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- API配置 -->
+    <script src="config.js"></script>
+    <!-- API服务 -->
+    <script src="api.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a56db',
+                        secondary: '#3b82f6',
+                        accent: '#60a5fa',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <!-- 不显示任何内容 -->
+            </div>
+            <div id="progress-container" class="hidden md:flex items-center">
+                <div class="text-sm text-gray-600 mr-2">问卷进度:</div>
+                <div class="w-64 bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-primary h-2.5 rounded-full transition-all duration-500" style="width: 50%"></div>
+                </div>
+                <span id="progress-text" class="ml-2 text-sm text-gray-600">50%</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-8 fade-in">
+                <!-- 页面标题 -->
+                <div class="text-center mb-8">
+                </div>
+
+                <!-- 题目内容 - 根据分组显示不同版本 -->
+                <div id="condition-1-2" class="hidden">
+                    <p class="text-gray-700 mb-4 font-bold">15、以下说法中，有几项符合您阅读材料后的真实感受？</p>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-gray-600 mb-2">① 我会想进一步了解事情的后续情况。</p>
+                        <p class="text-gray-600 mb-2">② 我认为仅凭私下议论还难以判断事情全貌。</p>
+                        <p class="text-gray-600 mb-2">③ 我认为类似事件可能会影响单位的工作氛围。</p>
+                        <p class="text-gray-600">④ 我认为类似问题需要通过规范程序进行处理。</p>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300" onclick="selectOption('listing-1-2', '0')">
+                            <input type="radio" id="listing-1-2-0" name="listing-1-2" value="0" class="h-5 w-5 text-primary focus:ring-primary border-gray-300">
+                            <label for="listing-1-2-0" class="ml-3 text-gray-700 cursor-pointer flex-1">0项</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300" onclick="selectOption('listing-1-2', '1')">
+                            <input type="radio" id="listing-1-2-1" name="listing-1-2" value="1" class="h-5 w-5 text-primary focus:ring-primary border-gray-300">
+                            <label for="listing-1-2-1" class="ml-3 text-gray-700 cursor-pointer flex-1">1项</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300" onclick="selectOption('listing-1-2', '2')">
+                            <input type="radio" id="listing-1-2-2" name="listing-1-2" value="2" class="h-5 w-5 text-primary focus:ring-primary border-gray-300">
+                            <label for="listing-1-2-2" class="ml-3 text-gray-700 cursor-pointer flex-1">2项</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300" onclick="selectOption('listing-1-2', '3')">
+                            <input type="radio" id="listing-1-2-3" name="listing-1-2" value="3" class="h-5 w-5 text-primary focus:ring-primary border-gray-300">
+                            <label for="listing-1-2-3" class="ml-3 text-gray-700 cursor-pointer flex-1">3项</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300" onclick="selectOption('listing-1-2', '4')">
+                            <input type="radio" id="listing-1-2-4" name="listing-1-2" value="4" class="h-5 w-5 text-primary focus:ring-primary border-gray-300">
+                            <label for="listing-1-2-4" class="ml-3 text-gray-700 cursor-pointer flex-1">4项</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="condition-3-4" class="hidden">
+                    <p class="text-gray-700 mb-4 font-bold">15、以下说法中，有几项符合您阅读材料后的真实感受？</p>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <p class="text-gray-600 mb-2">① 我会想进一步了解事情的后续情况。</p>
+                        <p class="text-gray-600 mb-2">② 我认为仅凭私下议论还难以判断事情全貌。</p>
+                        <p class="text-gray-600 mb-2">③ 我认为类似事件可能会影响单位的工作氛围。</p>
+                        <p class="text-gray-600 mb-2">④ 我认为类似问题需要通过规范程序进行处理。</p>
+                        <p class="text-gray-600">⑤ 阅读材料后，我对所在组织的信任程度会提高。</p>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300" onclick="selectOption('listing-3-4', '0')">
+                            <input type="radio" id="listing-3-4-0" name="listing-3-4" value="0" class="h-5 w-5 text-primary focus:ring-primary border-gray-300">
+                            <label for="listing-3-4-0" class="ml-3 text-gray-700 cursor-pointer flex-1">0项</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300" onclick="selectOption('listing-3-4', '1')">
+                            <input type="radio" id="listing-3-4-1" name="listing-3-4" value="1" class="h-5 w-5 text-primary focus:ring-primary border-gray-300">
+                            <label for="listing-3-4-1" class="ml-3 text-gray-700 cursor-pointer flex-1">1项</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300" onclick="selectOption('listing-3-4', '2')">
+                            <input type="radio" id="listing-3-4-2" name="listing-3-4" value="2" class="h-5 w-5 text-primary focus:ring-primary border-gray-300">
+                            <label for="listing-3-4-2" class="ml-3 text-gray-700 cursor-pointer flex-1">2项</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300" onclick="selectOption('listing-3-4', '3')">
+                            <input type="radio" id="listing-3-4-3" name="listing-3-4" value="3" class="h-5 w-5 text-primary focus:ring-primary border-gray-300">
+                            <label for="listing-3-4-3" class="ml-3 text-gray-700 cursor-pointer flex-1">3项</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300" onclick="selectOption('listing-3-4', '4')">
+                            <input type="radio" id="listing-3-4-4" name="listing-3-4" value="4" class="h-5 w-5 text-primary focus:ring-primary border-gray-300">
+                            <label for="listing-3-4-4" class="ml-3 text-gray-700 cursor-pointer flex-1">4项</label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-all-300" onclick="selectOption('listing-3-4', '5')">
+                            <input type="radio" id="listing-3-4-5" name="listing-3-4" value="5" class="h-5 w-5 text-primary focus:ring-primary border-gray-300">
+                            <label for="listing-3-4-5" class="ml-3 text-gray-700 cursor-pointer flex-1">5项</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 错误提示 -->
+                <div id="error-message" class="hidden bg-red-50 text-red-600 p-4 rounded-md mt-4 mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fa fa-exclamation-circle"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm">请选择一个选项。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 按钮 -->
+                <div class="flex justify-between mt-8">
+                    <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
+                        <i class="fa fa-arrow-left mr-2"></i>返回
+                    </button>
+
+                    <button id="next-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
+                        继续<i class="fa fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-4">
+        <div class="container mx-auto px-4 text-center text-sm text-gray-600">
+            <p>© 2026 清华大学纪检监察研究院 | 学术研究专用</p>
+        </div>
+    </footer>
+
+    <script>
+        // 全局变量
+        const totalPages = 9;
+        let currentPage = 5;
+        let participantId = '';
+        let group = 0;
+        let selectedAnswer = null;
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载问卷数据
+            loadQuestionnaireData();
+
+            // 绑定按钮事件
+            document.getElementById('back-btn').addEventListener('click', goBack);
+            document.getElementById('next-btn').addEventListener('click', goNext);
+
+            // 绑定选项变更事件
+            const radioButtons = document.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.getElementById('error-message').classList.add('hidden');
+                    selectedAnswer = this.value;
+                });
+            });
+
+            // 更新进度条
+            updateProgress();
+        });
+
+        // 加载问卷数据
+        function loadQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                participantId = data.participantId;
+                group = data.group;
+                currentPage = data.currentPage || 5;
+                
+                // 根据分组显示对应版本
+                displayQuestionByGroup(group);
+                
+                // 恢复之前的选择
+                if (data.listingAnswer) {
+                    const savedAnswer = data.listingAnswer;
+                    const radioButton = document.querySelector(`input[name="${savedAnswer.name}"][value="${savedAnswer.value}"]`);
+                    if (radioButton) {
+                        radioButton.checked = true;
+                        selectedAnswer = savedAnswer.value;
+                    }
+                }
+                
+                updateProgress();
+            } else {
+                // 如果没有保存的数据，返回欢迎页
+                window.location.href = 'index.html';
+            }
+        }
+
+        // 根据分组显示对应版本的题目
+        function displayQuestionByGroup(group) {
+            // condition1和condition2显示4项版本
+            // condition3和condition4显示5项版本
+            if (group === 1 || group === 2) {
+                document.getElementById('condition-1-2').classList.remove('hidden');
+                document.getElementById('condition-3-4').classList.add('hidden');
+            } else {
+                document.getElementById('condition-1-2').classList.add('hidden');
+                document.getElementById('condition-3-4').classList.remove('hidden');
+            }
+        }
+
+        // 选择选项的辅助函数
+        function selectOption(name, value) {
+            const radioButton = document.getElementById(`${name}-${value}`);
+            if (radioButton) {
+                radioButton.checked = true;
+                selectedAnswer = value;
+                document.getElementById('error-message').classList.add('hidden');
+            }
+        }
+
+        // 更新进度条
+        function updateProgress() {
+            const progress = Math.round((currentPage / totalPages) * 100);
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `${progress}%`;
+        }
+
+        // 返回上一页
+        function goBack() {
+            window.location.href = 'attention-test.html';
+        }
+
+        // 前进到下一页
+        async function goNext() {
+            // 确定使用哪个答案字段
+            const answerName = (group === 1 || group === 2) ? 'listing-1-2' : 'listing-3-4';
+            
+            // 验证是否已选择
+            if (!selectedAnswer) {
+                document.getElementById('error-message').classList.remove('hidden');
+                return;
+            }
+            
+            // 保存答案
+            await saveListingAnswer(answerName, selectedAnswer);
+            
+            // 更新当前页面
+            currentPage = 6;
+            
+            // 保存问卷数据
+            await saveQuestionnaireData();
+            
+            // 导航到填写说明页
+            window.location.href = 'instruction.html';
+        }
+
+        // 保存列举实验答案
+        async function saveListingAnswer(name, value) {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.listingAnswer = { name: name, value: value };
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                
+                // 保存到服务器
+                try {
+                    await autoSaveData(data);
+                    console.log('数据已成功保存到服务器');
+                } catch (error) {
+                    console.error('保存数据失败:', error);
+                }
+            }
+        }
+
+        // 保存问卷数据
+        async function saveQuestionnaireData() {
+            const savedData = localStorage.getItem('questionnaire_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                data.currentPage = currentPage;
+                localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                
+                // 保存到服务器
+                try {
+                    await autoSaveData(data);
+                    console.log('数据已成功保存到服务器');
+                } catch (error) {
+                    console.error('保存数据失败:', error);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

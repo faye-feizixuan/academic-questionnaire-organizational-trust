@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- SheetJS -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- API配置 -->
+    <script src="config.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -78,6 +80,10 @@
                         <i class="fa fa-exclamation-circle mr-2"></i>密码错误，请重试
                     </div>
                     
+                    <div id="loading-message" class="hidden bg-blue-50 text-blue-600 p-3 rounded-md text-sm">
+                        <i class="fa fa-spinner fa-spin mr-2"></i>正在加载数据...
+                    </div>
+                    
                     <button id="verify-btn" class="w-full bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg">
                         验证
                     </button>
@@ -85,16 +91,27 @@
             </div>
             
             <!-- 数据导出页面 (默认隐藏) -->
-            <div id="export-page" class="max-w-4xl mx-auto bg-white rounded-lg shadow-card overflow-hidden hidden">
+            <div id="export-page" class="max-w-6xl mx-auto bg-white rounded-lg shadow-card overflow-hidden hidden">
                 <div class="p-6 md:p-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-gray-800">问卷数据</h2>
-                        <button id="export-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg flex items-center">
-                            <i class="fa fa-download mr-2"></i>导出Excel
-                        </button>
+                    <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-800">问卷数据</h2>
+                            <p id="stats-info" class="text-sm text-gray-500 mt-1"></p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button id="refresh-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-all-300 flex items-center">
+                                <i class="fa fa-refresh mr-2"></i>刷新
+                            </button>
+                            <button id="export-json-btn" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-all-300 shadow-md hover:shadow-lg flex items-center">
+                                <i class="fa fa-download mr-2"></i>导出JSON
+                            </button>
+                            <button id="export-excel-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-4 rounded-md transition-all-300 shadow-md hover:shadow-lg flex items-center">
+                                <i class="fa fa-download mr-2"></i>导出Excel
+                            </button>
+                        </div>
                     </div>
                     
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto" id="data-table-container">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr id="table-header">
@@ -126,11 +143,16 @@
         // 密码
         const CORRECT_PASSWORD = '2025311741';
         
+        // 存储所有问卷数据
+        let allQuestionnaireData = [];
+        
         // 初始化应用
         document.addEventListener('DOMContentLoaded', function() {
             // 绑定按钮事件
             document.getElementById('verify-btn').addEventListener('click', verifyPassword);
-            document.getElementById('export-btn').addEventListener('click', exportToExcel);
+            document.getElementById('refresh-btn').addEventListener('click', loadAndDisplayData);
+            document.getElementById('export-json-btn').addEventListener('click', exportToJson);
+            document.getElementById('export-excel-btn').addEventListener('click', exportToExcel);
             
             // 绑定密码输入框的回车键事件
             document.getElementById('password').addEventListener('keypress', function(e) {
@@ -158,45 +180,56 @@
         }
         
         // 加载并显示数据
-        function loadAndDisplayData() {
-            // 获取所有问卷数据
-            const allData = getAllQuestionnaireData();
+        async function loadAndDisplayData() {
+            const loadingMessage = document.getElementById('loading-message');
+            const noDataMessage = document.getElementById('no-data-message');
+            const dataTableContainer = document.getElementById('data-table-container');
+            const statsInfo = document.getElementById('stats-info');
             
-            if (allData.length === 0) {
-                // 没有数据，显示提示消息
-                document.getElementById('no-data-message').classList.remove('hidden');
-                return;
+            // 显示加载状态
+            if (loadingMessage) {
+                loadingMessage.classList.remove('hidden');
             }
+            noDataMessage.classList.add('hidden');
+            dataTableContainer.classList.add('hidden');
             
-            // 生成表头
-            generateTableHeader(allData[0]);
-            
-            // 生成表格内容
-            generateTableBody(allData);
-        }
-        
-        // 获取所有问卷数据
-        function getAllQuestionnaireData() {
-            const allData = [];
-            
-            // 遍历localStorage中的所有数据
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
+            try {
+                // 获取统计信息
+                const statsResponse = await fetch(`${API_BASE_URL}/admin/stats`);
+                if (statsResponse.ok) {
+                    const stats = await statsResponse.json();
+                    statsInfo.textContent = `总计: ${stats.total} 份 | 已完成: ${stats.completed} 份 | 未完成: ${stats.incomplete} 份`;
+                }
                 
-                // 只获取问卷数据
-                if (key.startsWith('questionnaire_data_')) {
-                    try {
-                        const data = JSON.parse(localStorage.getItem(key));
-                        if (data && data.completed) {
-                            allData.push(data);
-                        }
-                    } catch (e) {
-                        console.error('Error parsing data:', e);
-                    }
+                // 获取所有问卷数据
+                const response = await fetch(`${API_BASE_URL}/admin/questionnaires?limit=1000`);
+                if (!response.ok) {
+                    throw new Error('获取数据失败');
+                }
+                
+                const result = await response.json();
+                allQuestionnaireData = result.data || [];
+                
+                if (allQuestionnaireData.length === 0) {
+                    // 没有数据，显示提示消息
+                    noDataMessage.classList.remove('hidden');
+                } else {
+                    // 生成表头
+                    generateTableHeader(allQuestionnaireData[0]);
+                    
+                    // 生成表格内容
+                    generateTableBody(allQuestionnaireData);
+                    
+                    dataTableContainer.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('加载数据错误:', error);
+                alert('加载数据失败: ' + error.message);
+            } finally {
+                if (loadingMessage) {
+                    loadingMessage.classList.add('hidden');
                 }
             }
-            
-            return allData;
         }
         
         // 生成表头
@@ -205,52 +238,34 @@
             headerRow.innerHTML = '';
             
             // 添加基本信息列
+            addHeaderCell(headerRow, 'ID');
             addHeaderCell(headerRow, '参与者ID');
             addHeaderCell(headerRow, '分组');
             addHeaderCell(headerRow, '开始时间');
             addHeaderCell(headerRow, '完成时间');
-            addHeaderCell(headerRow, '尝试次数');
+            addHeaderCell(headerRow, '状态');
+            addHeaderCell(headerRow, '创建时间');
             
             // 添加预测试列
-            if (data.preTest) {
-                addHeaderCell(headerRow, '预测试答案');
+            addHeaderCell(headerRow, '预测试Q1');
+            addHeaderCell(headerRow, '预测试Q2');
+            for (let i = 1; i <= 8; i++) {
+                addHeaderCell(headerRow, `预测试Q3-${i}`);
             }
+            addHeaderCell(headerRow, '预测试Q4');
+            addHeaderCell(headerRow, '预测试Q5');
+            addHeaderCell(headerRow, '预测试Q6');
+            addHeaderCell(headerRow, '预测试Q7');
+            addHeaderCell(headerRow, '预测试Q8');
             
             // 添加注意力测试列
-            if (data.attentionTest) {
-                addHeaderCell(headerRow, '注意力测试答案');
-                addHeaderCell(headerRow, '注意力测试通过');
-            }
+            addHeaderCell(headerRow, '注意力测试');
             
             // 添加主问卷列
-            if (data.mainQuestionnaire) {
-                for (let i = 1; i <= 22; i++) {
-                    addHeaderCell(headerRow, `主问卷Q1-${i}`);
-                }
-                for (let i = 1; i <= 3; i++) {
-                    addHeaderCell(headerRow, `主问卷Q2-${i}`);
-                }
-            }
+            addHeaderCell(headerRow, '主问卷');
             
             // 添加人口统计学变量列
-            if (data.demographics) {
-                addHeaderCell(headerRow, '性别');
-                addHeaderCell(headerRow, '出生年份');
-                addHeaderCell(headerRow, '政治面貌');
-                addHeaderCell(headerRow, '入党年份');
-                addHeaderCell(headerRow, '参加公职年份');
-                addHeaderCell(headerRow, '工作职级');
-                addHeaderCell(headerRow, '职务类型');
-            }
-            
-            // 添加腐败案件曝光感知列
-            if (data.corruptionPerception) {
-                addHeaderCell(headerRow, '案例通报次数');
-                addHeaderCell(headerRow, '案例来源');
-                addHeaderCell(headerRow, '防范效果');
-                addHeaderCell(headerRow, '支持力度');
-                addHeaderCell(headerRow, '警示教育形式');
-            }
+            addHeaderCell(headerRow, '人口统计');
             
             // 添加联系方式列
             addHeaderCell(headerRow, '联系方式');
@@ -259,7 +274,7 @@
         // 添加表头单元格
         function addHeaderCell(row, text) {
             const th = document.createElement('th');
-            th.className = 'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
+            th.className = 'px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap';
             th.textContent = text;
             row.appendChild(th);
         }
@@ -273,65 +288,75 @@
                 const row = document.createElement('tr');
                 
                 // 添加基本信息
-                addCell(row, data.participantId || '');
-                addCell(row, data.group || '');
-                addCell(row, formatDate(data.startTime) || '');
-                addCell(row, formatDate(data.completionTime) || '');
-                addCell(row, data.attentionTest ? data.attentionTest.attempts : '');
+                addCell(row, data.id || '');
+                addCell(row, data.participant_id || '');
+                addCell(row, data.group_number || '');
+                addCell(row, formatDate(data.start_time) || '');
+                addCell(row, formatDate(data.end_time) || '');
+                addCell(row, data.completed ? '<span class="text-green-600">已完成</span>' : '<span class="text-yellow-600">未完成</span>', true);
+                addCell(row, formatDate(data.created_at) || '');
                 
-                // 添加预测试答案
-                if (data.preTest) {
-                    addCell(row, JSON.stringify(data.preTest) || '');
-                }
+                // 添加预测试
+                let preTestQ1 = '';
+                let preTestQ2 = '';
+                let preTestQ3 = Array(8).fill('');
+                let preTestQ4 = '';
+                let preTestQ5 = '';
+                let preTestQ6 = '';
+                let preTestQ7 = '';
+                let preTestQ8 = '';
                 
-                // 添加注意力测试答案
-                if (data.attentionTest) {
-                    addCell(row, JSON.stringify(data.attentionTest.answers) || '');
-                    addCell(row, data.attentionTest.passed ? '是' : '否');
-                }
-                
-                // 添加主问卷答案
-                if (data.mainQuestionnaire) {
-                    for (let i = 1; i <= 22; i++) {
-                        addCell(row, data.mainQuestionnaire[`main-q1-${i}`] || '');
+                try {
+                    const preTest = typeof data.pre_test === 'string' ? JSON.parse(data.pre_test) : data.pre_test || {};
+                    preTestQ1 = preTest['pre-q1'] || '';
+                    preTestQ2 = preTest['pre-q2'] || '';
+                    for (let i = 1; i <= 8; i++) {
+                        preTestQ3[i-1] = preTest[`pre-q3-${i}`] || '';
                     }
-                    for (let i = 1; i <= 3; i++) {
-                        addCell(row, data.mainQuestionnaire[`main-q2-${i}`] || '');
-                    }
+                    preTestQ4 = preTest['cp-q1'] || '';
+                    preTestQ5 = preTest['cp-q2'] ? preTest['cp-q2'].join(', ') : '';
+                    preTestQ6 = preTest['cp-q3'] || '';
+                    preTestQ7 = preTest['cp-q4'] || '';
+                    preTestQ8 = preTest['cp-q5'] ? preTest['cp-q5'].join(', ') : '';
+                } catch (e) {
+                    // 解析失败，保持为空
+                    preTestQ3 = Array(8).fill('');
                 }
                 
-                // 添加人口统计学变量
-                if (data.demographics) {
-                    addCell(row, data.demographics['demo-q1'] || '');
-                    addCell(row, data.demographics['demo-q2'] || '');
-                    addCell(row, data.demographics['demo-q3'] || '');
-                    addCell(row, data.demographics['demo-q3-party-year'] || '');
-                    addCell(row, data.demographics['demo-q4'] || '');
-                    addCell(row, data.demographics['demo-q5'] || '');
-                    addCell(row, data.demographics['demo-q6'] || '');
-                }
+                addCell(row, preTestQ1);
+                addCell(row, preTestQ2);
+                preTestQ3.forEach(value => addCell(row, value));
+                addCell(row, preTestQ4);
+                addCell(row, preTestQ5);
+                addCell(row, preTestQ6);
+                addCell(row, preTestQ7);
+                addCell(row, preTestQ8);
                 
-                // 添加腐败案件曝光感知数据
-                if (data.corruptionPerception) {
-                    addCell(row, data.corruptionPerception['cp-q1'] || '');
-                    addCell(row, Array.isArray(data.corruptionPerception['cp-q2']) ? data.corruptionPerception['cp-q2'].join('; ') : '');
-                    addCell(row, data.corruptionPerception['cp-q3'] || '');
-                    addCell(row, data.corruptionPerception['cp-q4'] || '');
-                    addCell(row, Array.isArray(data.corruptionPerception['cp-q5']) ? data.corruptionPerception['cp-q5'].join('; ') : '');
-                }
+                // 添加注意力测试
+                addCell(row, data.attention_test ? '✓' : '-');
+                
+                // 添加主问卷
+                addCell(row, data.main_questionnaire ? '✓' : '-');
+                
+                // 添加人口统计
+                addCell(row, data.demographics ? '✓' : '-');
                 
                 // 添加联系方式
-                addCell(row, data.contactInfo || '');
+                addCell(row, data.contact_info || '-');
                 
                 tableBody.appendChild(row);
             });
         }
         
         // 添加表格单元格
-        function addCell(row, text) {
+        function addCell(row, text, isHtml = false) {
             const td = document.createElement('td');
-            td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500';
-            td.textContent = text;
+            td.className = 'px-4 py-4 whitespace-nowrap text-sm text-gray-500';
+            if (isHtml) {
+                td.innerHTML = text;
+            } else {
+                td.textContent = text;
+            }
             row.appendChild(td);
         }
         
@@ -350,24 +375,49 @@
             });
         }
         
+        // 导出为JSON
+        async function exportToJson() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/export?format=json`);
+                if (!response.ok) {
+                    throw new Error('导出失败');
+                }
+                
+                // 创建下载链接
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `问卷数据_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('导出JSON错误:', error);
+                alert('导出失败: ' + error.message);
+            }
+        }
+        
         // 导出为Excel
         function exportToExcel() {
-            // 获取所有问卷数据
-            const allData = getAllQuestionnaireData();
-            
-            if (allData.length === 0) {
+            if (allQuestionnaireData.length === 0) {
                 alert('暂无问卷数据');
                 return;
             }
             
             // 准备Excel数据
-            const excelData = prepareExcelData(allData);
+            const excelData = prepareExcelData(allQuestionnaireData);
             
             // 创建工作簿
             const wb = XLSX.utils.book_new();
             
             // 创建工作表
             const ws = XLSX.utils.json_to_sheet(excelData);
+            
+            // 设置列宽
+            const colWidths = Object.keys(excelData[0] || {}).map(() => ({ wch: 15 }));
+            ws['!cols'] = colWidths;
             
             // 添加工作表到工作簿
             XLSX.utils.book_append_sheet(wb, ws, '问卷数据');
@@ -379,65 +429,99 @@
         
         // 准备Excel数据
         function prepareExcelData(dataArray) {
-            const excelData = [];
-            
-            dataArray.forEach(data => {
+            return dataArray.map(data => {
                 const row = {
-                    '参与者ID': data.participantId || '',
-                    '分组': data.group || '',
-                    '开始时间': formatDate(data.startTime) || '',
-                    '完成时间': formatDate(data.completionTime) || '',
-                    '注意力测试尝试次数': data.attentionTest ? data.attentionTest.attempts : ''
+                    'ID': data.id || '',
+                    '参与者ID': data.participant_id || '',
+                    '分组': data.group_number || '',
+                    '开始时间': formatDate(data.start_time) || '',
+                    '完成时间': formatDate(data.end_time) || '',
+                    '状态': data.completed ? '已完成' : '未完成',
+                    '创建时间': formatDate(data.created_at) || ''
                 };
                 
-                // 添加预测试答案
-                if (data.preTest) {
-                    row['预测试答案'] = JSON.stringify(data.preTest) || '';
+                // 解析预测试数据
+                try {
+                    const preTest = typeof data.pre_test === 'string' ? JSON.parse(data.pre_test) : data.pre_test || {};
+                    // 展开预测试题目（按照实际顺序）
+                    row['预测试Q1'] = preTest['pre-q1'] || '';
+                    row['预测试Q2'] = preTest['pre-q2'] || '';
+                    for (let i = 1; i <= 8; i++) {
+                        row[`预测试Q3-${i}`] = preTest[`pre-q3-${i}`] || '';
+                    }
+                    row['预测试Q4'] = preTest['cp-q1'] || '';
+                    row['预测试Q5'] = preTest['cp-q2'] ? preTest['cp-q2'].join(', ') : '';
+                    row['预测试Q6'] = preTest['cp-q3'] || '';
+                    row['预测试Q7'] = preTest['cp-q4'] || '';
+                    row['预测试Q8'] = preTest['cp-q5'] ? preTest['cp-q5'].join(', ') : '';
+                } catch (e) {
+                    row['预测试Q1'] = '';
+                    row['预测试Q2'] = '';
+                    for (let i = 1; i <= 8; i++) {
+                        row[`预测试Q3-${i}`] = '';
+                    }
+                    row['预测试Q4'] = '';
+                    row['预测试Q5'] = '';
+                    row['预测试Q6'] = '';
+                    row['预测试Q7'] = '';
+                    row['预测试Q8'] = '';
                 }
                 
-                // 添加注意力测试答案
-                if (data.attentionTest) {
-                    row['注意力测试答案'] = JSON.stringify(data.attentionTest.answers) || '';
-                    row['注意力测试通过'] = data.attentionTest.passed ? '是' : '否';
+                // 解析注意力测试数据
+                try {
+                    const attentionTest = typeof data.attention_test === 'string' ? JSON.parse(data.attention_test) : data.attention_test || {};
+                    row['注意力测试答案'] = JSON.stringify(attentionTest.answers || attentionTest);
+                    row['注意力测试通过'] = attentionTest.passed ? '是' : '否';
+                    row['注意力测试尝试次数'] = attentionTest.attempts || '';
+                } catch (e) {
+                    row['注意力测试答案'] = data.attention_test || '';
+                    row['注意力测试通过'] = '';
+                    row['注意力测试尝试次数'] = '';
                 }
                 
-                // 添加主问卷答案
-                if (data.mainQuestionnaire) {
+                // 解析主问卷数据
+                try {
+                    const mainQ = typeof data.main_questionnaire === 'string' ? JSON.parse(data.main_questionnaire) : data.main_questionnaire || {};
                     for (let i = 1; i <= 22; i++) {
-                        row[`主问卷Q1-${i}`] = data.mainQuestionnaire[`main-q1-${i}`] || '';
+                        row[`主问卷Q1-${i}`] = mainQ[`main-q1-${i}`] || '';
                     }
                     for (let i = 1; i <= 3; i++) {
-                        row[`主问卷Q2-${i}`] = data.mainQuestionnaire[`main-q2-${i}`] || '';
+                        row[`主问卷Q2-${i}`] = mainQ[`main-q2-${i}`] || '';
+                    }
+                } catch (e) {
+                    for (let i = 1; i <= 22; i++) {
+                        row[`主问卷Q1-${i}`] = '';
+                    }
+                    for (let i = 1; i <= 3; i++) {
+                        row[`主问卷Q2-${i}`] = '';
                     }
                 }
                 
-                // 添加人口统计学变量
-                if (data.demographics) {
-                    row['性别'] = data.demographics['demo-q1'] || '';
-                    row['出生年份'] = data.demographics['demo-q2'] || '';
-                    row['政治面貌'] = data.demographics['demo-q3'] || '';
-                    row['入党年份'] = data.demographics['demo-q3-party-year'] || '';
-                    row['参加公职年份'] = data.demographics['demo-q4'] || '';
-                    row['工作职级'] = data.demographics['demo-q5'] || '';
-                    row['职务类型'] = data.demographics['demo-q6'] || '';
-                }
-                
-                // 添加腐败案件曝光感知数据
-                if (data.corruptionPerception) {
-                    row['案例通报次数'] = data.corruptionPerception['cp-q1'] || '';
-                    row['案例来源'] = Array.isArray(data.corruptionPerception['cp-q2']) ? data.corruptionPerception['cp-q2'].join('; ') : '';
-                    row['防范效果'] = data.corruptionPerception['cp-q3'] || '';
-                    row['支持力度'] = data.corruptionPerception['cp-q4'] || '';
-                    row['警示教育形式'] = Array.isArray(data.corruptionPerception['cp-q5']) ? data.corruptionPerception['cp-q5'].join('; ') : '';
+                // 解析人口统计数据
+                try {
+                    const demo = typeof data.demographics === 'string' ? JSON.parse(data.demographics) : data.demographics || {};
+                    row['性别'] = demo['demo-q1'] || '';
+                    row['出生年份'] = demo['demo-q2'] || '';
+                    row['政治面貌'] = demo['demo-q3'] || '';
+                    row['入党年份'] = demo['demo-q3-party-year'] || '';
+                    row['参加公职年份'] = demo['demo-q4'] || '';
+                    row['工作职级'] = demo['demo-q5'] || '';
+                    row['职务类型'] = demo['demo-q6'] || '';
+                } catch (e) {
+                    row['性别'] = '';
+                    row['出生年份'] = '';
+                    row['政治面貌'] = '';
+                    row['入党年份'] = '';
+                    row['参加公职年份'] = '';
+                    row['工作职级'] = '';
+                    row['职务类型'] = '';
                 }
                 
                 // 添加联系方式
-                row['联系方式'] = data.contactInfo || '';
+                row['联系方式'] = data.contact_info || '';
                 
-                excelData.push(row);
+                return row;
             });
-            
-            return excelData;
         }
     </script>
 </body>
