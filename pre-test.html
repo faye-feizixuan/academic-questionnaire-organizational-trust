@@ -929,24 +929,9 @@
         }
         
         // 前进到下一页
-        async function goNext() {
-            // 确保localStorage有数据
-            let storageData = localStorage.getItem('questionnaire_data');
-            if (!storageData) {
-                const participantId = localStorage.getItem('participantId') || 'unknown';
-                const group = parseInt(localStorage.getItem('group')) || 1;
-                const data = {
-                    participantId: participantId,
-                    group: group,
-                    currentPage: 1,
-                    preTest: {},
-                    intervention: {},
-                    mainQuestionnaire: {},
-                    demographics: {}
-                };
-                localStorage.setItem('questionnaire_data', JSON.stringify(data));
-                storageData = localStorage.getItem('questionnaire_data');
-            }
+        function goNext() {
+            console.log('goNext called');
+
             // 验证第1题排序题
             const preQ1A = document.getElementById('pre-q1-a').value;
             const preQ1B = document.getElementById('pre-q1-b').value;
@@ -1078,8 +1063,8 @@
                 const selected = document.querySelector(`input[name="pre-q3-${i}"]:checked`);
                 saveAnswer(`pre-q3-${i}`, selected ? selected.value : '');
             }
-            
-            // 更新当前页面（先保存到本地）
+
+            // 更新当前页面并导航到下一页
             currentPage = 2;
             const existingData = localStorage.getItem('questionnaire_data');
             if (existingData) {
@@ -1087,8 +1072,8 @@
                 data.currentPage = currentPage;
                 localStorage.setItem('questionnaire_data', JSON.stringify(data));
             }
-            
-            // 导航到下一页
+
+            console.log('Navigation to intervention.html');
             window.location.href = 'intervention.html';
         }
         
