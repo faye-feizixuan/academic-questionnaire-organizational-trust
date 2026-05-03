@@ -933,17 +933,19 @@
             console.log('goNext called');
 
             // 验证第1题排序题
-            const preQ1A = document.getElementById('pre-q1-a').value;
-            const preQ1B = document.getElementById('pre-q1-b').value;
-            const preQ1C = document.getElementById('pre-q1-c').value;
-            if (!preQ1A || !preQ1B || !preQ1C) {
+            const preQ1Result = document.getElementById('pre-q1-result').value;
+            if (!preQ1Result) {
                 showError('请完成第1题排序题');
                 return;
             }
-            const sortValues = [preQ1A, preQ1B, preQ1C];
-            const uniqueValues = [...new Set(sortValues)];
-            if (uniqueValues.length !== 3 || uniqueValues.some(v => v < 1 || v > 3)) {
-                showError('第1题排序题：每个选项只能选择一次');
+            try {
+                const sortData = JSON.parse(preQ1Result);
+                if (!sortData || sortData.length !== 3) {
+                    showError('请完成第1题排序题');
+                    return;
+                }
+            } catch (e) {
+                showError('请完成第1题排序题');
                 return;
             }
 
@@ -1022,11 +1024,7 @@
 
             // 保存所有答案
             // 保存排序题答案
-            saveAnswer('pre-q1', JSON.stringify([
-                { value: 'A', rank: parseInt(preQ1A) },
-                { value: 'B', rank: parseInt(preQ1B) },
-                { value: 'C', rank: parseInt(preQ1C) }
-            ]));
+            saveAnswer('pre-q1', preQ1Result);
 
             // 保存频率单选题答案
             saveAnswer('cp-q1', freqSelected.value);
