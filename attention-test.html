@@ -759,11 +759,12 @@
             const questionsToCheck = ['attn-q9', 'attn-q10', 'attn-q11'];
             
             let allCorrect = true;
+            let wrongCount = 0;
             
             for (const questionId of questionsToCheck) {
                 if (answers[questionId] !== correctAnswersForGroup[questionId]) {
                     allCorrect = false;
-                    break;
+                    wrongCount++;
                 }
             }
             
@@ -773,11 +774,11 @@
             // 检查是否已经纠正过一次
             const alreadyRetried = localStorage.getItem('attention_test_retried') === 'true';
             
-            // 第一次尝试且有错误：提示重读材料并重新作答
+            // 第一次尝试且有错误：提示重读材料并重新作答，显示错误数量
             if (!allCorrect && !alreadyRetried) {
                 localStorage.setItem('attention_test_retried', 'true');
                 document.getElementById('error-message').classList.remove('hidden');
-                document.getElementById('error-message').innerHTML = '<div class="flex"><div class="flex-shrink-0"><i class="fa fa-exclamation-circle"></i></div><div class="ml-3"><p class="text-sm">您的回答有误，请重新阅读材料并作答。</p></div></div>';
+                document.getElementById('error-message').innerHTML = `<div class="flex"><div class="flex-shrink-0"><i class="fa fa-exclamation-circle"></i></div><div class="ml-3"><p class="text-sm">您有 ${wrongCount} 道题回答错误，请重新阅读材料并作答。</p></div></div>`;
                 return;
             }
             
