@@ -654,35 +654,39 @@
                         });
                     }
 
-                    // 恢复cp-q3 (单选题)
-                    if (pt['cp-q3']) {
-                        const radio = document.querySelector(`input[name="cp-q3"][value="${pt['cp-q3']}"]`);
-                        if (radio) radio.checked = true;
-                    }
+                    // 只有当频率不是"从不开展"时才恢复cp-q3和cp-q4
+                    const freqSelected = document.querySelector('input[name="cp-q1"]:checked');
+                    if (freqSelected && freqSelected.value !== '从不开展') {
+                        // 恢复cp-q3 (单选题)
+                        if (pt['cp-q3']) {
+                            const radio = document.querySelector(`input[name="cp-q3"][value="${pt['cp-q3']}"]`);
+                            if (radio) radio.checked = true;
+                        }
 
-                    // 恢复cp-q4 (单选题)
-                    if (pt['cp-q4']) {
-                        const radio = document.querySelector(`input[name="cp-q4"][value="${pt['cp-q4']}"]`);
-                        if (radio) radio.checked = true;
-                    }
+                        // 恢复cp-q4 (单选题)
+                        if (pt['cp-q4']) {
+                            const radio = document.querySelector(`input[name="cp-q4"][value="${pt['cp-q4']}"]`);
+                            if (radio) radio.checked = true;
+                        }
 
-                    // 恢复cp-q5
-                    if (pt['cp-q5'] && Array.isArray(pt['cp-q5'])) {
-                        pt['cp-q5'].forEach(value => {
-                            if (value === '其他') {
-                                const checkbox = document.getElementById('cp-q5-7');
-                                if (checkbox) {
-                                    checkbox.checked = true;
-                                    const otherInput = document.getElementById('cp-q5-other');
-                                    if (otherInput) {
-                                        otherInput.disabled = false;
+                        // 恢复cp-q5
+                        if (pt['cp-q5'] && Array.isArray(pt['cp-q5'])) {
+                            pt['cp-q5'].forEach(value => {
+                                if (value === '其他') {
+                                    const checkbox = document.getElementById('cp-q5-7');
+                                    if (checkbox) {
+                                        checkbox.checked = true;
+                                        const otherInput = document.getElementById('cp-q5-other');
+                                        if (otherInput) {
+                                            otherInput.disabled = false;
+                                        }
                                     }
+                                } else {
+                                    const checkbox = document.querySelector(`input[name="cp-q5"][value="${value}"]`);
+                                    if (checkbox) checkbox.checked = true;
                                 }
-                            } else {
-                                const checkbox = document.querySelector(`input[name="cp-q5"][value="${value}"]`);
-                                if (checkbox) checkbox.checked = true;
-                            }
-                        });
+                            });
+                        }
                     }
 
                     // 恢复pre-q2 (单选题)
