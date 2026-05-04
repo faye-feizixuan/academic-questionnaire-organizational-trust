@@ -89,49 +89,49 @@
                     <div class="space-y-4 mb-8">
                         <div class="space-y-4">
                             <p class="text-gray-700 font-medium">1、在您看来，对<span class="font-bold text-purple">腐败典型案例</span>进行通报曝光有作用吗，其最主要的作用是什么？（排序题）</p>
-                            <p class="text-sm text-gray-500 mb-4">请拖动下方选项到对应的排序区域（1表示作用最大）</p>
 
-                            <div class="mb-6">
-                                <div class="grid grid-cols-3 gap-4">
-                                    <div class="drop-zone border-2 border-dashed border-purple-400 rounded-lg min-h-[100px] p-3 bg-purple-50 hover:bg-purple-100 transition-colors" data-rank="1" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
-                                        <div class="text-center mb-2">
-                                            <span class="text-2xl font-bold text-purple-600">1</span>
-                                            <span class="text-xs text-gray-500 ml-1">作用最大</span>
-                                        </div>
-                                        <div class="drop-zone-content min-h-[50px] flex flex-col gap-2"></div>
-                                    </div>
-                                    <div class="drop-zone border-2 border-dashed border-purple-400 rounded-lg min-h-[100px] p-3 bg-purple-50 hover:bg-purple-100 transition-colors" data-rank="2" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
-                                        <div class="text-center mb-2">
-                                            <span class="text-2xl font-bold text-purple-600">2</span>
-                                            <span class="text-xs text-gray-500 ml-1">作用中等</span>
-                                        </div>
-                                        <div class="drop-zone-content min-h-[50px] flex flex-col gap-2"></div>
-                                    </div>
-                                    <div class="drop-zone border-2 border-dashed border-purple-400 rounded-lg min-h-[100px] p-3 bg-purple-50 hover:bg-purple-100 transition-colors" data-rank="3" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
-                                        <div class="text-center mb-2">
-                                            <span class="text-2xl font-bold text-purple-600">3</span>
-                                            <span class="text-xs text-gray-500 ml-1">作用最小</span>
-                                        </div>
-                                        <div class="drop-zone-content min-h-[50px] flex flex-col gap-2"></div>
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-gray-700 flex-1">为了惩罚当事人，警示他人"不敢腐"。</span>
+                                    <div class="flex gap-2">
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" name="pre-q1-a" value="1" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">1</span>
+                                        </label>
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" name="pre-q1-a" value="2" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">2</span>
+                                        </label>
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" name="pre-q1-a" value="3" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">3</span>
+                                        </label>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <p class="text-sm font-medium text-gray-600">待排序选项（请拖动到上方区域）：</p>
-                            </div>
-                            <div id="sortable-options" class="space-y-3">
-                                <div class="draggable-option bg-white border-2 border-gray-300 rounded-lg p-4 cursor-grab active:cursor-grabbing hover:border-purple-400 hover:shadow-md transition-all flex items-center gap-3" draggable="true" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)" data-option="a">
-                                    <span class="text-purple-600 font-bold">☰</span>
-                                    <div class="flex-1 text-gray-700">为了惩罚当事人，警示他人"不敢腐"。</div>
+                                <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-gray-700 flex-1">为了澄清边界，教育大多数干部"不想腐"。</span>
+                                    <div class="flex gap-2">
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" name="pre-q1-b" value="1" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">1</span>
+                                        </label>
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" name="pre-q1-b" value="2" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">2</span>
+                                        </label>
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" name="pre-q1-b" value="3" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">3</span>
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="draggable-option bg-white border-2 border-gray-300 rounded-lg p-4 cursor-grab active:cursor-grabbing hover:border-purple-400 hover:shadow-md transition-all flex items-center gap-3" draggable="true" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)" data-option="b">
-                                    <span class="text-purple-600 font-bold">☰</span>
-                                    <div class="flex-1 text-gray-700">为了澄清边界，教育大多数干部"不想腐"。</div>
-                                </div>
-                                <div class="draggable-option bg-white border-2 border-gray-300 rounded-lg p-4 cursor-grab active:cursor-grabbing hover:border-purple-400 hover:shadow-md transition-all flex items-center gap-3" draggable="true" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)" data-option="c">
-                                    <span class="text-purple-600 font-bold">☰</span>
-                                    <div class="flex-1 text-gray-700">为了回应大众关切，展示监督过程本身。</div>
+                                <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-gray-700 flex-1">为了回应大众关切，展示监督过程本身。</span>
+                                    <div class="flex gap-2">
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" name="pre-q1-c" value="1" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">1</span>
+                                        </label>
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" name="pre-q1-c" value="2" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">2</span>
+                                        </label>
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="radio" name="pre-q1-c" value="3" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">3</span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <input type="hidden" id="pre-q1-result" name="pre-q1-result" value="">
@@ -317,7 +317,7 @@
                             <div class="space-y-6">
                                 <!-- 问题8-1 -->
                                 <div class="space-y-3">
-                                    <p class="text-gray-700 font-medium">（1）在实际工作中，有时为了减少冲突或保持工作关系顺畅，人们会在一些原则性问题上选择相对保守的处理方式。</p>
+                                    <p class="text-gray-700 font-medium">（1）在实际工作中，有时为了减少冲突或保持工作关系顺畅，人们不可避免地会在一些原则性问题上妥协让步。</p>
                                     <div class="grid grid-cols-5 gap-2">
                                         <label class="flex flex-col items-center p-1 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
                                             <input type="radio" id="pre-q3-1-1" name="pre-q3-1" value="1" class="h-3 w-3 text-primary focus:ring-primary border-gray-300">
@@ -711,15 +711,15 @@
                 if (data.preTest) {
                     const pt = data.preTest;
 
-                    // 恢复排序题 pre-q1 (输入框形式)
+                    // 恢复排序题 pre-q1 (radio形式)
                     if (pt['pre-q1']) {
                         try {
                             const sortedOrder = JSON.parse(pt['pre-q1']);
                             if (Array.isArray(sortedOrder)) {
                                 sortedOrder.forEach(item => {
-                                    const input = document.getElementById(`pre-q1-${item.value.toLowerCase()}`);
+                                    const input = document.querySelector(`input[name="pre-q1-${item.value.toLowerCase()}"][value="${item.rank}"]`);
                                     if (input) {
-                                        input.value = item.rank;
+                                        input.checked = true;
                                     }
                                 });
                             }
@@ -933,20 +933,17 @@
             console.log('goNext called');
 
             // 验证第1题排序题
-            const preQ1Result = document.getElementById('pre-q1-result').value;
-            if (!preQ1Result) {
+            const preQ1A = document.querySelector('input[name="pre-q1-a"]:checked');
+            const preQ1B = document.querySelector('input[name="pre-q1-b"]:checked');
+            const preQ1C = document.querySelector('input[name="pre-q1-c"]:checked');
+            if (!preQ1A || !preQ1B || !preQ1C) {
                 showError('请完成第1题排序题');
                 return;
             }
-            try {
-                const sortData = JSON.parse(preQ1Result);
-                const keys = Object.keys(sortData);
-                if (!sortData || keys.length !== 3) {
-                    showError('请完成第1题排序题');
-                    return;
-                }
-            } catch (e) {
-                showError('请完成第1题排序题');
+            const sortValues = [preQ1A.value, preQ1B.value, preQ1C.value];
+            const uniqueValues = [...new Set(sortValues)];
+            if (uniqueValues.length !== 3 || uniqueValues.some(v => v < 1 || v > 3)) {
+                showError('第1题排序题：每个选项只能选择一次');
                 return;
             }
 
@@ -1025,7 +1022,11 @@
 
             // 保存所有答案
             // 保存排序题答案
-            saveAnswer('pre-q1', preQ1Result);
+            saveAnswer('pre-q1', JSON.stringify([
+                { value: 'A', rank: parseInt(preQ1A.value) },
+                { value: 'B', rank: parseInt(preQ1B.value) },
+                { value: 'C', rank: parseInt(preQ1C.value) }
+            ]));
 
             // 保存频率单选题答案
             saveAnswer('cp-q1', freqSelected.value);
