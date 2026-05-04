@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- API配置 -->
     <script src="config.js"></script>
+    <!-- 草稿管理器 -->
+    <script src="draft-manager.js"></script>
     <script src="api.js"></script>
     <script>
         tailwind.config = {
@@ -483,9 +485,14 @@
                     </div>
                     
                     <div class="flex justify-between">
-                        <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
-                            <i class="fa fa-arrow-left mr-2"></i>返回
-                        </button>
+                        <div class="flex space-x-3">
+                            <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
+                                <i class="fa fa-arrow-left mr-2"></i>返回
+                            </button>
+                            <button type="button" id="exit-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-6 rounded-md transition-all-300">
+                                <i class="fa fa-sign-out mr-2"></i>暂时退出
+                            </button>
+                        </div>
                         
                         <button type="button" id="next-btn" class="bg-primary hover:bg-accent text-white font-medium py-2 px-6 rounded-md transition-all-300 shadow-md hover:shadow-lg" onclick="goNext()">
                             继续<i class="fa fa-arrow-right ml-2"></i>
@@ -515,20 +522,127 @@
             // 加载问卷数据
             loadQuestionnaireData();
 
+            // 初始化草稿管理
+            initPageAutoSave(currentPage);
+            initFormAutoSave('body');
+
             // 绑定按钮事件
             document.getElementById('back-btn').addEventListener('click', goBack);
             document.getElementById('next-btn').addEventListener('click', goNext);
+            
+            // 绑定"暂时退出"按钮
+            document.getElementById('exit-btn').addEventListener('click', function() {
+                showExitModal(function() {
+                    window.location.href = 'index.html';
+                });
+            });
 
-            // 绑定所有radio和checkbox的change事件来隐藏错误消息
+            // 绑定所有radio和checkbox的change事件来隐藏错误消息和保存草稿
             document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
                 input.addEventListener('change', function() {
                     document.getElementById('error-message').classList.add('hidden');
+                    savePreTestDraft();
                 });
+            });
+
+            // 绑定输入框变化事件
+            document.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+                input.addEventListener('input', debounce(function() {
+                    savePreTestDraft();
+                }, 500));
             });
 
             // 初始化方框选择器（只保留给第7题和问题8使用）
             initAllBoxSelectors();
         });
+
+        // 保存预测试草稿
+        function savePreTestDraft() {
+            try {
+                const savedData = localStorage.getItem('questionnaire_data');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    
+                    // 收集当前页面数据
+                    const preTest = {};
+                    
+                    // 收集排序题答案
+                    const preQ1A = document.querySelector('input[name="pre-q1-a"]:checked');
+                    const preQ1B = document.querySelector('input[name="pre-q1-b"]:checked');
+                    const preQ1C = document.querySelector('input[name="pre-q1-c"]:checked');
+                    if (preQ1A && preQ1B && preQ1C) {
+                        preTest.preQ1 = [
+                            { value: 'A', rank: parseInt(preQ1A.value) },
+                            { value: 'B', rank: parseInt(preQ1B.value) },
+                            { value: 'C', rank: parseInt(preQ1C.value) }
+                        ];
+                    }
+                    
+                    // 收集频率题
+                    const cpQ1 = document.querySelector('input[name="cp-q1"]:checked');
+                    if (cpQ1) {
+                        preTest.cpQ1 = cpQ1.value;
+                        if (cpQ1.value === '其他') {
+                            const otherInput = document.getElementById('cp-q1-other');
+                            preTest.cpQ1Other = otherInput ? otherInput.value : '';
+                        }
+                    }
+                    
+                    // 收集其他问题
+                    if (cpQ1 && cpQ1.value !== '从不开展') {
+                        // 案例来源
+                        const cpQ2 = [];
+                        document.querySelectorAll('input[name="cp-q2"]:checked').forEach(cb => {
+                            cpQ2.push(cb.value);
+                        });
+                        preTest.cpQ2 = cpQ2;
+                        
+                        // 效果评分
+                        const cpQ3 = document.querySelector('input[name="cp-q3"]:checked');
+                        if (cpQ3) preTest.cpQ3 = cpQ3.value;
+                        
+                        // 支持力度
+                        const cpQ4 = document.querySelector('input[name="cp-q4"]:checked');
+                        if (cpQ4) preTest.cpQ4 = cpQ4.value;
+                        
+                        // 教育形式
+                        const cpQ5 = [];
+                        document.querySelectorAll('input[name="cp-q5"]:checked').forEach(cb => {
+                            cpQ5.push(cb.value);
+                        });
+                        preTest.cpQ5 = cpQ5;
+                        
+                        // 其他说明
+                        const cpQ5Other = document.getElementById('cp-q5-7');
+                        if (cpQ5Other && cpQ5Other.checked) {
+                            const otherInput = document.getElementById('cp-q5-other');
+                            preTest.cpQ5Other = otherInput ? otherInput.value : '';
+                        }
+                    }
+                    
+                    // 职业诚信
+                    const preQ2 = document.querySelector('input[name="pre-q2"]:checked');
+                    if (preQ2) preTest.preQ2 = preQ2.value;
+                    
+                    // 其他问题
+                    for (let i = 1; i <= 5; i++) {
+                        const selected = document.querySelector(`input[name="pre-q3-${i}"]:checked`);
+                        if (selected) preTest[`preQ3-${i}`] = selected.value;
+                    }
+                    
+                    // 更新数据
+                    data.preTest = preTest;
+                    data.currentPage = currentPage;
+                    data.lastSavedAt = new Date().toISOString();
+                    
+                    // 保存
+                    localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                    saveDraft(data);
+                }
+            } catch (error) {
+                console.error('保存预测试草稿失败:', error);
+            }
+        }
 
         // 初始化所有问题的方框选择器
         function initAllBoxSelectors() {

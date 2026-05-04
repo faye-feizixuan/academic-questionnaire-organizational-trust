@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- API配置 -->
     <script src="config.js"></script>
+    <!-- 草稿管理器 -->
+    <script src="draft-manager.js"></script>
     <!-- API服务 -->
     <script src="api.js"></script>
     <script>
@@ -223,8 +225,13 @@
                 try {
                     await autoSaveData(data, true);
                     console.log('completeQuestionnaire: 数据保存到服务器成功');
+                    
+                    // 清除草稿（提交成功后）
+                    clearDraft();
+                    console.log('completeQuestionnaire: 草稿已清除');
                 } catch (error) {
                     console.warn('保存到服务器失败，数据已保存到本地:', error.message);
+                    // 提交失败时不清除草稿
                 }
                 
                 console.log('问卷数据:', data);

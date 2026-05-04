@@ -9,6 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- API配置 -->
     <script src="config.js"></script>
+    <!-- 草稿管理器 -->
+    <script src="draft-manager.js"></script>
     <!-- API服务 -->
     <script src="api.js"></script>
     <script>
@@ -160,8 +162,8 @@
                 }
             });
             
-            // 检查是否有未完成的问卷
-            checkForIncompleteQuestionnaire();
+            // 检查是否有未完成的问卷草稿
+            checkForDraftQuestionnaire();
         });
         
         // 生成唯一参与者ID
@@ -171,32 +173,59 @@
             return `P${timestamp}${random}`;
         }
         
-        // 检查是否有未完成的问卷
-        function checkForIncompleteQuestionnaire() {
+        // 检查是否有未完成的问卷草稿
+        function checkForDraftQuestionnaire() {
             try {
-                const savedData = localStorage.getItem('questionnaire_data');
-                if (savedData) {
-                    const data = JSON.parse(savedData);
-                    if (data.participantId && !data.completed) {
-                        const confirmContinue = confirm('检测到您有未完成的问卷，是否继续？');
-                        if (confirmContinue) {
-                            participantId = data.participantId;
-                            group = data.group;
-                            currentPage = data.currentPage || 0;
-                            updateProgress();
-                            const pageFileName = getPageFileName(currentPage);
-                            navigateToPage(pageFileName);
-                        } else {
-                            // 清除旧数据
-                            localStorage.removeItem('questionnaire_data');
+                const draftData = loadDraft();
+                if (draftData) {
+                    showRestoreModal(
+                        function() {
+                            // 继续填写
+                            continueFromDraft(draftData);
+                        },
+                        function() {
+                            // 重新开始
+                            restartQuestionnaire();
                         }
-                    }
+                    );
                 }
             } catch (error) {
-                console.error('检查未完成问卷时出错:', error);
-                // 如果出错，清除可能损坏的数据
-                localStorage.removeItem('questionnaire_data');
+                console.error('检查草稿时出错:', error);
             }
+        }
+
+        // 从草稿继续填写
+        function continueFromDraft(draftData) {
+            try {
+                console.log('从草稿继续填写:', draftData);
+
+                // 恢复数据
+                participantId = draftData.participantId;
+                group = draftData.group; // 保持原来的分组，不重新随机
+                currentPage = draftData.currentPage || 1;
+
+                // 保存到 questionnaire_data（向后兼容）
+                localStorage.setItem('questionnaire_data', JSON.stringify(draftData));
+
+                updateProgress();
+
+                // 导航到上次离开的页面
+                const pageFileName = getPageFileName(currentPage);
+                console.log('导航到页面:', pageFileName);
+                navigateToPage(pageFileName);
+
+            } catch (error) {
+                console.error('从草稿恢复失败:', error);
+                alert('恢复失败，将重新开始');
+                restartQuestionnaire();
+            }
+        }
+
+        // 重新开始问卷
+        function restartQuestionnaire() {
+            console.log('重新开始问卷，清除旧数据');
+            clearDraft();
+            localStorage.removeItem('questionnaire_data');
         }
         
         // 开始问卷
@@ -231,6 +260,10 @@
                 // 保存到本地存储
                 localStorage.setItem('questionnaire_data', JSON.stringify(questionnaireData));
                 console.log('数据已保存到本地存储');
+                
+                // 保存到草稿
+                saveDraft(questionnaireData);
+                console.log('数据已保存到草稿');
                 
                 // 保存到服务器（后台异步进行，不阻塞页面跳转）
                 autoSaveData(questionnaireData).then(() => {

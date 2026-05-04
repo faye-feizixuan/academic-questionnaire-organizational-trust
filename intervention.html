@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- API配置 -->
     <script src="config.js"></script>
+    <!-- 草稿管理器 -->
+    <script src="draft-manager.js"></script>
     <!-- API服务 -->
     <script src="api.js"></script>
     <script>
@@ -395,9 +397,14 @@
                     </div>
                     
                     <div class="flex justify-between">
-                        <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
-                            <i class="fa fa-arrow-left mr-2"></i>返回
-                        </button>
+                        <div class="flex space-x-3">
+                            <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all-300">
+                                <i class="fa fa-arrow-left mr-2"></i>返回
+                            </button>
+                            <button id="exit-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-6 rounded-md transition-all-300">
+                                <i class="fa fa-sign-out mr-2"></i>暂时退出
+                            </button>
+                        </div>
                         
                         <button id="next-btn" class="bg-gray-300 text-gray-400 font-medium py-2 px-6 rounded-md transition-all-300 cursor-not-allowed" disabled>
                             继续<span id="countdown" class="ml-2">(15秒)</span><i class="fa fa-arrow-right ml-2"></i>
@@ -430,13 +437,39 @@
             // 加载问卷数据
             loadQuestionnaireData();
             
+            // 初始化草稿管理
+            initPageAutoSave(currentPage);
+            
             // 绑定按钮事件
             document.getElementById('back-btn').addEventListener('click', goBack);
             document.getElementById('next-btn').addEventListener('click', goNext);
             
+            // 绑定"暂时退出"按钮
+            document.getElementById('exit-btn').addEventListener('click', function() {
+                showExitModal(function() {
+                    window.location.href = 'index.html';
+                });
+            });
+            
             // 启动倒计时
             startCountdown();
         });
+
+        // 保存干预页面草稿
+        function saveInterventionDraft() {
+            try {
+                const savedData = localStorage.getItem('questionnaire_data');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    data.currentPage = currentPage;
+                    data.lastSavedAt = new Date().toISOString();
+                    localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                    saveDraft(data);
+                }
+            } catch (error) {
+                console.error('保存干预页面草稿失败:', error);
+            }
+        }
         
         // 启动倒计时
         function startCountdown() {
