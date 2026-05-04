@@ -90,49 +90,37 @@
                         <div class="space-y-4">
                             <p class="text-gray-700 font-medium">1、在您看来，对<span class="font-bold text-purple">腐败典型案例</span>进行通报曝光有作用吗，其最主要的作用是什么？（排序题）</p>
 
-                            <div class="space-y-4">
-                                <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-                                    <span class="text-gray-700 flex-1">为了惩罚当事人，警示他人"不敢腐"。</span>
-                                    <div class="flex gap-2">
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="radio" name="pre-q1-a" value="1" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">1</span>
-                                        </label>
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="radio" name="pre-q1-a" value="2" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">2</span>
-                                        </label>
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="radio" name="pre-q1-a" value="3" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">3</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-                                    <span class="text-gray-700 flex-1">为了澄清边界，教育大多数干部"不想腐"。</span>
-                                    <div class="flex gap-2">
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="radio" name="pre-q1-b" value="1" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">1</span>
-                                        </label>
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="radio" name="pre-q1-b" value="2" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">2</span>
-                                        </label>
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="radio" name="pre-q1-b" value="3" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">3</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-                                    <span class="text-gray-700 flex-1">为了回应大众关切，展示监督过程本身。</span>
-                                    <div class="flex gap-2">
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="radio" name="pre-q1-c" value="1" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">1</span>
-                                        </label>
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="radio" name="pre-q1-c" value="2" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">2</span>
-                                        </label>
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="radio" name="pre-q1-c" value="3" class="h-4 w-4 text-primary focus:ring-primary"> <span class="text-sm">3</span>
-                                        </label>
-                                    </div>
-                                </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="bg-gray-100">
+                                            <th class="p-3 text-left font-medium text-gray-700 w-2/3">选项</th>
+                                            <th class="p-3 text-center font-medium text-gray-700 w-1/6">作用最大(1)</th>
+                                            <th class="p-3 text-center font-medium text-gray-700 w-1/6">作用中等(2)</th>
+                                            <th class="p-3 text-center font-medium text-gray-700 w-1/6">作用最小(3)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b">
+                                            <td class="p-3 text-gray-700">为了惩罚当事人，警示他人"不敢腐"。</td>
+                                            <td class="p-3 text-center"><input type="radio" name="pre-q1-a" value="1" class="h-5 w-5 text-primary focus:ring-primary"></td>
+                                            <td class="p-3 text-center"><input type="radio" name="pre-q1-a" value="2" class="h-5 w-5 text-primary focus:ring-primary"></td>
+                                            <td class="p-3 text-center"><input type="radio" name="pre-q1-a" value="3" class="h-5 w-5 text-primary focus:ring-primary"></td>
+                                        </tr>
+                                        <tr class="border-b">
+                                            <td class="p-3 text-gray-700">为了澄清边界，教育大多数干部"不想腐"。</td>
+                                            <td class="p-3 text-center"><input type="radio" name="pre-q1-b" value="1" class="h-5 w-5 text-primary focus:ring-primary"></td>
+                                            <td class="p-3 text-center"><input type="radio" name="pre-q1-b" value="2" class="h-5 w-5 text-primary focus:ring-primary"></td>
+                                            <td class="p-3 text-center"><input type="radio" name="pre-q1-b" value="3" class="h-5 w-5 text-primary focus:ring-primary"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 text-gray-700">为了回应大众关切，展示监督过程本身。</td>
+                                            <td class="p-3 text-center"><input type="radio" name="pre-q1-c" value="1" class="h-5 w-5 text-primary focus:ring-primary"></td>
+                                            <td class="p-3 text-center"><input type="radio" name="pre-q1-c" value="2" class="h-5 w-5 text-primary focus:ring-primary"></td>
+                                            <td class="p-3 text-center"><input type="radio" name="pre-q1-c" value="3" class="h-5 w-5 text-primary focus:ring-primary"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                             <input type="hidden" id="pre-q1-result" name="pre-q1-result" value="">
                         </div>
@@ -943,7 +931,7 @@
             const sortValues = [preQ1A.value, preQ1B.value, preQ1C.value];
             const uniqueValues = [...new Set(sortValues)];
             if (uniqueValues.length !== 3 || uniqueValues.some(v => v < 1 || v > 3)) {
-                showError('第1题排序题：每个选项只能选择一次');
+                showError('第1题排序题：1、2、3只能各选一次');
                 return;
             }
 
