@@ -794,17 +794,36 @@
         // 处理排序题互斥逻辑
         function handleRankingChange(radio, option) {
             const selectedValue = radio.value;
-            const otherOptions = ['a', 'b', 'c'].filter(o => o !== option);
+            const allOptions = ['a', 'b', 'c'];
 
-            otherOptions.forEach(otherOption => {
-                const inputs = document.querySelectorAll(`input[name="pre-q1-${otherOption}"]`);
+            // 收集所有已选择的值
+            const selectedValues = {};
+            allOptions.forEach(opt => {
+                const checked = document.querySelector(`input[name="pre-q1-${opt}"]:checked`);
+                selectedValues[opt] = checked ? checked.value : null;
+            });
+
+            // 更新所有选项的禁用状态
+            allOptions.forEach(currentOpt => {
+                const inputs = document.querySelectorAll(`input[name="pre-q1-${currentOpt}"]`);
                 inputs.forEach(input => {
-                    if (input.value === selectedValue) {
-                        input.disabled = true;
-                        input.parentElement.classList.add('opacity-50', 'cursor-not-allowed');
+                    const inputValue = input.value;
+                    let shouldDisable = false;
+                    allOptions.forEach(otherOpt => {
+                        if (otherOpt !== currentOpt && selectedValues[otherOpt] === inputValue) {
+                            shouldDisable = true;
+                        }
+                    });
+                    if (currentOpt !== option && selectedValues[currentOpt] === inputValue && selectedValue === inputValue) {
+                        shouldDisable = true;
+                    }
+
+                    input.disabled = shouldDisable;
+                    const label = input.parentElement;
+                    if (shouldDisable) {
+                        label.classList.add('opacity-40', 'cursor-not-allowed', 'bg-gray-200');
                     } else {
-                        input.disabled = false;
-                        input.parentElement.classList.remove('opacity-50', 'cursor-not-allowed');
+                        label.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-gray-200');
                     }
                 });
             });
