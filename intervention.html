@@ -539,14 +539,8 @@
                 localStorage.setItem('questionnaire_data', JSON.stringify(data));
             }
             
-            // 根据分组决定下一页
-            if (group === 1) {
-                // 第一组跳到填写说明页
-                window.location.href = 'instruction.html';
-            } else {
-                // 第二组、第三组和第四组需要进行注意力测试
-                window.location.href = 'attention-test.html';
-            }
+            // 所有组都需要进行注意力测试
+            window.location.href = 'attention-test.html';
         }
         
         // 保存问卷数据

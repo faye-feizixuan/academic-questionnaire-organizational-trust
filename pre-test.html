@@ -88,7 +88,7 @@
                     
                     <div class="space-y-4 mb-8">
                         <div class="space-y-4">
-                            <p class="text-gray-700 font-medium">1、在您看来，对<span class="font-bold text-purple">腐败典型案例</span>进行通报曝光有作用吗，其最主要的作用是什么？（排序题）</p>
+                            <p class="text-gray-700 font-medium"><strong>1、在您看来，对<span class="font-bold text-purple">腐败典型案例</span>进行通报曝光最主要的作用是什么？</strong>（排序题）</p>
 
                             <div class="space-y-4">
                                 <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
@@ -198,7 +198,7 @@
                             </div>
                         </div>
                         
-                        <div id="q3-container" class="space-y-4">
+                        <div id="q4-container" class="space-y-4">
                             <p class="text-gray-700 font-medium">4、您认为您所在单位的<span class="font-bold text-purple">腐败典型案例</span>通报对防治腐败、规范履职的效果如何？（单选题）</p>
                             <div class="space-y-3">
                                 <div class="flex items-start">
@@ -224,7 +224,7 @@
                             </div>
                         </div>
                         
-                        <div id="q4-container" class="space-y-4">
+                        <div id="q5-container" class="space-y-4">
                             <p class="text-gray-700 font-medium">5、您是否支持持续加大对<span class="font-bold text-purple">腐败典型案例</span>的通报曝光力度？（单选题）</p>
                             <div class="space-y-3">
                                 <div class="flex items-start">
@@ -654,7 +654,7 @@
                         });
                     }
 
-                    // 只有当频率不是"从不开展"时才恢复cp-q3和cp-q4
+                    // 只有当频率不是"从不开展"时才恢复cp-q3和cp-q5
                     const freqSelected = document.querySelector('input[name="cp-q1"]:checked');
                     if (freqSelected && freqSelected.value !== '从不开展') {
                         // 恢复cp-q3 (单选题)
@@ -663,13 +663,7 @@
                             if (radio) radio.checked = true;
                         }
 
-                        // 恢复cp-q4 (单选题)
-                        if (pt['cp-q4']) {
-                            const radio = document.querySelector(`input[name="cp-q4"][value="${pt['cp-q4']}"]`);
-                            if (radio) radio.checked = true;
-                        }
-
-                        // 恢复cp-q5
+                        // 恢复cp-q5 (多选题)
                         if (pt['cp-q5'] && Array.isArray(pt['cp-q5'])) {
                             pt['cp-q5'].forEach(value => {
                                 if (value === '其他') {
@@ -687,6 +681,12 @@
                                 }
                             });
                         }
+                    }
+
+                    // 恢复cp-q4 (单选题) - 始终恢复，因为第5题始终显示
+                    if (pt['cp-q4']) {
+                        const radio = document.querySelector(`input[name="cp-q4"][value="${pt['cp-q4']}"]`);
+                        if (radio) radio.checked = true;
                     }
 
                     // 恢复pre-q2 (单选题)
@@ -810,28 +810,36 @@
             });
         }
 
-        // 处理频率变化 - 如果选择"从不开展"则隐藏第3题、第4题和第6题
+        // 处理频率变化 - 如果选择"从不开展"则隐藏第3题、第4题和第6题（保留第5题）
         function handleFrequencyChange(radio) {
+            console.log('handleFrequencyChange called with value:', radio.value);
+            
             const q3Container = document.getElementById('q3-container');
             const q4Container = document.getElementById('q4-container');
             const q6Container = document.getElementById('q6-container');
             const otherInput = document.getElementById('cp-q1-other');
+            
+            console.log('q3Container exists:', !!q3Container);
+            console.log('q4Container exists:', !!q4Container);
+            console.log('q6Container exists:', !!q6Container);
 
             if (radio.value === '从不开展') {
+                console.log('Hiding q3, q4, q6 containers');
                 q3Container.classList.add('hidden');
                 q4Container.classList.add('hidden');
                 q6Container.classList.add('hidden');
                 // 清除可能已选的答案
                 clearQuestionAnswers('cp-q2');
                 clearQuestionAnswers('cp-q3');
-                clearQuestionAnswers('cp-q4');
                 clearQuestionAnswers('cp-q5');
             } else if (radio.value === '其他') {
+                console.log('Showing containers for 其他');
                 otherInput.disabled = false;
                 q3Container.classList.remove('hidden');
                 q4Container.classList.remove('hidden');
                 q6Container.classList.remove('hidden');
             } else {
+                console.log('Showing containers for normal option');
                 otherInput.disabled = true;
                 otherInput.value = '';
                 q3Container.classList.remove('hidden');
