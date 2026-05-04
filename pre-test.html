@@ -809,14 +809,18 @@
                 inputs.forEach(input => {
                     const inputValue = input.value;
                     let shouldDisable = false;
+
+                    // 如果当前行已经选了某个值，且这个值不是当前input的值，则禁用当前行的其他input
+                    if (selectedValues[currentOpt] !== null && selectedValues[currentOpt] !== inputValue) {
+                        shouldDisable = true;
+                    }
+
+                    // 如果其他选项中有一个选择了这个值，则禁用
                     allOptions.forEach(otherOpt => {
                         if (otherOpt !== currentOpt && selectedValues[otherOpt] === inputValue) {
                             shouldDisable = true;
                         }
                     });
-                    if (currentOpt !== option && selectedValues[currentOpt] === inputValue && selectedValue === inputValue) {
-                        shouldDisable = true;
-                    }
 
                     input.disabled = shouldDisable;
                     const label = input.parentElement;
