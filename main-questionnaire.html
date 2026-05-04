@@ -277,6 +277,38 @@
                                     </label>
                                 </div>
                             </div>
+                            
+                            <!-- 问题16-7 -->
+                            <div class="space-y-3">
+                                <p class="text-gray-700 font-medium">（7）我认为<span class="font-bold text-purple">材料中我所在的单位</span>内人员受到岗位职责、组织纪律和层级规范的强约束。</p>
+                                <div class="grid grid-cols-5 gap-2">
+                                    <label class="flex flex-col items-center p-1 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-7-1" name="main-q16-7" value="1" class="h-3 w-3 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-sm font-bold text-gray-700">1</span>
+                                        <span class="text-xs text-gray-500 text-center">非常不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-1 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-7-2" name="main-q16-7" value="2" class="h-3 w-3 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-sm font-bold text-gray-700">2</span>
+                                        <span class="text-xs text-gray-500 text-center">比较不同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-1 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-7-3" name="main-q16-7" value="3" class="h-3 w-3 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-sm font-bold text-gray-700">3</span>
+                                        <span class="text-xs text-gray-500 text-center">一般</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-1 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-7-4" name="main-q16-7" value="4" class="h-3 w-3 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-sm font-bold text-gray-700">4</span>
+                                        <span class="text-xs text-gray-500 text-center">比较同意</span>
+                                    </label>
+                                    <label class="flex flex-col items-center p-1 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" id="main-q16-7-5" name="main-q16-7" value="5" class="h-3 w-3 text-primary focus:ring-primary border-gray-300">
+                                        <span class="text-sm font-bold text-gray-700">5</span>
+                                        <span class="text-xs text-gray-500 text-center">非常同意</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -408,8 +440,8 @@
         
         // 恢复答案
         function restoreAnswers(data) {
-            // 恢复16题的6个子问题答案
-            for (let i = 1; i <= 6; i++) {
+            // 恢复16题的7个子问题答案
+            for (let i = 1; i <= 7; i++) {
                 const answer = data[`main-q16-${i}`];
                 if (answer) {
                     const radioButton = document.querySelector(`input[name="main-q16-${i}"][value="${answer}"]`);
@@ -459,8 +491,8 @@
         
         // 验证所有问题是否都已回答
         function validateAnswers() {
-            // 验证16题的6个子问题
-            for (let i = 1; i <= 6; i++) {
+            // 验证16题的7个子问题
+            for (let i = 1; i <= 7; i++) {
                 const selected = document.querySelector(`input[name="main-q16-${i}"]:checked`);
                 if (!selected) {
                     return false;
@@ -489,8 +521,8 @@
                 return;
             }
             
-            // 保存16题的6个子问题答案
-            for (let i = 1; i <= 6; i++) {
+            // 保存16题的7个子问题答案
+            for (let i = 1; i <= 7; i++) {
                 const selected = document.querySelector(`input[name="main-q16-${i}"]:checked`);
                 if (selected) {
                     saveAnswer(`main-q16-${i}`, selected.value);
