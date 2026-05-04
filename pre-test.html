@@ -198,7 +198,7 @@
                             </div>
                         </div>
                         
-                        <div class="space-y-4">
+                        <div id="q3-container" class="space-y-4">
                             <p class="text-gray-700 font-medium">4、您认为您所在单位的<span class="font-bold text-purple">腐败典型案例</span>通报对防治腐败、规范履职的效果如何？（单选题）</p>
                             <div class="space-y-3">
                                 <div class="flex items-start">
@@ -224,7 +224,7 @@
                             </div>
                         </div>
                         
-                        <div class="space-y-4">
+                        <div id="q4-container" class="space-y-4">
                             <p class="text-gray-700 font-medium">5、您是否支持持续加大对<span class="font-bold text-purple">腐败典型案例</span>的通报曝光力度？（单选题）</p>
                             <div class="space-y-3">
                                 <div class="flex items-start">
@@ -806,26 +806,32 @@
             });
         }
 
-        // 处理频率变化 - 如果选择"从不开展"则隐藏第3题和第6题
+        // 处理频率变化 - 如果选择"从不开展"则隐藏第3题、第4题和第6题
         function handleFrequencyChange(radio) {
             const q3Container = document.getElementById('q3-container');
+            const q4Container = document.getElementById('q4-container');
             const q6Container = document.getElementById('q6-container');
             const otherInput = document.getElementById('cp-q1-other');
 
             if (radio.value === '从不开展') {
                 q3Container.classList.add('hidden');
+                q4Container.classList.add('hidden');
                 q6Container.classList.add('hidden');
                 // 清除可能已选的答案
                 clearQuestionAnswers('cp-q2');
+                clearQuestionAnswers('cp-q3');
+                clearQuestionAnswers('cp-q4');
                 clearQuestionAnswers('cp-q5');
             } else if (radio.value === '其他') {
                 otherInput.disabled = false;
                 q3Container.classList.remove('hidden');
+                q4Container.classList.remove('hidden');
                 q6Container.classList.remove('hidden');
             } else {
                 otherInput.disabled = true;
                 otherInput.value = '';
                 q3Container.classList.remove('hidden');
+                q4Container.classList.remove('hidden');
                 q6Container.classList.remove('hidden');
             }
         }
