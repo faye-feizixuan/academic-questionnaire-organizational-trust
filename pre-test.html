@@ -796,40 +796,53 @@
             const selectedValue = radio.value;
             const allOptions = ['a', 'b', 'c'];
 
-            // 收集所有已选择的值
-            const selectedValues = {};
-            allOptions.forEach(opt => {
-                const checked = document.querySelector(`input[name="pre-q1-${opt}"]:checked`);
-                selectedValues[opt] = checked ? checked.value : null;
+            // 取消同一行之前选中的选项（如果有的话）
+            const currentRowInputs = document.querySelectorAll(`input[name="pre-q1-${option}"]`);
+            currentRowInputs.forEach(input => {
+                if (input !== radio && input.checked) {
+                    input.checked = false;
+                }
+            });
+
+            // 取消其他行中选择了相同值的选项
+            allOptions.forEach(otherOpt => {
+                if (otherOpt !== option) {
+                    const otherRowInputs = document.querySelectorAll(`input[name="pre-q1-${otherOpt}"]`);
+                    otherRowInputs.forEach(input => {
+                        if (input.value === selectedValue && input.checked) {
+                            input.checked = false;
+                        }
+                    });
+                }
             });
 
             // 更新所有选项的禁用状态
             allOptions.forEach(currentOpt => {
                 const inputs = document.querySelectorAll(`input[name="pre-q1-${currentOpt}"]`);
                 inputs.forEach(input => {
-                    const inputValue = input.value;
-                    let shouldDisable = false;
+                    // 先启用所有选项
+                    input.disabled = false;
+                    const label = input.parentElement;
+                    label.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-gray-200');
+                });
+            });
 
-                    // 如果当前行已经选了某个值，且这个值不是当前input的值，则禁用当前行的其他input
-                    if (selectedValues[currentOpt] !== null && selectedValues[currentOpt] !== inputValue) {
-                        shouldDisable = true;
-                    }
-
-                    // 如果其他选项中有一个选择了这个值，则禁用
+            // 然后禁用其他行中已被选择的值
+            allOptions.forEach(currentOpt => {
+                const currentChecked = document.querySelector(`input[name="pre-q1-${currentOpt}"]:checked`);
+                if (currentChecked) {
+                    const checkedValue = currentChecked.value;
                     allOptions.forEach(otherOpt => {
-                        if (otherOpt !== currentOpt && selectedValues[otherOpt] === inputValue) {
-                            shouldDisable = true;
+                        if (otherOpt !== currentOpt) {
+                            const inputs = document.querySelectorAll(`input[name="pre-q1-${otherOpt}"][value="${checkedValue}"]`);
+                            inputs.forEach(input => {
+                                input.disabled = true;
+                                const label = input.parentElement;
+                                label.classList.add('opacity-40', 'cursor-not-allowed', 'bg-gray-200');
+                            });
                         }
                     });
-
-                    input.disabled = shouldDisable;
-                    const label = input.parentElement;
-                    if (shouldDisable) {
-                        label.classList.add('opacity-40', 'cursor-not-allowed', 'bg-gray-200');
-                    } else {
-                        label.classList.remove('opacity-40', 'cursor-not-allowed', 'bg-gray-200');
-                    }
-                });
+                }
             });
         }
 
