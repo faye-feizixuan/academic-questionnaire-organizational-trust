@@ -40,6 +40,67 @@ async function saveDataToServer(data, signal = null) {
 }
 
 /**
+ * 分步保存问卷数据到服务器（实时保存）
+ * @param {number|string} currentPage - 当前页面编号
+ * @param {Object} formData - 当前页面的表单数据
+ * @param {AbortSignal} signal - 中止信号（可选）
+ * @returns {Promise<Object>} - 服务器响应
+ */
+async function savePartialData(currentPage, formData, signal = null) {
+    try {
+        // 从localStorage获取基础信息
+        const localData = localStorage.getItem('questionnaire_data');
+        if (!localData) {
+            console.warn('未找到本地问卷数据');
+            return { success: false, error: '未找到本地问卷数据' };
+        }
+
+        const questionnaireData = JSON.parse(localData);
+
+        // 构建分步保存数据
+        const partialData = {
+            participantId: questionnaireData.participantId,
+            currentPage: currentPage,
+            formData: formData,
+            group: questionnaireData.group,
+            startTime: questionnaireData.startTime,
+            completed: false
+        };
+
+        console.log('分步保存数据:', partialData);
+
+        const fetchOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(partialData)
+        };
+
+        if (signal) {
+            fetchOptions.signal = signal;
+        }
+
+        const response = await fetch(`${API_BASE_URL}/questionnaire/partial-save`, fetchOptions);
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || '保存失败');
+        }
+
+        console.log('分步保存成功:', result);
+        return result;
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            console.error('分步保存请求超时');
+            throw new Error('保存请求超时');
+        }
+        console.error('分步保存问卷数据错误:', error);
+        throw error;
+    }
+}
+
+/**
  * 获取问卷数据
  * @param {string} participantId - 参与者ID
  * @returns {Promise<Object>} - 问卷数据
@@ -107,7 +168,7 @@ function showSaveStatus(message, type = 'info') {
 async function autoSaveData(data, showNotification = false) {
     try {
         console.log('开始保存数据到服务器...');
-        
+
         // 从localStorage获取完整的问卷数据
         const localData = localStorage.getItem('questionnaire_data');
         if (!localData) {
@@ -149,7 +210,7 @@ async function autoSaveData(data, showNotification = false) {
             // 保存到服务器
             const result = await saveDataToServer(formattedData, controller.signal);
             clearTimeout(timeoutId);
-            
+
             console.log('数据成功保存到服务器:', result);
 
             if (showNotification) {
@@ -178,7 +239,7 @@ async function autoSaveData(data, showNotification = false) {
 async function restoreFromServer(participantId) {
     try {
         const data = await getQuestionnaireData(participantId);
-        
+
         // 保存到localStorage
         localStorage.setItem('questionnaire_data', JSON.stringify({
             participantId: data.participant_id,

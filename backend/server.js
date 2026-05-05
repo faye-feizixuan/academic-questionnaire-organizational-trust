@@ -69,7 +69,7 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: '问卷后端服务运行正常' });
 });
 
-// 保存或更新问卷数据
+// 保存或更新问卷数据（完整保存）
 app.post('/api/questionnaire/save', (req, res) => {
     try {
         const {
@@ -96,72 +96,34 @@ app.post('/api/questionnaire/save', (req, res) => {
 
         if (existing) {
             // 更新现有记录
-            // 构建更新语句，只更新非undefined的字段
-            let updateFields = [];
-            let updateValues = [];
-            
-            if (group !== undefined) {
-                updateFields.push('group_number = ?');
-                updateValues.push(group);
-            }
-            
-            if (preTest !== undefined) {
-                updateFields.push('pre_test = ?');
-                updateValues.push(JSON.stringify(preTest));
-            }
-            
-            if (attentionTest !== undefined) {
-                updateFields.push('attention_test = ?');
-                updateValues.push(JSON.stringify(attentionTest));
-            }
-            
-            if (mainQuestionnaire !== undefined) {
-                updateFields.push('main_questionnaire = ?');
-                updateValues.push(JSON.stringify(mainQuestionnaire));
-            }
-            
-            if (demographics !== undefined) {
-                updateFields.push('demographics = ?');
-                updateValues.push(JSON.stringify(demographics));
-            }
-            
-            if (contactInfo !== undefined) {
-                updateFields.push('contact_info = ?');
-                updateValues.push(contactInfo);
-            }
-            
-            if (startTime !== undefined) {
-                updateFields.push('start_time = ?');
-                updateValues.push(startTime);
-            }
-            
-            // 总是更新的字段
-            updateFields.push('end_time = ?');
-            updateFields.push('completed = ?');
-            updateFields.push('updated_at = ?');
-            updateValues.push(now);
-            updateValues.push(completedValue);
-            updateValues.push(now);
-            
-            // 添加WHERE条件
-            updateValues.push(participantId);
-            
-            // 构建完整的SQL语句
-            const updateQuery = `
-                UPDATE questionnaires 
-                SET ${updateFields.join(', ')}
+            const updateStmt = db.prepare(`
+                UPDATE questionnaires
+                SET group_number = COALESCE(?, group_number),
+                    pre_test = COALESCE(?, pre_test),
+                    attention_test = COALESCE(?, attention_test),
+                    main_questionnaire = COALESCE(?, main_questionnaire),
+                    demographics = COALESCE(?, demographics),
+                    contact_info = ?,
+                    start_time = COALESCE(?, start_time),
+                    end_time = ?,
+                    completed = ?,
+                    updated_at = ?
                 WHERE participant_id = ?
-            `;
-            
-            // 执行更新
-            const updateStmt = db.prepare(updateQuery);
-            updateStmt.run(...updateValues);
+            `);
 
-            // 记录日志
-            db.prepare(`
-                INSERT INTO questionnaire_logs (participant_id, action, data)
-                VALUES (?, 'update', ?)
-            `).run(participantId, JSON.stringify(req.body));
+            updateStmt.run(
+                group,
+                preTest ? JSON.stringify(preTest) : null,
+                attentionTest ? JSON.stringify(attentionTest) : null,
+                mainQuestionnaire ? JSON.stringify(mainQuestionnaire) : null,
+                demographics ? JSON.stringify(demographics) : null,
+                contactInfo || null,
+                startTime || null,
+                completed ? now : null,
+                completedValue,
+                now,
+                participantId
+            );
 
             res.json({ success: true, message: '问卷数据更新成功' });
         } else {
@@ -181,17 +143,11 @@ app.post('/api/questionnaire/save', (req, res) => {
                 attentionTest ? JSON.stringify(attentionTest) : null,
                 mainQuestionnaire ? JSON.stringify(mainQuestionnaire) : null,
                 demographics ? JSON.stringify(demographics) : null,
-                contactInfo === undefined ? null : contactInfo,
+                contactInfo || null,
                 startTime || now,
                 completed ? now : null,
                 completedValue
             );
-
-            // 记录日志
-            db.prepare(`
-                INSERT INTO questionnaire_logs (participant_id, action, data)
-                VALUES (?, 'create', ?)
-            `).run(participantId, JSON.stringify(req.body));
 
             res.json({ success: true, message: '问卷数据保存成功' });
         }
@@ -201,13 +157,165 @@ app.post('/api/questionnaire/save', (req, res) => {
     }
 });
 
+// 分步保存问卷数据（实时保存）
+app.post('/api/questionnaire/partial-save', (req, res) => {
+    try {
+        const {
+            participantId,
+            currentPage,
+            formData,
+            group,
+            startTime,
+            completed = false
+        } = req.body;
+
+        if (!participantId) {
+            return res.status(400).json({ error: '参与者ID不能为空' });
+        }
+
+        const now = new Date().toISOString();
+        const completedValue = completed ? 1 : 0;
+
+        console.log('收到分步保存请求:', {
+            participantId,
+            currentPage,
+            group,
+            completed
+        });
+
+        // 检查是否已存在
+        const existing = db.prepare('SELECT * FROM questionnaires WHERE participant_id = ?').get(participantId);
+
+        if (existing) {
+            // 获取现有数据
+            let existingData = {
+                pre_test: existing.pre_test ? JSON.parse(existing.pre_test) : {},
+                attention_test: existing.attention_test ? JSON.parse(existing.attention_test) : {},
+                main_questionnaire: existing.main_questionnaire ? JSON.parse(existing.main_questionnaire) : {},
+                demographics: existing.demographics ? JSON.parse(existing.demographics) : {}
+            };
+
+            // 根据currentPage合并数据
+            switch (currentPage) {
+                case 1:
+                case 'pre-test':
+                    existingData.pre_test = { ...existingData.pre_test, ...formData };
+                    break;
+                case 2:
+                case 'attention-test':
+                    existingData.attention_test = { ...existingData.attention_test, ...formData };
+                    break;
+                case 3:
+                case 'main-questionnaire':
+                    existingData.main_questionnaire = { ...existingData.main_questionnaire, ...formData };
+                    break;
+                case 4:
+                case 'demographics':
+                    existingData.demographics = { ...existingData.demographics, ...formData };
+                    break;
+                default:
+                    console.warn('未知的页面编号:', currentPage);
+            }
+
+            // 更新数据库
+            const updateStmt = db.prepare(`
+                UPDATE questionnaires
+                SET pre_test = ?,
+                    attention_test = ?,
+                    main_questionnaire = ?,
+                    demographics = ?,
+                    end_time = ?,
+                    completed = ?,
+                    updated_at = ?
+                WHERE participant_id = ?
+            `);
+
+            updateStmt.run(
+                JSON.stringify(existingData.pre_test),
+                JSON.stringify(existingData.attention_test),
+                JSON.stringify(existingData.main_questionnaire),
+                JSON.stringify(existingData.demographics),
+                completed ? now : null,
+                completedValue,
+                now,
+                participantId
+            );
+
+            console.log('分步保存成功，更新现有记录');
+            res.json({ success: true, message: '数据已保存', page: currentPage });
+        } else {
+            // 创建新记录
+            let newData = {
+                pre_test: {},
+                attention_test: {},
+                main_questionnaire: {},
+                demographics: {}
+            };
+
+            // 根据currentPage设置初始数据
+            switch (currentPage) {
+                case 1:
+                case 'pre-test':
+                    newData.pre_test = formData || {};
+                    break;
+                case 2:
+                case 'attention-test':
+                    newData.attention_test = formData || {};
+                    break;
+                case 3:
+                case 'main-questionnaire':
+                    newData.main_questionnaire = formData || {};
+                    break;
+                case 4:
+                case 'demographics':
+                    newData.demographics = formData || {};
+                    break;
+            }
+
+            const insertStmt = db.prepare(`
+                INSERT INTO questionnaires (
+                    participant_id, group_number, pre_test, attention_test,
+                    main_questionnaire, demographics, contact_info,
+                    start_time, end_time, completed
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `);
+
+            insertStmt.run(
+                participantId,
+                group || 1,
+                JSON.stringify(newData.pre_test),
+                JSON.stringify(newData.attention_test),
+                JSON.stringify(newData.main_questionnaire),
+                JSON.stringify(newData.demographics),
+                null,
+                startTime || now,
+                completed ? now : null,
+                completedValue
+            );
+
+            console.log('分步保存成功，创建新记录');
+            res.json({ success: true, message: '数据已创建并保存', page: currentPage });
+        }
+
+        // 记录日志
+        db.prepare(`
+            INSERT INTO questionnaire_logs (participant_id, action, page, data)
+            VALUES (?, 'partial_save', ?, ?)
+        `).run(participantId, String(currentPage), JSON.stringify(req.body));
+
+    } catch (error) {
+        console.error('分步保存问卷数据错误:', error);
+        res.status(500).json({ error: '保存失败: ' + error.message });
+    }
+});
+
 // 获取问卷数据
 app.get('/api/questionnaire/:participantId', (req, res) => {
     try {
         const { participantId } = req.params;
-        
+
         const row = db.prepare('SELECT * FROM questionnaires WHERE participant_id = ?').get(participantId);
-        
+
         if (!row) {
             return res.status(404).json({ error: '未找到该问卷数据' });
         }
@@ -232,7 +340,7 @@ app.get('/api/questionnaire/:participantId', (req, res) => {
 app.get('/api/admin/questionnaires', (req, res) => {
     try {
         const { completed, group, limit = 100, offset = 0 } = req.query;
-        
+
         let query = 'SELECT * FROM questionnaires WHERE 1=1';
         const params = [];
 
@@ -261,8 +369,14 @@ app.get('/api/admin/questionnaires', (req, res) => {
         }));
 
         // 获取总数
-        const countQuery = query.replace('SELECT *', 'SELECT COUNT(*) as total').split('LIMIT')[0];
-        const total = db.prepare(countQuery).get(...params.slice(0, -2)).total;
+        let countQuery = 'SELECT COUNT(*) as total FROM questionnaires WHERE 1=1';
+        if (completed !== undefined) {
+            countQuery += ' AND completed = ' + (completed === 'true' ? '1' : '0');
+        }
+        if (group !== undefined) {
+            countQuery += ' AND group_number = ' + parseInt(group);
+        }
+        const total = db.prepare(countQuery).get().total;
 
         res.json({
             data: results,
@@ -280,7 +394,7 @@ app.get('/api/admin/questionnaires', (req, res) => {
 app.get('/api/admin/export', (req, res) => {
     try {
         const { format = 'json' } = req.query;
-        
+
         const rows = db.prepare('SELECT * FROM questionnaires ORDER BY created_at DESC').all();
 
         // 解析JSON字段
@@ -313,8 +427,8 @@ app.get('/api/admin/stats', (req, res) => {
         const incomplete = total - completed;
 
         const groupStats = db.prepare(`
-            SELECT group_number, COUNT(*) as count 
-            FROM questionnaires 
+            SELECT group_number, COUNT(*) as count
+            FROM questionnaires
             GROUP BY group_number
         `).all();
 
@@ -334,9 +448,9 @@ app.get('/api/admin/stats', (req, res) => {
 app.delete('/api/admin/questionnaire/:participantId', (req, res) => {
     try {
         const { participantId } = req.params;
-        
+
         const result = db.prepare('DELETE FROM questionnaires WHERE participant_id = ?').run(participantId);
-        
+
         if (result.changes === 0) {
             return res.status(404).json({ error: '未找到该问卷数据' });
         }
