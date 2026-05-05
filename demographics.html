@@ -344,11 +344,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             // 加载问卷数据
             loadQuestionnaireData();
-            
+
             // 绑定按钮事件
             document.getElementById('back-btn').addEventListener('click', goBack);
             document.getElementById('next-btn').addEventListener('click', goNext);
-            
+
             // 绑定政治面貌选项变更事件
             const politicalRadioButtons = document.querySelectorAll('input[name="demo-q3"]');
             politicalRadioButtons.forEach(radio => {
@@ -361,7 +361,108 @@
                     }
                 });
             });
+
+            // 绑定所有输入框的change事件来自动保存
+            document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    autoSaveDemographicsDraft();
+                });
+            });
+
+            // 绑定输入框变化事件
+            document.querySelectorAll('input[type="text"], input[type="number"], select').forEach(input => {
+                input.addEventListener('input', debounce(function() {
+                    autoSaveDemographicsDraft();
+                }, 500));
+            });
         });
+
+        // 自动保存人口统计学草稿
+        function autoSaveDemographicsDraft() {
+            try {
+                const savedData = localStorage.getItem('questionnaire_data');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+
+                    // 收集所有人口统计学答案
+                    const demographics = {};
+
+                    // 收集demo-q1 (性别)
+                    const demoQ1 = document.querySelector('input[name="demo-q1"]:checked');
+                    if (demoQ1) demographics['demo-q1'] = demoQ1.value;
+
+                    // 收集demo-q2 (出生年份)
+                    const demoQ2 = document.getElementById('demo-q2');
+                    if (demoQ2 && demoQ2.value) demographics['demo-q2'] = demoQ2.value;
+
+                    // 收集demo-q3 (政治面貌)
+                    const demoQ3 = document.querySelector('input[name="demo-q3"]:checked');
+                    if (demoQ3) {
+                        demographics['demo-q3'] = demoQ3.value;
+                        // 如果是中共党员，保存入党年份
+                        if (demoQ3.value === '中共党员') {
+                            const partyYear = document.getElementById('party-year-input');
+                            if (partyYear && partyYear.value) {
+                                demographics['party-year'] = partyYear.value;
+                            }
+                        }
+                    }
+
+                    // 收集demo-q4 (教育程度)
+                    const demoQ4 = document.querySelector('input[name="demo-q4"]:checked');
+                    if (demoQ4) demographics['demo-q4'] = demoQ4.value;
+
+                    // 收集demo-q5 (职务级别)
+                    const demoQ5 = document.querySelector('input[name="demo-q5"]:checked');
+                    if (demoQ5) demographics['demo-q5'] = demoQ5.value;
+
+                    // 收集demo-q6 (工作年限)
+                    const demoQ6 = document.querySelector('input[name="demo-q6"]:checked');
+                    if (demoQ6) demographics['demo-q6'] = demoQ6.value;
+
+                    // 收集demo-q7 (单位性质)
+                    const demoQ7 = document.querySelectorAll('input[name="demo-q7"]:checked');
+                    if (demoQ7.length > 0) {
+                        demographics['demo-q7'] = Array.from(demoQ7).map(cb => cb.value);
+                    }
+
+                    // 收集demo-q8 (每月收入范围)
+                    const demoQ8 = document.querySelector('input[name="demo-q8"]:checked');
+                    if (demoQ8) demographics['demo-q8'] = demoQ8.value;
+
+                    // 收集demo-q9 (工作角色)
+                    const demoQ9 = document.querySelector('input[name="demo-q9"]:checked');
+                    if (demoQ9) demographics['demo-q9'] = demoQ9.value;
+
+                    // 收集demo-q10 (与纪检监察工作关系)
+                    const demoQ10 = document.querySelector('input[name="demo-q10"]:checked');
+                    if (demoQ10) demographics['demo-q10'] = demoQ10.value;
+
+                    data.demographics = demographics;
+                    data.currentPage = currentPage;
+                    data.lastSavedAt = new Date().toISOString();
+
+                    // 保存
+                    localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                    saveDraft(data);
+                }
+            } catch (error) {
+                console.error('保存人口统计学草稿失败:', error);
+            }
+        }
+
+        // 防抖函数
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
         
         // 加载问卷数据
         function loadQuestionnaireData() {

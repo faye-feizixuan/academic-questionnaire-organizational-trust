@@ -562,32 +562,32 @@
                 const savedData = localStorage.getItem('questionnaire_data');
                 if (savedData) {
                     const data = JSON.parse(savedData);
-                    
+
                     // 收集当前页面数据
                     const preTest = {};
-                    
+
                     // 收集排序题答案
                     const preQ1A = document.querySelector('input[name="pre-q1-a"]:checked');
                     const preQ1B = document.querySelector('input[name="pre-q1-b"]:checked');
                     const preQ1C = document.querySelector('input[name="pre-q1-c"]:checked');
                     if (preQ1A && preQ1B && preQ1C) {
-                        preTest.preQ1 = [
+                        preTest['pre-q1'] = JSON.stringify([
                             { value: 'A', rank: parseInt(preQ1A.value) },
                             { value: 'B', rank: parseInt(preQ1B.value) },
                             { value: 'C', rank: parseInt(preQ1C.value) }
-                        ];
+                        ]);
                     }
-                    
+
                     // 收集频率题
                     const cpQ1 = document.querySelector('input[name="cp-q1"]:checked');
                     if (cpQ1) {
-                        preTest.cpQ1 = cpQ1.value;
+                        preTest['cp-q1'] = cpQ1.value;
                         if (cpQ1.value === '其他') {
                             const otherInput = document.getElementById('cp-q1-other');
-                            preTest.cpQ1Other = otherInput ? otherInput.value : '';
+                            preTest['cp-q1-other'] = otherInput ? otherInput.value : '';
                         }
                     }
-                    
+
                     // 收集其他问题
                     if (cpQ1 && cpQ1.value !== '从不开展') {
                         // 案例来源
@@ -595,46 +595,46 @@
                         document.querySelectorAll('input[name="cp-q2"]:checked').forEach(cb => {
                             cpQ2.push(cb.value);
                         });
-                        preTest.cpQ2 = cpQ2;
-                        
+                        preTest['cp-q2'] = cpQ2;
+
                         // 效果评分
                         const cpQ3 = document.querySelector('input[name="cp-q3"]:checked');
-                        if (cpQ3) preTest.cpQ3 = cpQ3.value;
-                        
+                        if (cpQ3) preTest['cp-q3'] = cpQ3.value;
+
                         // 支持力度
                         const cpQ4 = document.querySelector('input[name="cp-q4"]:checked');
-                        if (cpQ4) preTest.cpQ4 = cpQ4.value;
-                        
+                        if (cpQ4) preTest['cp-q4'] = cpQ4.value;
+
                         // 教育形式
                         const cpQ5 = [];
                         document.querySelectorAll('input[name="cp-q5"]:checked').forEach(cb => {
                             cpQ5.push(cb.value);
                         });
-                        preTest.cpQ5 = cpQ5;
-                        
+                        preTest['cp-q5'] = cpQ5;
+
                         // 其他说明
                         const cpQ5Other = document.getElementById('cp-q5-7');
                         if (cpQ5Other && cpQ5Other.checked) {
                             const otherInput = document.getElementById('cp-q5-other');
-                            preTest.cpQ5Other = otherInput ? otherInput.value : '';
+                            preTest['cp-q5-other'] = otherInput ? otherInput.value : '';
                         }
                     }
-                    
+
                     // 职业诚信
                     const preQ2 = document.querySelector('input[name="pre-q2"]:checked');
-                    if (preQ2) preTest.preQ2 = preQ2.value;
-                    
-                    // 其他问题
+                    if (preQ2) preTest['pre-q2'] = preQ2.value;
+
+                    // 其他问题 - 使用连字符格式与loadQuestionnaireData保持一致
                     for (let i = 1; i <= 5; i++) {
                         const selected = document.querySelector(`input[name="pre-q3-${i}"]:checked`);
-                        if (selected) preTest[`preQ3-${i}`] = selected.value;
+                        if (selected) preTest[`pre-q3-${i}`] = selected.value;
                     }
-                    
+
                     // 更新数据
                     data.preTest = preTest;
                     data.currentPage = currentPage;
                     data.lastSavedAt = new Date().toISOString();
-                    
+
                     // 保存
                     localStorage.setItem('questionnaire_data', JSON.stringify(data));
                     saveDraft(data);

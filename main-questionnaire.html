@@ -476,9 +476,76 @@
         function bindEvents() {
             // 绑定返回按钮
             document.getElementById('back-btn').addEventListener('click', goBack);
-            
+
             // 绑定提交按钮
             document.getElementById('next-btn').addEventListener('click', submitAnswers);
+
+            // 绑定所有radio和checkbox的change事件来隐藏错误消息和保存草稿
+            document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    document.getElementById('error-message').classList.add('hidden');
+                    autoSaveMainQuestionnaireDraft();
+                });
+            });
+
+            // 绑定输入框变化事件
+            document.querySelectorAll('input[type="text"], input[type="number"]').forEach(input => {
+                input.addEventListener('input', debounce(function() {
+                    autoSaveMainQuestionnaireDraft();
+                }, 500));
+            });
+        }
+
+        // 自动保存主问卷草稿
+        function autoSaveMainQuestionnaireDraft() {
+            try {
+                const savedData = localStorage.getItem('questionnaire_data');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+
+                    // 收集16题的7个子问题答案
+                    for (let i = 1; i <= 7; i++) {
+                        const selected = document.querySelector(`input[name="main-q16-${i}"]:checked`);
+                        if (selected) {
+                            data[`main-q16-${i}`] = selected.value;
+                        }
+                    }
+
+                    // 保存17-1答案
+                    const q17_1Selected = document.querySelector('input[name="main-q17-1"]:checked');
+                    if (q17_1Selected) {
+                        data['main-q17-1'] = q17_1Selected.value;
+                    }
+
+                    // 保存17-2答案
+                    const q17_2Selected = document.querySelector('input[name="main-q17-2"]:checked');
+                    if (q17_2Selected) {
+                        data['main-q17-2'] = q17_2Selected.value;
+                    }
+
+                    data.currentPage = currentPage;
+                    data.lastSavedAt = new Date().toISOString();
+
+                    // 保存
+                    localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                    saveDraft(data);
+                }
+            } catch (error) {
+                console.error('保存主问卷草稿失败:', error);
+            }
+        }
+
+        // 防抖函数
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
         }
         
         // 保存单个答案

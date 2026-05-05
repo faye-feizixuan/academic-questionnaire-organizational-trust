@@ -650,22 +650,72 @@
         document.addEventListener('DOMContentLoaded', function() {
             // 加载问卷数据
             loadQuestionnaireData();
-            
+
             // 绑定按钮事件
             document.getElementById('back-btn').addEventListener('click', goBack);
             document.getElementById('next-btn').addEventListener('click', goNext);
             document.getElementById('review-btn').addEventListener('click', openMaterialModal);
             document.getElementById('close-modal-btn').addEventListener('click', closeMaterialModal);
-            
-            // 绑定选项变更事件
+
+            // 绑定选项变更事件 - 自动保存草稿
             const radioButtons = document.querySelectorAll('input[type="radio"]');
             radioButtons.forEach(radio => {
                 radio.addEventListener('change', function() {
                     // 隐藏错误消息
                     document.getElementById('error-message').classList.add('hidden');
+                    // 自动保存草稿
+                    autoSaveAttentionDraft();
                 });
             });
         });
+
+        // 自动保存注意力测试草稿
+        function autoSaveAttentionDraft() {
+            try {
+                const savedData = localStorage.getItem('questionnaire_data');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+
+                    // 收集所有注意力测试答案
+                    const attentionTest = data.attentionTest || {};
+                    attentionTest.answers = attentionTest.answers || {};
+
+                    const questions = ['attn-q9', 'attn-q10', 'attn-q11', 'attn-q12', 'attn-q13', 'attn-q14'];
+                    questions.forEach(questionId => {
+                        const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+                        if (selected) {
+                            attentionTest.answers[questionId] = selected.value;
+                        }
+                    });
+
+                    // 保存尝试次数
+                    attentionTest.attempts = attemptCount;
+
+                    data.attentionTest = attentionTest;
+                    data.currentPage = currentPage;
+                    data.lastSavedAt = new Date().toISOString();
+
+                    // 保存
+                    localStorage.setItem('questionnaire_data', JSON.stringify(data));
+                    saveDraft(data);
+                }
+            } catch (error) {
+                console.error('保存注意力测试草稿失败:', error);
+            }
+        }
+
+        // 防抖函数
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
         
         // 加载问卷数据
         function loadQuestionnaireData() {
